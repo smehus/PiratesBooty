@@ -15,7 +15,10 @@
 		A52EF6761F8CE931005636D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6751F8CE931005636D3 /* Assets.xcassets */; };
 		A52EF6791F8CE931005636D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6771F8CE931005636D3 /* LaunchScreen.storyboard */; };
 		A52EF6811F8CEA84005636D3 /* PirateTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */; };
-		A5B7718F1F8CF80D00AFA21B /* BaseTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A5B7718E1F8CF80D00AFA21B /* BaseTileSet.sks */; };
+		A594B6601F8E2D6100361E50 /* Ship.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B65F1F8E2D6100361E50 /* Ship.swift */; };
+		A594B6621F8E2DC500361E50 /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6611F8E2DC500361E50 /* SpriteComponent.swift */; };
+		A594B6641F8E2F2000361E50 /* EntityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6631F8E2F2000361E50 /* EntityManager.swift */; };
+		A5A880C91F8E2258001CE5EC /* MyTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A5A880C71F8E2258001CE5EC /* MyTileSet.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +32,10 @@
 		A52EF6781F8CE931005636D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A52EF67A1F8CE931005636D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PirateTileSet.sks; sourceTree = "<group>"; };
-		A5B7718E1F8CF80D00AFA21B /* BaseTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BaseTileSet.sks; sourceTree = "<group>"; };
-		A5B771901F8E1E6E00AFA21B /* TileSets.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TileSets.sks; sourceTree = "<group>"; };
+		A594B65F1F8E2D6100361E50 /* Ship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ship.swift; sourceTree = "<group>"; };
+		A594B6611F8E2DC500361E50 /* SpriteComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
+		A594B6631F8E2F2000361E50 /* EntityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityManager.swift; sourceTree = "<group>"; };
+		A5A880C71F8E2258001CE5EC /* MyTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyTileSet.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,7 +68,7 @@
 		A52EF6671F8CE931005636D3 /* PiratesBooty */ = {
 			isa = PBXGroup;
 			children = (
-				A5B771901F8E1E6E00AFA21B /* TileSets.sks */,
+				A549E37B1F8E1F4E00A40782 /* TileSets */,
 				A52EF6681F8CE931005636D3 /* AppDelegate.swift */,
 				A52EF66A1F8CE931005636D3 /* GameScene.sks */,
 				A52EF66E1F8CE931005636D3 /* GameScene.swift */,
@@ -72,10 +77,20 @@
 				A52EF6751F8CE931005636D3 /* Assets.xcassets */,
 				A52EF6771F8CE931005636D3 /* LaunchScreen.storyboard */,
 				A52EF67A1F8CE931005636D3 /* Info.plist */,
-				A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */,
-				A5B7718E1F8CF80D00AFA21B /* BaseTileSet.sks */,
+				A594B65F1F8E2D6100361E50 /* Ship.swift */,
+				A594B6611F8E2DC500361E50 /* SpriteComponent.swift */,
+				A594B6631F8E2F2000361E50 /* EntityManager.swift */,
 			);
 			path = PiratesBooty;
+			sourceTree = "<group>";
+		};
+		A549E37B1F8E1F4E00A40782 /* TileSets */ = {
+			isa = PBXGroup;
+			children = (
+				A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */,
+				A5A880C71F8E2258001CE5EC /* MyTileSet.sks */,
+			);
+			path = TileSets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,10 +152,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5A880C91F8E2258001CE5EC /* MyTileSet.sks in Resources */,
 				A52EF6741F8CE931005636D3 /* Main.storyboard in Resources */,
 				A52EF66B1F8CE931005636D3 /* GameScene.sks in Resources */,
 				A52EF6761F8CE931005636D3 /* Assets.xcassets in Resources */,
-				A5B7718F1F8CF80D00AFA21B /* BaseTileSet.sks in Resources */,
 				A52EF6791F8CE931005636D3 /* LaunchScreen.storyboard in Resources */,
 				A52EF6811F8CEA84005636D3 /* PirateTileSet.sks in Resources */,
 			);
@@ -154,6 +169,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A52EF66F1F8CE931005636D3 /* GameScene.swift in Sources */,
+				A594B6621F8E2DC500361E50 /* SpriteComponent.swift in Sources */,
+				A594B6641F8E2F2000361E50 /* EntityManager.swift in Sources */,
+				A594B6601F8E2D6100361E50 /* Ship.swift in Sources */,
 				A52EF6711F8CE931005636D3 /* GameViewController.swift in Sources */,
 				A52EF6691F8CE931005636D3 /* AppDelegate.swift in Sources */,
 			);
