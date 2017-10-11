@@ -11,13 +11,17 @@ import GameplayKit
 
 class GameScene: SKScene {
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    private var entityManager: EntityManager!
     
     override func didMove(to view: SKView) {
         
+        entityManager = EntityManager(scene: self)
+        
+        var ship = Ship(shipType: .defaultShip)
+        ship.position = CGPoint(x: 0, y: 0)
+        entityManager.add(ship)
+        
     }
-
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered

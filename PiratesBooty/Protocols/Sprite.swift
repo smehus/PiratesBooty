@@ -7,12 +7,29 @@
 //
 
 import SpriteKit
+import GameplayKit
 
 protocol Sprite {
+    var position: CGPoint? { get set }
     func sprite() -> SKSpriteNode?
 }
 
 extension Sprite where Self: GKEntity {
+    
+    var position: CGPoint? {
+        get {
+            return sprite()?.position
+        }
+        
+        set {
+            guard let point = newValue else {
+                assertionFailure("Setting nil position")
+                return
+            }
+            sprite()?.position = point
+        }
+    }
+    
     func sprite() -> SKSpriteNode? {
         return component(ofType: SpriteComponent.self)?.node
     }

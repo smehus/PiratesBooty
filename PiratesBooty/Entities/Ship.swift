@@ -17,7 +17,7 @@ enum ShipType {
     }
 }
 
-class Ship: GKEntity {
+class Ship: GKEntity, Sprite {
     
     init(shipType: ShipType) {
         super.init()
@@ -31,4 +31,3 @@ class Ship: GKEntity {
     }
 }
 
-extension Ship: Sprite { }

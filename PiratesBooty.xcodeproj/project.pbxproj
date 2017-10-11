@@ -19,7 +19,6 @@
 		A594B6621F8E2DC500361E50 /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6611F8E2DC500361E50 /* SpriteComponent.swift */; };
 		A594B6641F8E2F2000361E50 /* EntityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6631F8E2F2000361E50 /* EntityManager.swift */; };
 		A594B6681F8E320600361E50 /* Sprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6671F8E320600361E50 /* Sprite.swift */; };
-		A5A880C91F8E2258001CE5EC /* MyTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A5A880C71F8E2258001CE5EC /* MyTileSet.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +36,6 @@
 		A594B6611F8E2DC500361E50 /* SpriteComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
 		A594B6631F8E2F2000361E50 /* EntityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityManager.swift; sourceTree = "<group>"; };
 		A594B6671F8E320600361E50 /* Sprite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sprite.swift; sourceTree = "<group>"; };
-		A5A880C71F8E2258001CE5EC /* MyTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyTileSet.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,7 +88,6 @@
 			isa = PBXGroup;
 			children = (
 				A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */,
-				A5A880C71F8E2258001CE5EC /* MyTileSet.sks */,
 			);
 			path = TileSets;
 			sourceTree = "<group>";
@@ -195,7 +192,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A5A880C91F8E2258001CE5EC /* MyTileSet.sks in Resources */,
 				A52EF6741F8CE931005636D3 /* Main.storyboard in Resources */,
 				A52EF66B1F8CE931005636D3 /* GameScene.sks in Resources */,
 				A52EF6761F8CE931005636D3 /* Assets.xcassets in Resources */,
