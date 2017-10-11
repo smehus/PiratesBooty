@@ -18,6 +18,7 @@
 		A594B6601F8E2D6100361E50 /* Ship.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B65F1F8E2D6100361E50 /* Ship.swift */; };
 		A594B6621F8E2DC500361E50 /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6611F8E2DC500361E50 /* SpriteComponent.swift */; };
 		A594B6641F8E2F2000361E50 /* EntityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6631F8E2F2000361E50 /* EntityManager.swift */; };
+		A594B6681F8E320600361E50 /* Sprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6671F8E320600361E50 /* Sprite.swift */; };
 		A5A880C91F8E2258001CE5EC /* MyTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A5A880C71F8E2258001CE5EC /* MyTileSet.sks */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		A594B65F1F8E2D6100361E50 /* Ship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ship.swift; sourceTree = "<group>"; };
 		A594B6611F8E2DC500361E50 /* SpriteComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
 		A594B6631F8E2F2000361E50 /* EntityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityManager.swift; sourceTree = "<group>"; };
+		A594B6671F8E320600361E50 /* Sprite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sprite.swift; sourceTree = "<group>"; };
 		A5A880C71F8E2258001CE5EC /* MyTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyTileSet.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,18 +70,18 @@
 		A52EF6671F8CE931005636D3 /* PiratesBooty */ = {
 			isa = PBXGroup;
 			children = (
+				A594B66C1F8E327C00361E50 /* Utilities */,
+				A594B66B1F8E326000361E50 /* Scenes */,
+				A594B66A1F8E325300361E50 /* Components */,
+				A594B6691F8E324700361E50 /* Entities */,
+				A594B6661F8E31F700361E50 /* Protocols */,
 				A549E37B1F8E1F4E00A40782 /* TileSets */,
 				A52EF6681F8CE931005636D3 /* AppDelegate.swift */,
-				A52EF66A1F8CE931005636D3 /* GameScene.sks */,
-				A52EF66E1F8CE931005636D3 /* GameScene.swift */,
 				A52EF6701F8CE931005636D3 /* GameViewController.swift */,
 				A52EF6721F8CE931005636D3 /* Main.storyboard */,
 				A52EF6751F8CE931005636D3 /* Assets.xcassets */,
 				A52EF6771F8CE931005636D3 /* LaunchScreen.storyboard */,
 				A52EF67A1F8CE931005636D3 /* Info.plist */,
-				A594B65F1F8E2D6100361E50 /* Ship.swift */,
-				A594B6611F8E2DC500361E50 /* SpriteComponent.swift */,
-				A594B6631F8E2F2000361E50 /* EntityManager.swift */,
 			);
 			path = PiratesBooty;
 			sourceTree = "<group>";
@@ -91,6 +93,47 @@
 				A5A880C71F8E2258001CE5EC /* MyTileSet.sks */,
 			);
 			path = TileSets;
+			sourceTree = "<group>";
+		};
+		A594B6661F8E31F700361E50 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				A594B6671F8E320600361E50 /* Sprite.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		A594B6691F8E324700361E50 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				A594B65F1F8E2D6100361E50 /* Ship.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		A594B66A1F8E325300361E50 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A594B6611F8E2DC500361E50 /* SpriteComponent.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A594B66B1F8E326000361E50 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				A52EF66A1F8CE931005636D3 /* GameScene.sks */,
+				A52EF66E1F8CE931005636D3 /* GameScene.swift */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		A594B66C1F8E327C00361E50 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A594B6631F8E2F2000361E50 /* EntityManager.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -172,6 +215,7 @@
 				A594B6621F8E2DC500361E50 /* SpriteComponent.swift in Sources */,
 				A594B6641F8E2F2000361E50 /* EntityManager.swift in Sources */,
 				A594B6601F8E2D6100361E50 /* Ship.swift in Sources */,
+				A594B6681F8E320600361E50 /* Sprite.swift in Sources */,
 				A52EF6711F8CE931005636D3 /* GameViewController.swift in Sources */,
 				A52EF6691F8CE931005636D3 /* AppDelegate.swift in Sources */,
 			);
