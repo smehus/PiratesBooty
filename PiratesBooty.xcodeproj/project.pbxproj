@@ -14,7 +14,8 @@
 		A52EF6741F8CE931005636D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6721F8CE931005636D3 /* Main.storyboard */; };
 		A52EF6761F8CE931005636D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6751F8CE931005636D3 /* Assets.xcassets */; };
 		A52EF6791F8CE931005636D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6771F8CE931005636D3 /* LaunchScreen.storyboard */; };
-		A52EF6811F8CEA84005636D3 /* TileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6801F8CEA84005636D3 /* TileSet.sks */; };
+		A52EF6811F8CEA84005636D3 /* PirateTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */; };
+		A5B7718F1F8CF80D00AFA21B /* BaseTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A5B7718E1F8CF80D00AFA21B /* BaseTileSet.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +28,9 @@
 		A52EF6751F8CE931005636D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A52EF6781F8CE931005636D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A52EF67A1F8CE931005636D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A52EF6801F8CEA84005636D3 /* TileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TileSet.sks; sourceTree = "<group>"; };
+		A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PirateTileSet.sks; sourceTree = "<group>"; };
+		A5B7718E1F8CF80D00AFA21B /* BaseTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BaseTileSet.sks; sourceTree = "<group>"; };
+		A5B771901F8E1E6E00AFA21B /* TileSets.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = TileSets.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +63,7 @@
 		A52EF6671F8CE931005636D3 /* PiratesBooty */ = {
 			isa = PBXGroup;
 			children = (
+				A5B771901F8E1E6E00AFA21B /* TileSets.sks */,
 				A52EF6681F8CE931005636D3 /* AppDelegate.swift */,
 				A52EF66A1F8CE931005636D3 /* GameScene.sks */,
 				A52EF66E1F8CE931005636D3 /* GameScene.swift */,
@@ -68,7 +72,8 @@
 				A52EF6751F8CE931005636D3 /* Assets.xcassets */,
 				A52EF6771F8CE931005636D3 /* LaunchScreen.storyboard */,
 				A52EF67A1F8CE931005636D3 /* Info.plist */,
-				A52EF6801F8CEA84005636D3 /* TileSet.sks */,
+				A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */,
+				A5B7718E1F8CF80D00AFA21B /* BaseTileSet.sks */,
 			);
 			path = PiratesBooty;
 			sourceTree = "<group>";
@@ -135,8 +140,9 @@
 				A52EF6741F8CE931005636D3 /* Main.storyboard in Resources */,
 				A52EF66B1F8CE931005636D3 /* GameScene.sks in Resources */,
 				A52EF6761F8CE931005636D3 /* Assets.xcassets in Resources */,
+				A5B7718F1F8CF80D00AFA21B /* BaseTileSet.sks in Resources */,
 				A52EF6791F8CE931005636D3 /* LaunchScreen.storyboard in Resources */,
-				A52EF6811F8CEA84005636D3 /* TileSet.sks in Resources */,
+				A52EF6811F8CEA84005636D3 /* PirateTileSet.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
