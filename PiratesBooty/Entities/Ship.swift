@@ -24,6 +24,7 @@ class Ship: GKEntity, Sprite {
         
         let spriteComponent = SpriteComponent(texture: shipType.texture)
         addComponent(spriteComponent)
+        addComponent(BootyComponent())
     }
     
     required init?(coder aDecoder: NSCoder) {

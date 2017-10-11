@@ -15,11 +15,18 @@ class EntityManager {
     // MARK: - Public
     
     var entities = Set<GKEntity>()
+    var toRemove = Set<GKEntity>()
     
     
     // MARK: - Private
     
     private let scene: SKScene
+    
+    lazy var componentSystems: [GKComponentSystem] = {
+        // Manages all instances of hte BootyComponent
+        let bootySystem = GKComponentSystem(componentClass: BootyComponent.self)
+        return [bootySystem]
+    }()
     
     init(scene: SKScene) {
         self.scene = scene
@@ -31,6 +38,12 @@ class EntityManager {
         if let sprite = entity.component(ofType: SpriteComponent.self)?.node {
             scene.addChild(sprite)
         }
+        
+        for system in componentSystems {
+            // Looks through all of the components in the entity,
+            // and adds any that match the class for the current iteration of the systems array
+            system.addComponent(foundIn: entity)
+        }
     }
     
     func remove(_ entity: GKEntity) {
@@ -39,5 +52,20 @@ class EntityManager {
         }
         
         entities.remove(entity)
+        toRemove.insert(entity)
+    }
+    
+    func update(_ deltaTime: CFTimeInterval) {
+        componentSystems.forEach { (system) in
+            system.update(deltaTime: deltaTime)
+        }
+        
+        toRemove.forEach { (entity) in
+            componentSystems.forEach({ (system) in
+                system.removeComponent(foundIn: entity)
+            })
+        }
+        
+        toRemove.removeAll()
     }
 }
