@@ -9,11 +9,15 @@
 import SpriteKit
 import GameplayKit
 
-enum ShipType {
+enum ShipType: Directional {
     case defaultShip
     
     var texture: SKTexture {
         return SKTexture(image: #imageLiteral(resourceName: "ship (1)"))
+    }
+    
+    var directionOffset: CGFloat {
+        return CGFloat(270).degreesToRadians()
     }
 }
 
@@ -33,7 +37,7 @@ class Ship: GKEntity, Sprite {
         
         let spriteComponent = SpriteComponent(texture: shipType.texture, physicsConfiguration: ShipPhysics())
         addComponent(spriteComponent)
-        addComponent(DirectionalComponent())
+        addComponent(DirectionalComponent(directional: shipType))
     }
     
     required init?(coder aDecoder: NSCoder) {

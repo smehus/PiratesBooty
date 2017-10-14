@@ -27,6 +27,7 @@ class GameScene: SKScene {
         
         playerShip = Ship(shipType: .defaultShip)
         playerShip.position = CGPoint(x: 0, y: 0)
+        playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)
         
         if motionManager.isDeviceMotionAvailable {
@@ -40,9 +41,10 @@ class GameScene: SKScene {
                 OperationQueue.main.addOperation {
                     let modifiedPitch = CGFloat(attitude.pitch * abs(30.0))
                     let modifiedRoll = CGFloat(attitude.roll * abs(30.0))
-                    print("\(modifiedPitch), \(modifiedRoll)")
-                    let action = SKAction.moveBy(x: modifiedPitch, y: modifiedRoll, duration: 0.5)
-                    sprite.run(action)
+                    let moveVelocity = CGVector(dx: modifiedPitch, dy: modifiedRoll)
+                    if let body = sprite.physicsBody {
+                        body.velocity = body.velocity + moveVelocity
+                    }
                 }
             })
         }

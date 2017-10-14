@@ -9,7 +9,22 @@
 import SpriteKit
 import GameplayKit
 
+protocol Directional {
+    var directionOffset: CGFloat { get }
+}
+
 class DirectionalComponent: GKAgent2D, GKAgentDelegate {
+    
+    private let offset: CGFloat
+    
+    init(directional: Directional) {
+        self.offset = directional.directionOffset
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
@@ -22,9 +37,9 @@ class DirectionalComponent: GKAgent2D, GKAgentDelegate {
             return
         }
        
-        let shortestAngle = shortestAngleBetween(sprite.node.zRotation, angle2: velocity.angle)
+        let shortestAngle = shortestAngleBetween(sprite.node.zRotation, angle2: velocity.angle) + CGFloat(90).degreesToRadians()
         let rotationRadiansPerSec = 4.0 * π
-        let amountToRotate = min(rotationRadiansPerSec * CGFloat(seconds), abs(shortestAngle))
+        let amountToRotate = (min(rotationRadiansPerSec * CGFloat(seconds), abs(shortestAngle)))
         sprite.node.zRotation += shortestAngle.sign() * amountToRotate
     }
 }
