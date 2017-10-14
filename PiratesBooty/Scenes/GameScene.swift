@@ -22,7 +22,18 @@ class GameScene: SKScene {
     private let attitudeMultiplier: Double = 30.0
     
     override func didMove(to view: SKView) {
-        
+        setupRequiredNodes()
+        setupCamera()
+        setupMotion()
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+        let delta = currentTime - lastUpdatedTime
+        lastUpdatedTime = currentTime
+        entityManager.update(delta)
+    }
+    
+    private func setupRequiredNodes() {
         entityManager = EntityManager(scene: self)
         
         playerShip = Ship(shipType: .defaultShip)
@@ -30,6 +41,9 @@ class GameScene: SKScene {
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)
         
+    }
+    
+    private func setupMotion() {
         if motionManager.isDeviceMotionAvailable {
             motionManager.deviceMotionUpdateInterval = 0.1
             let reference = motionManager.attitudeReferenceFrame
@@ -50,10 +64,29 @@ class GameScene: SKScene {
         }
     }
     
-    override func update(_ currentTime: TimeInterval) {
-        let delta = currentTime - lastUpdatedTime
-        lastUpdatedTime = currentTime
+    private func setupCamera() {
+        let cam = SKCameraNode()
+        addChild(cam)
+        camera = cam
         
-        entityManager.update(delta)
+        ///
+        /// Follow Shipe
+        ///
+        
+        guard let ship = playerShip.sprite() else { return }
+        let followConstraint = SKConstraint.distance(SKRange(constantValue: 0), to: ship)
+        
+        
+        ///
+        /// Constraint to edges
+        ///
+        
+        
+        let xRange = SKRange(lowerLimit: -size.halfWidth/2, upperLimit: size.halfWidth/2)
+        let yRange = SKRange(lowerLimit: -size.halfHeight/2, upperLimit: size.halfHeight/2)
+        let edgeConstraint = SKConstraint.positionX(xRange, y: yRange)
+        edgeConstraint.referenceNode = self
+        
+        camera?.constraints = [followConstraint, edgeConstraint]
     }
 }
