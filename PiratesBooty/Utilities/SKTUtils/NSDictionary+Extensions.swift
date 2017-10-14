@@ -10,17 +10,5 @@ import Foundation
 
 extension NSMutableDictionary {
     
-    subscript<T: StringInitable>(accessor: UserDataAccessor) -> T? {
-        get {
-            guard let value = self[accessor.key] as? String else {
-                return nil
-            }
-            
-            return  T.init(string: value)
-        }
-        
-        set {
-            self[accessor.key] = newValue
-        }
-    }
+
 }

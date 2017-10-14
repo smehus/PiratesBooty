@@ -15,11 +15,11 @@
 		A52EF6761F8CE931005636D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6751F8CE931005636D3 /* Assets.xcassets */; };
 		A52EF6791F8CE931005636D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6771F8CE931005636D3 /* LaunchScreen.storyboard */; };
 		A52EF6811F8CEA84005636D3 /* PirateTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */; };
+		A58676411F925524001F37C1 /* DirectionalComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58676401F925524001F37C1 /* DirectionalComponent.swift */; };
 		A594B6601F8E2D6100361E50 /* Ship.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B65F1F8E2D6100361E50 /* Ship.swift */; };
 		A594B6621F8E2DC500361E50 /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6611F8E2DC500361E50 /* SpriteComponent.swift */; };
 		A594B6641F8E2F2000361E50 /* EntityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6631F8E2F2000361E50 /* EntityManager.swift */; };
 		A594B6681F8E320600361E50 /* Sprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6671F8E320600361E50 /* Sprite.swift */; };
-		A594B66E1F8E370800361E50 /* BootyComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B66D1F8E370800361E50 /* BootyComponent.swift */; };
 		A594B6841F8E3D5600361E50 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6701F8E3D5500361E50 /* Array+Extensions.swift */; };
 		A594B6851F8E3D5600361E50 /* Assert+SKNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6711F8E3D5500361E50 /* Assert+SKNode.swift */; };
 		A594B6861F8E3D5600361E50 /* Bool+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6721F8E3D5500361E50 /* Bool+Extensions.swift */; };
@@ -40,7 +40,6 @@
 		A594B6951F8E3D5600361E50 /* SKTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6811F8E3D5500361E50 /* SKTexture+Extensions.swift */; };
 		A594B6961F8E3D5600361E50 /* SKTTimingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6821F8E3D5500361E50 /* SKTTimingFunctions.swift */; };
 		A594B6971F8E3D5600361E50 /* Vector3.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6831F8E3D5500361E50 /* Vector3.swift */; };
-		A594B69A1F8E41E700361E50 /* MoveBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6991F8E41E700361E50 /* MoveBehavior.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,11 +53,11 @@
 		A52EF6781F8CE931005636D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A52EF67A1F8CE931005636D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PirateTileSet.sks; sourceTree = "<group>"; };
+		A58676401F925524001F37C1 /* DirectionalComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalComponent.swift; sourceTree = "<group>"; };
 		A594B65F1F8E2D6100361E50 /* Ship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ship.swift; sourceTree = "<group>"; };
 		A594B6611F8E2DC500361E50 /* SpriteComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
 		A594B6631F8E2F2000361E50 /* EntityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityManager.swift; sourceTree = "<group>"; };
 		A594B6671F8E320600361E50 /* Sprite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sprite.swift; sourceTree = "<group>"; };
-		A594B66D1F8E370800361E50 /* BootyComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootyComponent.swift; sourceTree = "<group>"; };
 		A594B6701F8E3D5500361E50 /* Array+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		A594B6711F8E3D5500361E50 /* Assert+SKNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Assert+SKNode.swift"; sourceTree = "<group>"; };
 		A594B6721F8E3D5500361E50 /* Bool+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bool+Extensions.swift"; sourceTree = "<group>"; };
@@ -79,7 +78,6 @@
 		A594B6811F8E3D5500361E50 /* SKTexture+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SKTexture+Extensions.swift"; sourceTree = "<group>"; };
 		A594B6821F8E3D5500361E50 /* SKTTimingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTTimingFunctions.swift; sourceTree = "<group>"; };
 		A594B6831F8E3D5500361E50 /* Vector3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vector3.swift; sourceTree = "<group>"; };
-		A594B6991F8E41E700361E50 /* MoveBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveBehavior.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,7 +155,7 @@
 			children = (
 				A594B6981F8E41D900361E50 /* Behaviors */,
 				A594B6611F8E2DC500361E50 /* SpriteComponent.swift */,
-				A594B66D1F8E370800361E50 /* BootyComponent.swift */,
+				A58676401F925524001F37C1 /* DirectionalComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -210,7 +208,6 @@
 		A594B6981F8E41D900361E50 /* Behaviors */ = {
 			isa = PBXGroup;
 			children = (
-				A594B6991F8E41E700361E50 /* MoveBehavior.swift */,
 			);
 			path = Behaviors;
 			sourceTree = "<group>";
@@ -291,7 +288,6 @@
 			files = (
 				A52EF66F1F8CE931005636D3 /* GameScene.swift in Sources */,
 				A594B6961F8E3D5600361E50 /* SKTTimingFunctions.swift in Sources */,
-				A594B69A1F8E41E700361E50 /* MoveBehavior.swift in Sources */,
 				A594B6851F8E3D5600361E50 /* Assert+SKNode.swift in Sources */,
 				A594B6891F8E3D5600361E50 /* CGSize+Extensions.swift in Sources */,
 				A594B68E1F8E3D5600361E50 /* SKAction+SpecialEffects.swift in Sources */,
@@ -312,11 +308,11 @@
 				A594B6901F8E3D5600361E50 /* SKNode+Extensions.swift in Sources */,
 				A52EF6711F8CE931005636D3 /* GameViewController.swift in Sources */,
 				A594B68F1F8E3D5600361E50 /* SKColor+Extensions.swift in Sources */,
+				A58676411F925524001F37C1 /* DirectionalComponent.swift in Sources */,
 				A52EF6691F8CE931005636D3 /* AppDelegate.swift in Sources */,
 				A594B6861F8E3D5600361E50 /* Bool+Extensions.swift in Sources */,
 				A594B6931F8E3D5600361E50 /* SKTAudio.swift in Sources */,
 				A594B6871F8E3D5600361E50 /* CGFloat+Extensions.swift in Sources */,
-				A594B66E1F8E370800361E50 /* BootyComponent.swift in Sources */,
 				A594B6951F8E3D5600361E50 /* SKTexture+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

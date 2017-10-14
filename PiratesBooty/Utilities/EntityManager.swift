@@ -23,8 +23,8 @@ class EntityManager {
     private let scene: SKScene
     
     lazy var componentSystems: [GKComponentSystem] = {
-        // Manages all instances of hte BootyComponent
-        let bootySystem = GKComponentSystem(componentClass: BootyComponent.self)
+        // Manages all instances of the DirectionalComponent
+        let bootySystem = GKComponentSystem(componentClass: DirectionalComponent.self)
         return [bootySystem]
     }()
     

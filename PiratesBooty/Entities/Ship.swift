@@ -17,14 +17,23 @@ enum ShipType {
     }
 }
 
+struct ShipPhysics: PhysicsConfiguration {
+    var categoryBitMask: UInt32 { return 0 }
+    var contactTestBitMask: UInt32 { return 0 }
+    var collisionBitMask: UInt32 { return 0 }
+    var isDynamic: Bool = true
+    var affectedByGravity: Bool = false
+}
+
+
 class Ship: GKEntity, Sprite {
     
     init(shipType: ShipType) {
         super.init()
         
-        let spriteComponent = SpriteComponent(texture: shipType.texture)
+        let spriteComponent = SpriteComponent(texture: shipType.texture, physicsConfiguration: ShipPhysics())
         addComponent(spriteComponent)
-        addComponent(BootyComponent())
+        addComponent(DirectionalComponent())
     }
     
     required init?(coder aDecoder: NSCoder) {

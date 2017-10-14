@@ -9,12 +9,24 @@
 import SpriteKit
 import GameplayKit
 
+protocol PhysicsConfiguration {
+    var categoryBitMask: UInt32 { get }
+    var contactTestBitMask: UInt32 { get }
+    var collisionBitMask: UInt32 { get }
+    var isDynamic: Bool { get }
+    var affectedByGravity: Bool { get }
+}
+
 class SpriteComponent: GKComponent {
     
     let node: SKSpriteNode
     
-    init(texture: SKTexture) {
+    init(texture: SKTexture, physicsConfiguration: PhysicsConfiguration?) {
         node = SKSpriteNode(texture: texture, color: .white, size: texture.size())
+        if let config = physicsConfiguration {
+            node.set(physicsConfiguration: config)
+        }
+        
         super.init()
     }
     

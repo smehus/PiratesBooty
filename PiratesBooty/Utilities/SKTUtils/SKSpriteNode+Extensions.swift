@@ -35,19 +35,20 @@ extension SKSpriteNode {
         }
     }
     
-    func configure(with config: SpriteConfiguration) {
-        guard let body = physicsBody else {
-            conditionFailure(with: "Failed to unwrap physics body in configure method")
+    func set(physicsConfiguration config: PhysicsConfiguration) {
+        guard let text = texture else {
+            assertionFailure("Sprite missing texture")
             return
         }
         
-        body.categoryBitMask = config.categoryBitMask
-        body.contactTestBitMask = config.contactTestBitMask
-        body.collisionBitMask = config.collisionBitMask
-        body.isDynamic = config.isDynamic
-        body.affectedByGravity = config.affectedByGravity
-        body.allowsRotation = config.allowsRotation
-        body.fieldBitMask = config.fieldBitMask
+        physicsBody = SKPhysicsBody(texture: text, size: text.size())
+        physicsBody?.categoryBitMask = config.categoryBitMask
+        physicsBody?.contactTestBitMask = config.contactTestBitMask
+        physicsBody?.isDynamic = config.isDynamic
+        physicsBody?.affectedByGravity = config.affectedByGravity
+        physicsBody?.collisionBitMask = config.collisionBitMask
     }
 }
+
+
 
