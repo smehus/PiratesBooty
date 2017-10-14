@@ -17,7 +17,7 @@ enum ShipType: Directional {
     }
     
     var directionOffset: CGFloat {
-        return CGFloat(270).degreesToRadians()
+        return CGFloat(90).degreesToRadians()
     }
 }
 

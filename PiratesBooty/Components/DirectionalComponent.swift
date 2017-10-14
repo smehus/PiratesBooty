@@ -37,7 +37,7 @@ class DirectionalComponent: GKAgent2D, GKAgentDelegate {
             return
         }
        
-        let shortestAngle = shortestAngleBetween(sprite.node.zRotation, angle2: velocity.angle) + CGFloat(90).degreesToRadians()
+        let shortestAngle = shortestAngleBetween(sprite.node.zRotation, angle2: velocity.angle) + offset
         let rotationRadiansPerSec = 4.0 * π
         let amountToRotate = (min(rotationRadiansPerSec * CGFloat(seconds), abs(shortestAngle)))
         sprite.node.zRotation += shortestAngle.sign() * amountToRotate
