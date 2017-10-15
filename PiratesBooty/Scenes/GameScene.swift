@@ -10,6 +10,17 @@ import SpriteKit
 import GameplayKit
 import CoreMotion
 
+enum Nodes: String, CustomStringConvertible {
+    case waterGroup = "water"
+    case islandGroup = "island"
+    case tileSet = "itleSet"
+    case tileMap = "tileMap"
+    
+    var description: String {
+        return rawValue
+    }
+}
+
 class GameScene: SKScene {
     
     private var entityManager: EntityManager!
@@ -39,9 +50,10 @@ class GameScene: SKScene {
     
     private func setupRequiredNodes() {
         
-        tileMap = childNode(withName: "tileMap") as! SKTileMapNode
-        tileSet = SKTileSet(named: "PirateTileSet")
-        
+        tileMap = childNode(withName: Nodes.tileMap)
+        tileSet = SKTileSet(named: Nodes.tileSet.rawValue)
+        waterGroup = tileSet.groupWith(name: Nodes.waterGroup)
+        islandGroup = tileSet.groupWith(name: Nodes.islandGroup)
         
         
         

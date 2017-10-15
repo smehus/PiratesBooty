@@ -9,6 +9,16 @@
 import SpriteKit
 
 extension SKScene {
+    
+    func childNode<T>(withName name: CustomStringConvertible) -> T? {
+        guard let node = childNode(withName: name.description) as? T else {
+            assertionFailure("Failed to resolve node with name \(name.description)")
+            return nil
+        }
+        
+        return node
+    }
+    
     func zeroAnchoredCenter() -> CGPoint {
         let width = size.width / 2
         let height = size.height / 2

@@ -10,8 +10,8 @@ import SpriteKit
 
 extension SKTileSet {
     
-    func groupWith(name: String) -> SKTileGroup? {
-        guard let group = tileGroups.filter ({ $0.name == name }).first else {
+    func groupWith(name: CustomStringConvertible) -> SKTileGroup? {
+        guard let group = tileGroups.filter ({ $0.name == name.description }).first else {
             assertionFailure("No Tile Set Group With Name \(name)")
             return nil
         }
