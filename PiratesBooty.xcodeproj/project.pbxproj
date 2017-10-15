@@ -40,6 +40,7 @@
 		A594B6951F8E3D5600361E50 /* SKTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6811F8E3D5500361E50 /* SKTexture+Extensions.swift */; };
 		A594B6961F8E3D5600361E50 /* SKTTimingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6821F8E3D5500361E50 /* SKTTimingFunctions.swift */; };
 		A594B6971F8E3D5600361E50 /* Vector3.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6831F8E3D5500361E50 /* Vector3.swift */; };
+		A59B93D51F93C1A900F37A49 /* SKTileSet+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59B93D41F93C1A900F37A49 /* SKTileSet+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,7 @@
 		A594B6811F8E3D5500361E50 /* SKTexture+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SKTexture+Extensions.swift"; sourceTree = "<group>"; };
 		A594B6821F8E3D5500361E50 /* SKTTimingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTTimingFunctions.swift; sourceTree = "<group>"; };
 		A594B6831F8E3D5500361E50 /* Vector3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vector3.swift; sourceTree = "<group>"; };
+		A59B93D41F93C1A900F37A49 /* SKTileSet+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKTileSet+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +203,7 @@
 				A594B6811F8E3D5500361E50 /* SKTexture+Extensions.swift */,
 				A594B6821F8E3D5500361E50 /* SKTTimingFunctions.swift */,
 				A594B6831F8E3D5500361E50 /* Vector3.swift */,
+				A59B93D41F93C1A900F37A49 /* SKTileSet+Extensions.swift */,
 			);
 			path = SKTUtils;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 				A594B6621F8E2DC500361E50 /* SpriteComponent.swift in Sources */,
 				A594B68B1F8E3D5600361E50 /* Int+Extensions.swift in Sources */,
 				A594B6921F8E3D5600361E50 /* SKSpriteNode+Extensions.swift in Sources */,
+				A59B93D51F93C1A900F37A49 /* SKTileSet+Extensions.swift in Sources */,
 				A594B68A1F8E3D5600361E50 /* CGVector+Extensions.swift in Sources */,
 				A594B6881F8E3D5600361E50 /* CGPoint+Extensions.swift in Sources */,
 				A594B6641F8E2F2000361E50 /* EntityManager.swift in Sources */,

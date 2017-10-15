@@ -16,6 +16,10 @@ class GameScene: SKScene {
     private var lastUpdatedTime: TimeInterval = 0
     private var motionManager = CMMotionManager()
     private let motionQueue = OperationQueue()
+    private var tileMap: SKTileMapNode!
+    private var tileSet: SKTileSet!
+    private var waterGroup: SKTileGroup!
+    private var islandGroup: SKTileGroup!
     
     private var playerShip: Ship!
     
@@ -34,6 +38,13 @@ class GameScene: SKScene {
     }
     
     private func setupRequiredNodes() {
+        
+        tileMap = childNode(withName: "tileMap") as! SKTileMapNode
+        tileSet = SKTileSet(named: "PirateTileSet")
+        
+        
+        
+        
         entityManager = EntityManager(scene: self)
         
         playerShip = Ship(shipType: .defaultShip)
@@ -66,6 +77,8 @@ class GameScene: SKScene {
     
     private func setupCamera() {
         let cam = SKCameraNode()
+        cam.xScale = 2.0
+        cam.yScale = 2.0
         addChild(cam)
         camera = cam
         
@@ -81,12 +94,12 @@ class GameScene: SKScene {
         /// Constraint to edges
         ///
         
-        
+        /// This is weird cause we're in anchor point 0.5
         let xRange = SKRange(lowerLimit: -size.halfWidth/2, upperLimit: size.halfWidth/2)
         let yRange = SKRange(lowerLimit: -size.halfHeight/2, upperLimit: size.halfHeight/2)
         let edgeConstraint = SKConstraint.positionX(xRange, y: yRange)
         edgeConstraint.referenceNode = self
         
-        camera?.constraints = [followConstraint, edgeConstraint]
+        camera?.constraints = [followConstraint/*, edgeConstraint*/]
     }
 }
