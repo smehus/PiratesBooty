@@ -10,16 +10,9 @@ import SpriteKit
 import GameplayKit
 import CoreMotion
 
-enum Nodes: String, CustomStringConvertible {
-    case waterGroup = "water"
-    case islandGroup = "island"
-    case tileSet = "itleSet"
-    case tileMap = "tileMap"
-    
-    var description: String {
-        return rawValue
-    }
-}
+/// NOTES
+/// use GKGraphNode2D for enemy path finding around obstacles (islands)
+
 
 class GameScene: SKScene {
     
@@ -27,10 +20,6 @@ class GameScene: SKScene {
     private var lastUpdatedTime: TimeInterval = 0
     private var motionManager = CMMotionManager()
     private let motionQueue = OperationQueue()
-    private var tileMap: SKTileMapNode!
-    private var tileSet: SKTileSet!
-    private var waterGroup: SKTileGroup!
-    private var islandGroup: SKTileGroup!
     
     private var playerShip: Ship!
     
@@ -50,20 +39,13 @@ class GameScene: SKScene {
     
     private func setupRequiredNodes() {
         
-        tileMap = childNode(withName: Nodes.tileMap)
-        tileSet = SKTileSet(named: Nodes.tileSet.rawValue)
-        waterGroup = tileSet.groupWith(name: Nodes.waterGroup)
-        islandGroup = tileSet.groupWith(name: Nodes.islandGroup)
-        
-        
-        
         entityManager = EntityManager(scene: self)
         
         playerShip = Ship(shipType: .defaultShip)
         playerShip.position = CGPoint(x: 0, y: 0)
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)
-        
+        entityManager.add(World(scene: self))
     }
     
     private func setupMotion() {
