@@ -9,6 +9,14 @@
 import GameplayKit
 import SpriteKit
 
+private enum MapState: NSString, CustomStringConvertible {
+    case incrementBottomRow = "incrementBottomRow"
+    
+    var description: String {
+        return rawValue as String
+    }
+}
+
 class InfiniteMapComponent: GKAgent2D {
     
     private let tileMap: SKTileMapNode!
@@ -24,14 +32,25 @@ class InfiniteMapComponent: GKAgent2D {
     }
     
     private func setupRules() {
+        
+        ruleSystem.state.addEntries(from: ["scene": scene, "tileMap": tileMap])
+
         let belowMinTileMapYRule = GKRule(blockPredicate: { (system) -> Bool in
-            return (self.scene.camera!.position.y - self.scene.size.halfHeight) < -self.tileMap.mapSize.halfHeight
+            guard
+                let scene = system.state["scene"] as? GameScene,
+                let tileMap = system.state["tileMap"] as? SKTileMapNode
+            else {
+                return false
+            }
+            
+            return (scene.camera!.position.y - scene.size.halfHeight) < -tileMap.mapSize.halfHeight
         }) { (system) in
-            // Add new stuff
-            print("BELOW STUFF")
+            system.assertFact(MapState.incrementBottomRow.rawValue)
         }
         
+
         ruleSystem.add(belowMinTileMapYRule)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -40,8 +59,15 @@ class InfiniteMapComponent: GKAgent2D {
     
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
-        
- 
+        ruleSystem.reset()
         ruleSystem.evaluate()
+        
+        if ruleSystem.grade(forFact: MapState.incrementBottomRow.rawValue) > 0 {
+            
+        }
+    }
+    
+    private func addBottomRow() {
+        
     }
 }
