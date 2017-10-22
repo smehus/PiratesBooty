@@ -25,7 +25,8 @@ class EntityManager {
     lazy var componentSystems: [GKComponentSystem] = {
         // Manages all instances of the DirectionalComponent
         let bootySystem = GKComponentSystem(componentClass: DirectionalComponent.self)
-        return [bootySystem]
+        let infiniteMapSystem = GKComponentSystem(componentClass: InfiniteMapComponent.self)
+        return [bootySystem, infiniteMapSystem]
     }()
     
     init(scene: SKScene) {

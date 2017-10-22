@@ -11,7 +11,7 @@ import SpriteKit
 
 enum Nodes: String, CustomStringConvertible {
     case waterGroup = "water"
-    case islandGroup = "island"
+    case islandGroup = "land"
     case tileSet = "tileSet"
     case tileMap = "tileMap"
     
@@ -26,12 +26,13 @@ class World: GKEntity {
     private let waterGroup: SKTileGroup!
     private let islandGroup: SKTileGroup!
     
-    init(scene: SKScene) {
+    init(scene: GameScene) {
         tileMap = scene.childNode(withName: Nodes.tileMap)
         waterGroup = tileMap.tileSet.groupWith(name: Nodes.waterGroup)
         islandGroup = tileMap.tileSet.groupWith(name: Nodes.islandGroup)
-        
         super.init()
+        
+        addComponent(InfiniteMapComponent(tileMap: tileMap, scene: scene))
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -21,13 +21,14 @@ class GameScene: SKScene {
     private var motionManager = CMMotionManager()
     private let motionQueue = OperationQueue()
     
-    private var playerShip: Ship!
+    var playerShip: Ship!
     
     private let attitudeMultiplier: Double = 30.0
     
     override func didMove(to view: SKView) {
         setupRequiredNodes()
         setupCamera()
+        setupNodes()
         setupMotion()
     }
     
@@ -45,6 +46,9 @@ class GameScene: SKScene {
         playerShip.position = CGPoint(x: 0, y: 0)
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)
+    }
+    
+    private func setupNodes() {
         entityManager.add(World(scene: self))
     }
     
@@ -54,8 +58,7 @@ class GameScene: SKScene {
             let reference = motionManager.attitudeReferenceFrame
             motionManager.startDeviceMotionUpdates(using: reference, to: motionQueue, withHandler: { (motion, error) in
                 guard let attitude = motion?.attitude else { return }
-                print("ATTITUDE \(attitude)")
-                
+        
                 guard let sprite = self.playerShip.sprite() else { return }
                 OperationQueue.main.addOperation {
                     let modifiedPitch = CGFloat(attitude.pitch * abs(30.0))
