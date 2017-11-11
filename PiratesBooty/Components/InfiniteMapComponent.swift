@@ -43,29 +43,29 @@ class InfiniteMapComponent: GKAgent2D {
         setupFirstMap()
         setupRules()
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func update(deltaTime seconds: TimeInterval) {
+        super.update(deltaTime: seconds)
+        ruleSystem.reset()
+        ruleSystem.evaluate()
+        
+        for fact in ruleSystem.facts {
+            guard let state = MapState(rawValue: fact as! NSString) else { continue }
+            switch state {
+            case .incrementBottomRow:
+                addBottomRow()
+            }
+        }
+    }
 
     private func setupFirstMap() {
-        guard let tileSet = SKTileSet(named: MapValues.tileSetName) else {
-            assertionFailure("Failed to resolve tile set")
-            return
-        }
-    
-        let noise = GKNoise(source)
-        let map = GKNoiseMap(noise)
-        
-        let generatedMaps = SKTileMapNode
-            .tileMapNodes(tileSet: tileSet,
-                          columns: MapValues.numberOfColumns,
-                          rows: MapValues.numberOfRows,
-                          tileSize: MapValues.tileSize,
-                          from: map,
-                          tileTypeNoiseMapThresholds: MapValues.threshholds)
-        
-        
-        let layeredMap = LayeredMap(maps: generatedMaps)
-        scene.addChild(layeredMap)
-        
-        currentMap = layeredMap
+        let firstMap = generateMap()
+        scene.addChild(firstMap)
+        currentMap = firstMap
     }
     
     private func setupRules() {
@@ -85,31 +85,30 @@ class InfiniteMapComponent: GKAgent2D {
             system.assertFact(MapState.incrementBottomRow.rawValue)
         }
         
-        
-
         ruleSystem.add(belowMinTileMapYRule)
-        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func update(deltaTime seconds: TimeInterval) {
-        super.update(deltaTime: seconds)
-        ruleSystem.reset()
-        ruleSystem.evaluate()
-        
-        for fact in ruleSystem.facts {
-            guard let state = MapState(rawValue: fact as! NSString) else { continue }
-            switch state {
-            case .incrementBottomRow:
-                addBottomRow()
-            }
-        }
     }
     
     private func addBottomRow() {
         
+    }
+}
+
+extension InfiniteMapComponent {
+    private func generateMap() -> LayeredMap {
+        
+        let tileSet = SKTileSet(named: MapValues.tileSetName)
+        let noise = GKNoise(source)
+        let map = GKNoiseMap(noise)
+        
+        let generatedMaps = SKTileMapNode
+            .tileMapNodes(tileSet: tileSet!,
+                          columns: MapValues.numberOfColumns,
+                          rows: MapValues.numberOfRows,
+                          tileSize: MapValues.tileSize,
+                          from: map,
+                          tileTypeNoiseMapThresholds: MapValues.threshholds)
+        
+        
+        return LayeredMap(maps: generatedMaps)
     }
 }
