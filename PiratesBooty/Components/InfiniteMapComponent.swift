@@ -31,6 +31,10 @@ class InfiniteMapComponent: GKAgent2D {
         setupRules()
     }
     
+    private var sceneHalfHeight: CGFloat {
+        return scene.size.halfHeight * max(scene.camera!.xScale, scene.camera!.yScale)
+    }
+    
     private func setupRules() {
         
         ruleSystem.state.addEntries(from: ["scene": scene, "tileMap": tileMap])
@@ -43,7 +47,7 @@ class InfiniteMapComponent: GKAgent2D {
                 return false
             }
             
-            return (scene.camera!.position.y - scene.size.halfHeight) < -tileMap.mapSize.halfHeight
+            return (scene.camera!.position.y - self.sceneHalfHeight) < -tileMap.mapSize.halfHeight
         }) { (system) in
             system.assertFact(MapState.incrementBottomRow.rawValue)
         }
