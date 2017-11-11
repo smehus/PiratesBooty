@@ -22,17 +22,36 @@ class InfiniteMapComponent: GKAgent2D {
     private var tileMap: SKTileMapNode!
     private let scene: GameScene!
     private let ruleSystem = GKRuleSystem()
+    private var sceneHalfHeight: CGFloat {
+        return scene.size.halfHeight * max(scene.camera!.xScale, scene.camera!.yScale)
+    }
     
     init(tileMap: SKTileMapNode, scene: GameScene) {
         self.tileMap = tileMap
         self.scene = scene
         super.init()
         
-        setupRules()
+//        setupRules()
+        setupNoise()
     }
-    
-    private var sceneHalfHeight: CGFloat {
-        return scene.size.halfHeight * max(scene.camera!.xScale, scene.camera!.yScale)
+
+    private func setupNoise() {
+        let source = GKPerlinNoiseSource()
+        let noise = GKNoise(source)
+        let map = GKNoiseMap(noise)
+        
+        
+        let generatedMaps = SKTileMapNode
+            .tileMapNodes(tileSet: tileMap.tileSet,
+                          columns: tileMap.numberOfColumns,
+                          rows: tileMap.numberOfRows,
+                          tileSize: tileMap.tileSize,
+                          from: map,
+                          tileTypeNoiseMapThresholds: [-0.5, 0.0, 0.5])
+        
+        
+        scene.addChildren(children: generatedMaps)
+        tileMap.removeFromParent()
     }
     
     private func setupRules() {
