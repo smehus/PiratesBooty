@@ -26,8 +26,7 @@ class InfiniteMapComponent: GKAgent2D {
         return scene.size.halfHeight * max(scene.camera!.xScale, scene.camera!.yScale)
     }
     
-    init(tileMap: SKTileMapNode, scene: GameScene) {
-        self.tileMap = tileMap
+    init(scene: GameScene) {
         self.scene = scene
         super.init()
         
@@ -51,7 +50,6 @@ class InfiniteMapComponent: GKAgent2D {
         
         
         scene.addChildren(children: generatedMaps)
-        tileMap.removeFromParent()
     }
     
     private func setupRules() {
