@@ -19,7 +19,7 @@ private enum MapState: NSString, CustomStringConvertible {
 
 class InfiniteMapComponent: GKAgent2D {
     
-    private let tileMap: SKTileMapNode!
+    private var tileMap: SKTileMapNode!
     private let scene: GameScene!
     private let ruleSystem = GKRuleSystem()
     
