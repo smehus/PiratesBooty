@@ -13,6 +13,8 @@ class LayeredMap: SKNode {
     
     let maps: [SKTileMapNode]
     
+    var mapName = ""
+    
     var mapSize: CGSize {
         return maps.first!.mapSize
     }

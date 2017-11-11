@@ -19,6 +19,11 @@ private enum MapState: NSString, CustomStringConvertible {
 
 class InfiniteMapComponent: GKAgent2D {
     
+    private struct RuleSystemValues {
+        static let map = "map"
+        static let scene = "scene"
+    }
+    
     private struct MapValues {
         static let tileSetName = "PirateTiles"
         static let numberOfColumns = 24
@@ -31,7 +36,7 @@ class InfiniteMapComponent: GKAgent2D {
     private let scene: GameScene!
     private let ruleSystem = GKRuleSystem()
     private let source = GKPerlinNoiseSource()
-    
+    private var totalMapsGenerated = 0
     private var sceneHalfHeight: CGFloat {
         return scene.size.halfHeight * max(scene.camera!.xScale, scene.camera!.yScale)
     }
@@ -70,17 +75,17 @@ class InfiniteMapComponent: GKAgent2D {
     
     private func setupRules() {
         guard let currentMap = self.currentMap else { return }
-        ruleSystem.state.addEntries(from: ["scene": scene, "map": currentMap])
+        ruleSystem.state.addEntries(from: [RuleSystemValues.scene: scene, RuleSystemValues.map: currentMap])
 
         let belowMinTileMapYRule = GKRule(blockPredicate: { (system) -> Bool in
             guard
-                let scene = system.state["scene"] as? GameScene,
-                let map = system.state["map"] as? LayeredMap
+                let scene = system.state[RuleSystemValues.scene] as? GameScene,
+                let map = system.state[RuleSystemValues.map] as? LayeredMap
             else {
                 return false
             }
-            
-            return (scene.camera!.position.y - self.sceneHalfHeight) < -map.mapSize.halfHeight
+        
+            return (scene.camera!.position.y - self.sceneHalfHeight) < (map.position.y - map.mapSize.halfHeight)
         }) { (system) in
             system.assertFact(MapState.incrementBottomRow.rawValue)
         }
@@ -89,13 +94,17 @@ class InfiniteMapComponent: GKAgent2D {
     }
     
     private func addBottomRow() {
-        
+        let newMap = generateMap()
+        newMap.position = CGPoint(x: currentMap.position.x, y: currentMap.position.y - currentMap.mapSize.height)
+        scene.addChild(newMap)
+        currentMap = newMap
+        ruleSystem.state["map"] = newMap
     }
 }
 
 extension InfiniteMapComponent {
     private func generateMap() -> LayeredMap {
-        
+        totalMapsGenerated += 1
         let tileSet = SKTileSet(named: MapValues.tileSetName)
         let noise = GKNoise(source)
         let map = GKNoiseMap(noise)
@@ -108,7 +117,8 @@ extension InfiniteMapComponent {
                           from: map,
                           tileTypeNoiseMapThresholds: MapValues.threshholds)
         
-        
-        return LayeredMap(maps: generatedMaps)
+        let newMap = LayeredMap(maps: generatedMaps)
+        newMap.mapName = "Map # \(totalMapsGenerated)"
+        return newMap
     }
 }
