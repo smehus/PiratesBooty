@@ -19,9 +19,19 @@ private enum MapState: NSString, CustomStringConvertible {
 
 class InfiniteMapComponent: GKAgent2D {
     
+    private struct MapValues {
+        static let tileSetName = "PirateTiles"
+        static let numberOfColumns = 24
+        static let numberOfRows = 24
+        static let tileSize = CGSize(width: 64, height: 64)
+        static let threshholds: [NSNumber] = [-0.5, 0.0, 0.5]
+    }
+    
     private var tileMap: SKTileMapNode!
     private let scene: GameScene!
     private let ruleSystem = GKRuleSystem()
+    private let source = GKPerlinNoiseSource()
+    
     private var sceneHalfHeight: CGFloat {
         return scene.size.halfHeight * max(scene.camera!.xScale, scene.camera!.yScale)
     }
@@ -35,18 +45,21 @@ class InfiniteMapComponent: GKAgent2D {
     }
 
     private func setupNoise() {
-        let source = GKPerlinNoiseSource()
+        guard let tileSet = SKTileSet(named: MapValues.tileSetName) else {
+            assertionFailure("Failed to resolve tile set")
+            return
+        }
+    
         let noise = GKNoise(source)
         let map = GKNoiseMap(noise)
         
-        
         let generatedMaps = SKTileMapNode
-            .tileMapNodes(tileSet: tileMap.tileSet,
-                          columns: tileMap.numberOfColumns,
-                          rows: tileMap.numberOfRows,
-                          tileSize: tileMap.tileSize,
+            .tileMapNodes(tileSet: tileSet,
+                          columns: MapValues.numberOfColumns,
+                          rows: MapValues.numberOfRows,
+                          tileSize: MapValues.tileSize,
                           from: map,
-                          tileTypeNoiseMapThresholds: [-0.5, 0.0, 0.5])
+                          tileTypeNoiseMapThresholds: MapValues.threshholds)
         
         
         scene.addChildren(children: generatedMaps)
