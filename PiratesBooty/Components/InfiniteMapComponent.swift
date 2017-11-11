@@ -26,6 +26,7 @@ class InfiniteMapComponent: GKAgent2D {
     }
     
     private struct MapValues {
+        static let mapName = "TILE_MAP"
         static let tileSetName = "PirateTiles"
         static let numberOfColumns = 24
         static let numberOfRows = 24
@@ -38,8 +39,13 @@ class InfiniteMapComponent: GKAgent2D {
     private let ruleSystem = GKRuleSystem()
     private let source = GKPerlinNoiseSource()
     private var totalMapsGenerated = 0
+    
     private var sceneHalfHeight: CGFloat {
         return scene.size.halfHeight * max(scene.camera!.xScale, scene.camera!.yScale)
+    }
+    
+    private var sceneHalfWidth: CGFloat {
+        return scene.size.halfWidth * max(scene.camera!.xScale, scene.camera!.yScale)
     }
     
     init(scene: GameScene) {
@@ -56,6 +62,7 @@ class InfiniteMapComponent: GKAgent2D {
     
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
+        cleanMaps()
         ruleSystem.reset()
         ruleSystem.evaluate()
         
@@ -93,7 +100,6 @@ class InfiniteMapComponent: GKAgent2D {
                 return false
             }
         
-            
             return (scene.camera!.position.y - self.sceneHalfHeight) < (map.position.y - map.mapSize.halfHeight)
         }) { (system) in
             system.assertFact(MapState.incrementBottomRow.rawValue)
@@ -137,6 +143,22 @@ class InfiniteMapComponent: GKAgent2D {
 }
 
 extension InfiniteMapComponent {
+    private func cleanMaps() {
+        scene.enumerateChildNodes(withName: "\(MapValues.mapName)") { (node, stop) in
+            guard let map = node as? LayeredMap else { return }
+            
+            let offScreenBottom = (map.position.y + self.sceneHalfHeight) < (self.scene.camera!.position.y - self.sceneHalfHeight)
+            let offScreenTop = (map.position.y - self.sceneHalfHeight) > (self.scene.camera!.position.y + self.sceneHalfHeight)
+            
+            
+            if offScreenBottom || offScreenTop {
+                map.removeFromParent()
+            }
+        }
+    }
+}
+
+extension InfiniteMapComponent {
     private func generateMap() -> LayeredMap {
         totalMapsGenerated += 1
         let tileSet = SKTileSet(named: MapValues.tileSetName)
@@ -152,7 +174,7 @@ extension InfiniteMapComponent {
                           tileTypeNoiseMapThresholds: MapValues.threshholds)
         
         let newMap = LayeredMap(maps: generatedMaps)
-        newMap.mapName = "Map # \(totalMapsGenerated)"
+        newMap.name = MapValues.mapName
         return newMap
     }
 }
