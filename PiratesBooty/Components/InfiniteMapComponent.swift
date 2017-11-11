@@ -86,11 +86,14 @@ class InfiniteMapComponent: GKAgent2D {
             guard
                 currentFacts.filter ({ $0 == .incrementTopRow }).isEmpty,
                 let scene = system.state[RuleSystemValues.scene] as? GameScene,
+                let playerBody = scene.playerShip.sprite()?.physicsBody,
+                playerBody.velocity.dy < 0,
                 let map = system.state[RuleSystemValues.map] as? LayeredMap
             else {
                 return false
             }
         
+            
             return (scene.camera!.position.y - self.sceneHalfHeight) < (map.position.y - map.mapSize.halfHeight)
         }) { (system) in
             system.assertFact(MapState.incrementBottomRow.rawValue)
@@ -101,6 +104,8 @@ class InfiniteMapComponent: GKAgent2D {
             guard
                 currentFacts.filter ({ $0 == .incrementBottomRow }).isEmpty,
                 let scene = system.state[RuleSystemValues.scene] as? GameScene,
+                let playerBody = scene.playerShip.sprite()?.physicsBody,
+                playerBody.velocity.dy > 0,
                 let map = system.state[RuleSystemValues.map] as? LayeredMap
             else {
                 return false
