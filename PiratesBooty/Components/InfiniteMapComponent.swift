@@ -27,7 +27,7 @@ class InfiniteMapComponent: GKAgent2D {
         static let threshholds: [NSNumber] = [-0.5, 0.0, 0.5]
     }
     
-    private var tileMap: SKTileMapNode!
+    private var currentMap: LayeredMap!
     private let scene: GameScene!
     private let ruleSystem = GKRuleSystem()
     private let source = GKPerlinNoiseSource()
@@ -40,11 +40,11 @@ class InfiniteMapComponent: GKAgent2D {
         self.scene = scene
         super.init()
         
-//        setupRules()
-        setupNoise()
+        setupFirstMap()
+        setupRules()
     }
 
-    private func setupNoise() {
+    private func setupFirstMap() {
         guard let tileSet = SKTileSet(named: MapValues.tileSetName) else {
             assertionFailure("Failed to resolve tile set")
             return
@@ -62,22 +62,25 @@ class InfiniteMapComponent: GKAgent2D {
                           tileTypeNoiseMapThresholds: MapValues.threshholds)
         
         
-        scene.addChildren(children: generatedMaps)
+        let layeredMap = LayeredMap(maps: generatedMaps)
+        scene.addChild(layeredMap)
+        
+        currentMap = layeredMap
     }
     
     private func setupRules() {
-        
-        ruleSystem.state.addEntries(from: ["scene": scene, "tileMap": tileMap])
+        guard let currentMap = self.currentMap else { return }
+        ruleSystem.state.addEntries(from: ["scene": scene, "map": currentMap])
 
         let belowMinTileMapYRule = GKRule(blockPredicate: { (system) -> Bool in
             guard
                 let scene = system.state["scene"] as? GameScene,
-                let tileMap = system.state["tileMap"] as? SKTileMapNode
+                let map = system.state["map"] as? LayeredMap
             else {
                 return false
             }
             
-            return (scene.camera!.position.y - self.sceneHalfHeight) < -tileMap.mapSize.halfHeight
+            return (scene.camera!.position.y - self.sceneHalfHeight) < -map.mapSize.halfHeight
         }) { (system) in
             system.assertFact(MapState.incrementBottomRow.rawValue)
         }
