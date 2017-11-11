@@ -48,6 +48,7 @@ class InfiniteMapComponent: GKAgent2D {
             system.assertFact(MapState.incrementBottomRow.rawValue)
         }
         
+        
 
         ruleSystem.add(belowMinTileMapYRule)
         
@@ -62,8 +63,12 @@ class InfiniteMapComponent: GKAgent2D {
         ruleSystem.reset()
         ruleSystem.evaluate()
         
-        if ruleSystem.grade(forFact: MapState.incrementBottomRow.rawValue) > 0 {
-            
+        for fact in ruleSystem.facts {
+            guard let state = MapState(rawValue: fact as! NSString) else { continue }
+            switch state {
+            case .incrementBottomRow:
+                addBottomRow()
+            }
         }
     }
     

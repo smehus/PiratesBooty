@@ -74,8 +74,8 @@ class GameScene: SKScene {
     
     private func setupCamera() {
         let cam = SKCameraNode()
-        cam.xScale = 2.0
-        cam.yScale = 2.0
+        cam.xScale = 1.0
+        cam.yScale = 1.0
         addChild(cam)
         camera = cam
         
