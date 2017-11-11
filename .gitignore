@@ -1,8 +1,10 @@
 xcuserdata/*
 xcuserdata
+*.xcuserdatad/
 
 .DS_Store
-PiratesBooty.xcodeproj/project.xcworkspace/xcuserdata/scottmehus.xcuserdatad/UserInterfaceState.xcuserstate
+
+UserInterfaceState.xcuserstate
 
 *.xcuserstate
 *.ipa
