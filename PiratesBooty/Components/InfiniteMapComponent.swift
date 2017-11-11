@@ -11,6 +11,7 @@ import SpriteKit
 
 private enum MapState: NSString, CustomStringConvertible {
     case incrementBottomRow = "incrementBottomRow"
+    case incrementTopRow = "incrementTopRow"
     
     var description: String {
         return rawValue as String
@@ -63,6 +64,8 @@ class InfiniteMapComponent: GKAgent2D {
             switch state {
             case .incrementBottomRow:
                 addBottomRow()
+            case .incrementTopRow:
+                addTopRow()
             }
         }
     }
@@ -78,7 +81,10 @@ class InfiniteMapComponent: GKAgent2D {
         ruleSystem.state.addEntries(from: [RuleSystemValues.scene: scene, RuleSystemValues.map: currentMap])
 
         let belowMinTileMapYRule = GKRule(blockPredicate: { (system) -> Bool in
+            
+            let currentFacts = system.facts.map { MapState(rawValue: $0 as! NSString) }
             guard
+                currentFacts.filter ({ $0 == .incrementTopRow }).isEmpty,
                 let scene = system.state[RuleSystemValues.scene] as? GameScene,
                 let map = system.state[RuleSystemValues.map] as? LayeredMap
             else {
@@ -90,12 +96,35 @@ class InfiniteMapComponent: GKAgent2D {
             system.assertFact(MapState.incrementBottomRow.rawValue)
         }
         
-        ruleSystem.add(belowMinTileMapYRule)
+        let aboveMaxTileMapYRule = GKRule(blockPredicate: { (system) -> Bool in
+            let currentFacts = system.facts.map { MapState(rawValue: $0 as! NSString) }
+            guard
+                currentFacts.filter ({ $0 == .incrementBottomRow }).isEmpty,
+                let scene = system.state[RuleSystemValues.scene] as? GameScene,
+                let map = system.state[RuleSystemValues.map] as? LayeredMap
+            else {
+                return false
+            }
+            
+            return (scene.camera!.position.y + self.sceneHalfHeight) > (map.position.y + map.mapSize.halfHeight)
+        }) { (system) in
+            system.assertFact(MapState.incrementTopRow.rawValue)
+        }
+        
+        ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule])
     }
     
     private func addBottomRow() {
         let newMap = generateMap()
         newMap.position = CGPoint(x: currentMap.position.x, y: currentMap.position.y - currentMap.mapSize.height)
+        scene.addChild(newMap)
+        currentMap = newMap
+        ruleSystem.state["map"] = newMap
+    }
+    
+    private func addTopRow() {
+        let newMap = generateMap()
+        newMap.position = CGPoint(x: currentMap.position.x, y: currentMap.position.y + currentMap.mapSize.height)
         scene.addChild(newMap)
         currentMap = newMap
         ruleSystem.state["map"] = newMap
