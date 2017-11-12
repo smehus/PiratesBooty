@@ -62,16 +62,16 @@ class InfiniteMapComponent: GKAgent2D {
         
         for fact in ruleSystem.facts {
             guard let state = MapState(rawValue: fact as! NSString) else { continue }
-//            switch state {
-//            case .incrementBottomRow:
-//                addBottomRow()
-//            case .incrementTopRow:
-//                addTopRow()
-//            case .incrementLeftColumn:
-//                addLeftColumn()
-//            case .incrementRightColumn:
-//                break
-//            }
+            switch state {
+            case .incrementBottomRow:
+                addBottomRow()
+            case .incrementTopRow:
+                addTopRow()
+            case .incrementLeftColumn:
+                addLeftColumn()
+            case .incrementRightColumn:
+                break
+            }
         }
     }
 
@@ -133,13 +133,13 @@ class InfiniteMapComponent: GKAgent2D {
                     return false
             }
             
-            return (scene.camera!.position.y + scene.scaledHalfHeight) > (map.position.y + map.mapSize.halfHeight)
+            return (scene.camera!.position.x - scene.scaledHalfWidth) < (map.position.x - map.mapSize.halfWidth)
             
         }) { (system) in
             system.assertFact(MapState.incrementLeftColumn.rawValue)
         }
         
-        ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule])
+        ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule, leftMaxTileMapRule])
     }
     
     private func addBottomRow() {
@@ -159,13 +159,17 @@ class InfiniteMapComponent: GKAgent2D {
     }
     
     private func addLeftColumn() {
-        
+        let newMap = generateMap()
+        newMap.position = CGPoint(x: currentMap.position.x - currentMap.mapSize.width, y: currentMap.position.y)
+        scene.addChild(newMap)
+        currentMap = newMap
+        ruleSystem.state[RuleSystemValues.map] = newMap
     }
 }
 
 extension InfiniteMapComponent {
     private func cleanMaps() {
-        let rules = [offScreenBottom(), offScreenTop()]
+        let rules = [offScreenBottom(), offScreenTop(), offScreenRight()]
         
         scene.enumerateChildNodes(withName: "\(MapValues.mapName)") { (node, stop) in
             guard let map = node as? LayeredMap else { return }
@@ -179,17 +183,24 @@ extension InfiniteMapComponent {
         }
     }
     
-    func offScreenBottom() -> ((LayeredMap) -> Bool) {
+    private func offScreenBottom() -> ((LayeredMap) -> Bool) {
         return { map in
             return (map.position.y + map.mapSize.halfHeight) < (self.scene.camera!.position.y - self.scene.scaledHalfHeight)
         }
     }
     
-    func offScreenTop() -> ((LayeredMap) -> Bool) {
+    private func offScreenTop() -> ((LayeredMap) -> Bool) {
         return { map in
             return (map.position.y - map.mapSize.halfHeight) > (self.scene.camera!.position.y + self.scene.scaledHalfHeight)
         }
     }
+    
+    private func offScreenRight() -> ((LayeredMap) -> Bool) {
+        return { map in
+            return (map.position.x - map.mapSize.halfWidth) > (self.scene.camera!.position.x + self.scene.scaledHalfWidth)
+        }
+    }
+    
 }
 
 extension InfiniteMapComponent {

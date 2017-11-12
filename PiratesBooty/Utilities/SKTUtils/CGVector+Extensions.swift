@@ -96,7 +96,11 @@ public extension CGVector {
 }
 
 public func > (left: CGVector, right: CGVector) -> Bool {
-    return (left.dx > right.dx) || (left.dy > right.dy)
+    return (left.dx > right.dx) && (left.dy > right.dy)
+}
+
+public func < (left: CGVector, right: CGVector) -> Bool {
+    return (left.dx < right.dx) && (left.dy < right.dy)
 }
 
 /**
