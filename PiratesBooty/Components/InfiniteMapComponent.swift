@@ -87,18 +87,23 @@ class InfiniteMapComponent: GKAgent2D {
 
         let belowMinTileMapYRule = GKRule(blockPredicate: { (system) -> Bool in
             
-            let currentFacts = system.facts.map { MapState(rawValue: $0 as! NSString) }
             guard
-                currentFacts.filter ({ $0 == .incrementTopRow }).isEmpty,
                 let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let playerBody = scene.playerShip.sprite()?.physicsBody,
-                playerBody.velocity.dy < 0,
                 let map = system.state[RuleSystemValues.map] as? LayeredMap
             else {
                 return false
             }
         
-            return (scene.camera!.position.y - scene.scaledHalfHeight) < (map.position.y - map.mapSize.halfHeight)
+            let bottomCameraEdge = scene.camera!.position.y - scene.scaledHalfHeight
+            let bottomMapEdge = map.position.y - map.mapSize.halfHeight
+            let cameraEdgeIsBelowMapEdge = bottomCameraEdge < bottomMapEdge
+            let estimatedNextMapArea = CGPoint(x: map.position.x, y: bottomCameraEdge - scene.scaledHalfHeight)
+            guard cameraEdgeIsBelowMapEdge else { return false }
+            
+            let existingMapsInArea = scene.nodes(at: estimatedNextMapArea).filter { $0 is LayeredMap }
+            
+            return existingMapsInArea.isEmpty
+            
         }) { (system) in
             system.assertFact(MapState.incrementBottomRow.rawValue)
         }
@@ -156,7 +161,7 @@ class InfiniteMapComponent: GKAgent2D {
             system.assertFact(MapState.incrementRightColumn.rawValue)
         }
         
-        ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule, leftMaxTileMapRule, rightMaxTileMapRule])
+        ruleSystem.add([belowMinTileMapYRule/*, aboveMaxTileMapYRule, leftMaxTileMapRule, rightMaxTileMapRule*/])
     }
     
     private func addBottomRow() {
