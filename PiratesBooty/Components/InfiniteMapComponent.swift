@@ -12,6 +12,8 @@ import SpriteKit
 private enum MapState: NSString, CustomStringConvertible {
     case incrementBottomRow = "incrementBottomRow"
     case incrementTopRow = "incrementTopRow"
+    case incrementLeftColumn = "incrementLeftColumn"
+    case incrementRightColumn = "incrementRightColumn"
     
     var description: String {
         return rawValue as String
@@ -28,8 +30,8 @@ class InfiniteMapComponent: GKAgent2D {
     private struct MapValues {
         static let mapName = "TILE_MAP"
         static let tileSetName = "PirateTiles"
-        static let numberOfColumns = 24
-        static let numberOfRows = 24
+        static let numberOfColumns = 48
+        static let numberOfRows = 48
         static let tileSize = CGSize(width: 64, height: 64)
         static let threshholds: [NSNumber] = [-0.5, 0.0, 0.5]
     }
@@ -39,14 +41,6 @@ class InfiniteMapComponent: GKAgent2D {
     private let ruleSystem = GKRuleSystem()
     private let source = GKPerlinNoiseSource()
     private var totalMapsGenerated = 0
-    
-    private var sceneHalfHeight: CGFloat {
-        return scene.size.halfHeight * max(scene.camera!.xScale, scene.camera!.yScale)
-    }
-    
-    private var sceneHalfWidth: CGFloat {
-        return scene.size.halfWidth * max(scene.camera!.xScale, scene.camera!.yScale)
-    }
     
     init(scene: GameScene) {
         self.scene = scene
@@ -68,12 +62,16 @@ class InfiniteMapComponent: GKAgent2D {
         
         for fact in ruleSystem.facts {
             guard let state = MapState(rawValue: fact as! NSString) else { continue }
-            switch state {
-            case .incrementBottomRow:
-                addBottomRow()
-            case .incrementTopRow:
-                addTopRow()
-            }
+//            switch state {
+//            case .incrementBottomRow:
+//                addBottomRow()
+//            case .incrementTopRow:
+//                addTopRow()
+//            case .incrementLeftColumn:
+//                addLeftColumn()
+//            case .incrementRightColumn:
+//                break
+//            }
         }
     }
 
@@ -100,7 +98,7 @@ class InfiniteMapComponent: GKAgent2D {
                 return false
             }
         
-            return (scene.camera!.position.y - self.sceneHalfHeight) < (map.position.y - map.mapSize.halfHeight)
+            return (scene.camera!.position.y - scene.scaledHalfHeight) < (map.position.y - map.mapSize.halfHeight)
         }) { (system) in
             system.assertFact(MapState.incrementBottomRow.rawValue)
         }
@@ -117,9 +115,28 @@ class InfiniteMapComponent: GKAgent2D {
                 return false
             }
             
-            return (scene.camera!.position.y + self.sceneHalfHeight) > (map.position.y + map.mapSize.halfHeight)
+            return (scene.camera!.position.y + scene.scaledHalfHeight) > (map.position.y + map.mapSize.halfHeight)
         }) { (system) in
             system.assertFact(MapState.incrementTopRow.rawValue)
+        }
+        
+        
+        let leftMaxTileMapRule = GKRule(blockPredicate: { (system) -> Bool in
+            let currentFacts = system.facts.map { MapState(rawValue: $0 as! NSString) }
+            guard
+                currentFacts.filter ({ $0 == .incrementRightColumn }).isEmpty,
+                let scene = system.state[RuleSystemValues.scene] as? GameScene,
+                let playerBody = scene.playerShip.sprite()?.physicsBody,
+                playerBody.velocity.dx < 0,
+                let map = system.state[RuleSystemValues.map] as? LayeredMap
+                else {
+                    return false
+            }
+            
+            return (scene.camera!.position.y + scene.scaledHalfHeight) > (map.position.y + map.mapSize.halfHeight)
+            
+        }) { (system) in
+            system.assertFact(MapState.incrementLeftColumn.rawValue)
         }
         
         ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule])
@@ -139,6 +156,10 @@ class InfiniteMapComponent: GKAgent2D {
         scene.addChild(newMap)
         currentMap = newMap
         ruleSystem.state[RuleSystemValues.map] = newMap
+    }
+    
+    private func addLeftColumn() {
+        
     }
 }
 
@@ -160,13 +181,13 @@ extension InfiniteMapComponent {
     
     func offScreenBottom() -> ((LayeredMap) -> Bool) {
         return { map in
-            return (map.position.y + self.sceneHalfHeight) < (self.scene.camera!.position.y - self.sceneHalfHeight)
+            return (map.position.y + map.mapSize.halfHeight) < (self.scene.camera!.position.y - self.scene.scaledHalfHeight)
         }
     }
     
     func offScreenTop() -> ((LayeredMap) -> Bool) {
         return { map in
-            return (map.position.y - self.sceneHalfHeight) > (self.scene.camera!.position.y + self.sceneHalfHeight)
+            return (map.position.y - map.mapSize.halfHeight) > (self.scene.camera!.position.y + self.scene.scaledHalfHeight)
         }
     }
 }

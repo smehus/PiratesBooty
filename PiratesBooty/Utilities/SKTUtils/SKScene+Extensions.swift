@@ -77,4 +77,20 @@ extension SKScene {
         let joint = SKPhysicsJointFixed.joint(withBodyA: bodyA, bodyB: bodyB, anchor: position)
         physicsWorld.add(joint)
     }
+    
+    var scaledHeight: CGFloat {
+        return size.height * max(camera!.xScale, camera!.yScale)
+    }
+    
+    var scaledWidth: CGFloat {
+        return size.width * max(camera!.xScale, camera!.yScale)
+    }
+    
+    var scaledHalfHeight: CGFloat {
+        return size.halfHeight * max(camera!.xScale, camera!.yScale)
+    }
+    
+    var scaledHalfWidth: CGFloat {
+        return size.halfWidth * max(camera!.xScale, camera!.yScale)
+    }
 }
