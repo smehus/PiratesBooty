@@ -115,8 +115,8 @@ class InfiniteMapComponent: GKAgent2D {
                 return false
             }
             
-            let cameraTopEdge = (scene.camera!.position.y + scene.scaledHalfHeight)
-            let mapTopEdge = (map.position.y + map.mapSize.halfHeight)
+            let cameraTopEdge = scene.camera!.position.y + scene.scaledHalfHeight
+            let mapTopEdge = map.position.y + map.mapSize.halfHeight
             guard  cameraTopEdge > mapTopEdge else { return false }
             
             let estimatedNextMapArea = CGPoint(x: map.position.x, y: cameraTopEdge + scene.scaledHalfHeight)
@@ -129,41 +129,47 @@ class InfiniteMapComponent: GKAgent2D {
         
         
         let leftMaxTileMapRule = GKRule(blockPredicate: { (system) -> Bool in
-            let currentFacts = system.facts.map { MapState(rawValue: $0 as! NSString) }
             guard
-                currentFacts.filter ({ $0 == .incrementRightColumn }).isEmpty,
                 let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let playerBody = scene.playerShip.sprite()?.physicsBody,
-                playerBody.velocity.dx < 0,
                 let map = system.state[RuleSystemValues.map] as? LayeredMap
                 else {
                     return false
             }
             
-            return (scene.camera!.position.x - scene.scaledHalfWidth) < (map.position.x - map.mapSize.halfWidth)
+            let cameraLeftEdge = scene.camera!.position.x - scene.scaledHalfWidth
+            let mapLeftEdge = map.position.x - map.mapSize.halfWidth
+            guard cameraLeftEdge < mapLeftEdge else { return false }
+            
+            let estimatedNextMapArea = CGPoint(x: cameraLeftEdge - scene.scaledHalfWidth, y: map.position.y)
+            let existingMapsInArea = scene.nodes(at: estimatedNextMapArea).filter { $0 is LayeredMap }
+            
+            return existingMapsInArea.isEmpty
             
         }) { (system) in
             system.assertFact(MapState.incrementLeftColumn.rawValue)
         }
         
         let rightMaxTileMapRule = GKRule(blockPredicate: { (system) -> Bool in
-            let currentFacts = system.facts.map { MapState(rawValue: $0 as! NSString) }
             guard
-                currentFacts.filter ({ $0 == .incrementLeftColumn }).isEmpty,
                 let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let playerBody = scene.playerShip.sprite()?.physicsBody,
-                playerBody.velocity.dx > 0,
                 let map = system.state[RuleSystemValues.map] as? LayeredMap
             else {
                 return false
             }
             
-            return (scene.camera!.position.x + scene.scaledHalfWidth) > (map.position.x + map.mapSize.halfWidth)
+            let cameraRightEdge = scene.camera!.position.x + scene.scaledHalfWidth
+            let mapRightEdge = map.position.x + map.mapSize.halfWidth
+            guard cameraRightEdge > mapRightEdge else { return false }
+            
+            let estimatedNextMapArea = CGPoint(x: cameraRightEdge + scene.scaledHalfWidth, y: map.position.y)
+            let existingMapsInArea = scene.nodes(at: estimatedNextMapArea).filter { $0 is LayeredMap }
+            
+            return existingMapsInArea.isEmpty
         }) { (system) in
             system.assertFact(MapState.incrementRightColumn.rawValue)
         }
         
-        ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule/*, leftMaxTileMapRule, rightMaxTileMapRule*/])
+        ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule, leftMaxTileMapRule, rightMaxTileMapRule])
     }
     
     private func addBottomRow() {
