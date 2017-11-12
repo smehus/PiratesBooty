@@ -70,7 +70,7 @@ class InfiniteMapComponent: GKAgent2D {
             case .incrementLeftColumn:
                 addLeftColumn()
             case .incrementRightColumn:
-                break
+                addRightColumn()
             }
         }
     }
@@ -139,7 +139,24 @@ class InfiniteMapComponent: GKAgent2D {
             system.assertFact(MapState.incrementLeftColumn.rawValue)
         }
         
-        ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule, leftMaxTileMapRule])
+        let rightMaxTileMapRule = GKRule(blockPredicate: { (system) -> Bool in
+            let currentFacts = system.facts.map { MapState(rawValue: $0 as! NSString) }
+            guard
+                currentFacts.filter ({ $0 == .incrementLeftColumn }).isEmpty,
+                let scene = system.state[RuleSystemValues.scene] as? GameScene,
+                let playerBody = scene.playerShip.sprite()?.physicsBody,
+                playerBody.velocity.dx > 0,
+                let map = system.state[RuleSystemValues.map] as? LayeredMap
+            else {
+                return false
+            }
+            
+            return (scene.camera!.position.x + scene.scaledHalfWidth) > (map.position.x + map.mapSize.halfWidth)
+        }) { (system) in
+            system.assertFact(MapState.incrementRightColumn.rawValue)
+        }
+        
+        ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule, leftMaxTileMapRule, rightMaxTileMapRule])
     }
     
     private func addBottomRow() {
@@ -165,11 +182,19 @@ class InfiniteMapComponent: GKAgent2D {
         currentMap = newMap
         ruleSystem.state[RuleSystemValues.map] = newMap
     }
+    
+    private func addRightColumn() {
+        let newMap = generateMap()
+        newMap.position = CGPoint(x: currentMap.position.x + currentMap.mapSize.width, y: currentMap.position.y)
+        scene.addChild(newMap)
+        currentMap = newMap
+        ruleSystem.state[RuleSystemValues.map] = newMap
+    }
 }
 
 extension InfiniteMapComponent {
     private func cleanMaps() {
-        let rules = [offScreenBottom(), offScreenTop(), offScreenRight()]
+        let rules = [offScreenBottom(), offScreenTop(), offScreenRight(), offScreenLeft()]
         
         scene.enumerateChildNodes(withName: "\(MapValues.mapName)") { (node, stop) in
             guard let map = node as? LayeredMap else { return }
