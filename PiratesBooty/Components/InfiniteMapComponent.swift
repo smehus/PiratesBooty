@@ -201,6 +201,11 @@ extension InfiniteMapComponent {
         }
     }
     
+    private func offScreenLeft() -> ((LayeredMap) -> Bool) {
+        return { map in
+            return (map.position.x + map.mapSize.halfWidth) < (self.scene.camera!.position.x - self.scene.scaledHalfWidth)
+        }
+    }
 }
 
 extension InfiniteMapComponent {
