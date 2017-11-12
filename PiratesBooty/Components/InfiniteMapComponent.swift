@@ -46,7 +46,8 @@ class InfiniteMapComponent: GKAgent2D {
     
     private var currentMap: LayeredMap? {
         let possibleNodes = scene.nodes(at: scene.playerShip.position!)
-        return possibleNodes.filter ({ $0 is LayeredMap }).first as? LayeredMap
+        let tileMap = possibleNodes.filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).first
+        return tileMap?.parent as? LayeredMap
     }
     
     init(scene: GameScene) {
@@ -65,12 +66,14 @@ class InfiniteMapComponent: GKAgent2D {
     
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
-//        cleanMaps()
+        
         ruleSystem.reset()
+        ruleSystem.state[RuleSystemValues.map] = currentMap
         ruleSystem.evaluate()
         
         for fact in ruleSystem.facts {
             guard let state = MapState(rawValue: fact as! NSString) else { continue }
+            print("ADDING MAP \(fact)")
             addMap(state: state)
         }
     }
@@ -98,7 +101,7 @@ class InfiniteMapComponent: GKAgent2D {
             guard bottomCameraEdge < bottomMapEdge else { return false }
             
             let estimatedNextMapArea = CGPoint(x: map.position.x, y: bottomCameraEdge - scene.scaledHalfHeight)
-            guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is LayeredMap }).isEmpty else { return false }
+            guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty else { return false }
             
             return true
             
@@ -119,9 +122,9 @@ class InfiniteMapComponent: GKAgent2D {
             guard  cameraTopEdge > mapTopEdge else { return false }
             
             let estimatedNextMapArea = CGPoint(x: map.position.x, y: cameraTopEdge + scene.scaledHalfHeight)
-            let existingMapsInArea = scene.nodes(at: estimatedNextMapArea).filter { $0 is LayeredMap }
+            guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty else { return false }
             
-            return existingMapsInArea.isEmpty
+            return true
         }) { (system) in
             system.assertFact(MapState.incrementTopRow.rawValue)
         }
@@ -140,9 +143,9 @@ class InfiniteMapComponent: GKAgent2D {
             guard cameraLeftEdge < mapLeftEdge else { return false }
             
             let estimatedNextMapArea = CGPoint(x: cameraLeftEdge - scene.scaledHalfWidth, y: map.position.y)
-            let existingMapsInArea = scene.nodes(at: estimatedNextMapArea).filter { $0 is LayeredMap }
+           guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty else { return false }
             
-            return existingMapsInArea.isEmpty
+            return true
             
         }) { (system) in
             system.assertFact(MapState.incrementLeftColumn.rawValue)
@@ -161,9 +164,9 @@ class InfiniteMapComponent: GKAgent2D {
             guard cameraRightEdge > mapRightEdge else { return false }
             
             let estimatedNextMapArea = CGPoint(x: cameraRightEdge + scene.scaledHalfWidth, y: map.position.y)
-            let existingMapsInArea = scene.nodes(at: estimatedNextMapArea).filter { $0 is LayeredMap }
+            guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty else { return false }
             
-            return existingMapsInArea.isEmpty
+            return true
         }) { (system) in
             system.assertFact(MapState.incrementRightColumn.rawValue)
         }
@@ -185,11 +188,15 @@ class InfiniteMapComponent: GKAgent2D {
             pos = CGPoint(x: currentMap.position.x + currentMap.mapSize.width, y: currentMap.position.y)
         }
         
-        generateMapOnBackground(position: pos) { (newMap) in
-            DispatchQueue.main.sync {
-                self.scene.addChild(newMap)
-                self.ruleSystem.state[RuleSystemValues.map] = newMap
-            }
+        let placeholder = PlaceholderMapNode(color: .blue, size: currentMap.mapSize)
+        let newMap = LayeredMap(placeholder: placeholder)
+        newMap.position = pos
+        newMap.name = MapValues.mapName
+        scene.addChild(newMap)
+
+        
+        generateMapOnBackground(map: newMap) { (configuredMap) in
+            print("Map completed generation")
         }
     }
 }
@@ -254,7 +261,7 @@ extension InfiniteMapComponent {
         return newMap
     }
     
-    private func generateMapOnBackground(position: CGPoint, completion: @escaping (LayeredMap) -> Void) {
+    private func generateMapOnBackground(map: LayeredMap, completion: @escaping (LayeredMap) -> Void) {
         
         mapGenerationQueue.async {
             let generatedMaps = SKTileMapNode
@@ -264,11 +271,9 @@ extension InfiniteMapComponent {
                               tileSize: MapValues.tileSize,
                               from: self.noiseMap,
                               tileTypeNoiseMapThresholds: MapValues.threshholds)
-            
-            let newMap = LayeredMap(maps: generatedMaps)
-            newMap.name = MapValues.mapName
-            newMap.position = position
-            completion(newMap)
+
+            map.addMaps(maps: generatedMaps)
+            completion(map)
         }
     }
 }

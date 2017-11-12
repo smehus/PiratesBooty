@@ -11,12 +11,20 @@ import GameplayKit
 
 class LayeredMap: SKNode {
     
-    let maps: [SKTileMapNode]
+    var maps: [SKTileMapNode] = []
+    var placeholderMap: PlaceholderMapNode?
     
     var mapName = ""
     
     var mapSize: CGSize {
-        return maps.first?.mapSize ?? CGSize(width: 0, height: 0)
+        return maps.first?.mapSize ?? placeholderMap!.size
+    }
+    
+    init(placeholder: PlaceholderMapNode) {
+        self.placeholderMap = placeholder
+        super.init()
+        
+        addChild(placeholder)
     }
     
     init(maps: [SKTileMapNode]) {
@@ -29,6 +37,11 @@ class LayeredMap: SKNode {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func addMaps(maps: [SKTileMapNode]) {
+        self.maps = maps
+        addChildren(children: maps)
     }
 }
 
