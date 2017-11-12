@@ -95,14 +95,14 @@ class InfiniteMapComponent: GKAgent2D {
                 return false
             }
         
-            let bottomCameraEdge = (scene.camera!.position.y - scene.scaledHalfHeight)
+            let bottomCameraEdge = scene.camera!.position.y - scene.scaledHalfHeight
             let bottomMapEdge = map.position.y - map.mapSize.halfHeight
-            guard bottomCameraEdge < bottomMapEdge else { return false }
+            guard (bottomCameraEdge - MapValues.generationBuffer) < bottomMapEdge else { return false }
             
             let estimatedNextMapArea = CGPoint(x: map.position.x, y: bottomCameraEdge - scene.scaledHalfHeight)
-            let existingMapsInArea = scene.nodes(at: estimatedNextMapArea).filter { $0 is LayeredMap }
+            guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is LayeredMap }).isEmpty else { return false }
             
-            return existingMapsInArea.isEmpty
+            return true
             
         }) { (system) in
             system.assertFact(MapState.incrementBottomRow.rawValue)
@@ -224,7 +224,10 @@ extension InfiniteMapComponent {
     
     private func offScreenBottom() -> ((LayeredMap) -> Bool) {
         return { map in
-            return (map.position.y + map.mapSize.halfHeight) < (self.scene.camera!.position.y - self.scene.scaledHalfHeight)
+            let mapTopEdge = map.position.y + map.mapSize.halfHeight
+            let cameraBottomEdge = self.scene.camera!.position.y - self.scene.scaledHalfHeight
+            
+            return (mapTopEdge + MapValues.generationBuffer) < cameraBottomEdge
         }
     }
     
