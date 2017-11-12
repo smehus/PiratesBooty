@@ -32,6 +32,8 @@ struct ShipPhysics: PhysicsConfiguration {
 
 class Ship: GKEntity, Sprite {
     
+    static let MAX_VELOCITY = 50.0
+    
     init(shipType: ShipType) {
         super.init()
         

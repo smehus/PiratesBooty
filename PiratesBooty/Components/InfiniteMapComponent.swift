@@ -130,7 +130,7 @@ class InfiniteMapComponent: GKAgent2D {
         newMap.position = CGPoint(x: currentMap.position.x, y: currentMap.position.y - currentMap.mapSize.height)
         scene.addChild(newMap)
         currentMap = newMap
-        ruleSystem.state["map"] = newMap
+        ruleSystem.state[RuleSystemValues.map] = newMap
     }
     
     private func addTopRow() {
@@ -138,22 +138,35 @@ class InfiniteMapComponent: GKAgent2D {
         newMap.position = CGPoint(x: currentMap.position.x, y: currentMap.position.y + currentMap.mapSize.height)
         scene.addChild(newMap)
         currentMap = newMap
-        ruleSystem.state["map"] = newMap
+        ruleSystem.state[RuleSystemValues.map] = newMap
     }
 }
 
 extension InfiniteMapComponent {
     private func cleanMaps() {
+        let rules = [offScreenBottom(), offScreenTop()]
+        
         scene.enumerateChildNodes(withName: "\(MapValues.mapName)") { (node, stop) in
             guard let map = node as? LayeredMap else { return }
             
-            let offScreenBottom = (map.position.y + self.sceneHalfHeight) < (self.scene.camera!.position.y - self.sceneHalfHeight)
-            let offScreenTop = (map.position.y - self.sceneHalfHeight) > (self.scene.camera!.position.y + self.sceneHalfHeight)
-            
-            
-            if offScreenBottom || offScreenTop {
-                map.removeFromParent()
+            for rule in rules {
+                if rule(map) {
+                    map.removeFromParent()
+                    return
+                }
             }
+        }
+    }
+    
+    func offScreenBottom() -> ((LayeredMap) -> Bool) {
+        return { map in
+            return (map.position.y + self.sceneHalfHeight) < (self.scene.camera!.position.y - self.sceneHalfHeight)
+        }
+    }
+    
+    func offScreenTop() -> ((LayeredMap) -> Bool) {
+        return { map in
+            return (map.position.y - self.sceneHalfHeight) > (self.scene.camera!.position.y + self.sceneHalfHeight)
         }
     }
 }
