@@ -272,8 +272,10 @@ extension InfiniteMapComponent {
                               from: self.noiseMap,
                               tileTypeNoiseMapThresholds: MapValues.threshholds)
 
-            map.addMaps(maps: generatedMaps)
-            completion(map)
+            DispatchQueue.main.async {
+                map.addMaps(maps: generatedMaps)
+                completion(map)
+            }
         }
     }
 }
