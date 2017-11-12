@@ -65,11 +65,34 @@ class GameScene: SKScene {
                     let modifiedRoll = CGFloat(attitude.roll * abs(30.0))
                     let moveVelocity = CGVector(dx: modifiedPitch, dy: modifiedRoll)
                     if let body = sprite.physicsBody {
-                        body.velocity = body.velocity + moveVelocity
+                        let newVelocity = body.velocity + moveVelocity
+                        body.velocity = self.normalizedVelocity(velocity: newVelocity)
                     }
                 }
             })
         }
+    }
+    
+    private func normalizedVelocity(velocity: CGVector) -> CGVector {
+        var y: CGFloat
+        var x: CGFloat
+        if velocity.dx < -Ship.MAX_VELOCITY {
+            x = -Ship.MAX_VELOCITY
+        } else if velocity.dx > Ship.MAX_VELOCITY {
+            x = Ship.MAX_VELOCITY
+        } else {
+            x = velocity.dx
+        }
+        
+        if velocity.dy < -Ship.MAX_VELOCITY {
+            y = -Ship.MAX_VELOCITY
+        } else if velocity.dy > Ship.MAX_VELOCITY {
+            y = Ship.MAX_VELOCITY
+        } else {
+            y = velocity.dy
+        }
+        
+        return CGVector(dx: x, dy: y)
     }
     
     private func setupCamera() {

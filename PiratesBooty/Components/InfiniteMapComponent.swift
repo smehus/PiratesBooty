@@ -34,6 +34,7 @@ class InfiniteMapComponent: GKAgent2D {
         static let numberOfRows = 48
         static let tileSize = CGSize(width: 64, height: 64)
         static let threshholds: [NSNumber] = [-0.5, 0.0, 0.5]
+        static let generationBuffer: CGFloat = 100
     }
     
     private var currentMap: LayeredMap!
@@ -94,7 +95,7 @@ class InfiniteMapComponent: GKAgent2D {
                 return false
             }
         
-            let bottomCameraEdge = scene.camera!.position.y - scene.scaledHalfHeight
+            let bottomCameraEdge = (scene.camera!.position.y - scene.scaledHalfHeight)
             let bottomMapEdge = map.position.y - map.mapSize.halfHeight
             guard bottomCameraEdge < bottomMapEdge else { return false }
             
