@@ -36,14 +36,18 @@ class InfiniteMapComponent: GKAgent2D {
         static let threshholds: [NSNumber] = [-0.5, 0.0, 0.5]
     }
     
-    private var currentMap: LayeredMap!
     private let scene: GameScene!
     private let ruleSystem = GKRuleSystem()
     private let noise: GKNoise
     private let noiseMap: GKNoiseMap
     private let source = GKPerlinNoiseSource()
     private let tileSet = SKTileSet(named: MapValues.tileSetName)
+    private let mapGenerationQueue = DispatchQueue(label: "map_generation_queue")
     
+    private var currentMap: LayeredMap? {
+        let possibleNodes = scene.nodes(at: scene.playerShip.position!)
+        return possibleNodes.filter ({ $0 is LayeredMap }).first as? LayeredMap
+    }
     
     init(scene: GameScene) {
         self.scene = scene
@@ -67,23 +71,13 @@ class InfiniteMapComponent: GKAgent2D {
         
         for fact in ruleSystem.facts {
             guard let state = MapState(rawValue: fact as! NSString) else { continue }
-            switch state {
-            case .incrementBottomRow:
-                addBottomRow()
-            case .incrementTopRow: break
-//                addTopRow()
-            case .incrementLeftColumn: break
-//                addLeftColumn()
-            case .incrementRightColumn: break
-//                addRightColumn()
-            }
+            addMap(state: state)
         }
     }
 
     private func setupFirstMap() {
         let firstMap = generateMap()
         scene.addChild(firstMap)
-        currentMap = firstMap
     }
     
     private func setupRules() {
@@ -100,9 +94,8 @@ class InfiniteMapComponent: GKAgent2D {
             }
         
             let bottomCameraEdge = scene.camera!.position.y - scene.scaledHalfHeight
-            let cutOffEdge = scene.camera!.position.y - (scene.scaledHalfHeight / 2)
             let bottomMapEdge = map.position.y - map.mapSize.halfHeight
-            guard cutOffEdge < bottomMapEdge else { return false }
+            guard bottomCameraEdge < bottomMapEdge else { return false }
             
             let estimatedNextMapArea = CGPoint(x: map.position.x, y: bottomCameraEdge - scene.scaledHalfHeight)
             guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is LayeredMap }).isEmpty else { return false }
@@ -178,40 +171,26 @@ class InfiniteMapComponent: GKAgent2D {
         ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule, leftMaxTileMapRule, rightMaxTileMapRule])
     }
     
-    private func addBottomRow() {
-        generateMapOnBackground { (newMap) in
-            DispatchQueue.main.async {
-                newMap.position = CGPoint(x: self.currentMap.position.x, y: self.currentMap.position.y - self.currentMap.mapSize.height)
+    private func addMap(state: MapState) {
+        guard let currentMap = currentMap else { return }
+        var pos: CGPoint
+        switch state {
+        case .incrementBottomRow:
+            pos = CGPoint(x: currentMap.position.x, y: currentMap.position.y - currentMap.mapSize.height)
+        case .incrementTopRow:
+            pos = CGPoint(x: currentMap.position.x, y: currentMap.position.y + currentMap.mapSize.height)
+        case .incrementLeftColumn:
+            pos = CGPoint(x: currentMap.position.x - currentMap.mapSize.width, y: currentMap.position.y)
+        case .incrementRightColumn:
+            pos = CGPoint(x: currentMap.position.x + currentMap.mapSize.width, y: currentMap.position.y)
+        }
+        
+        generateMapOnBackground(position: pos) { (newMap) in
+            DispatchQueue.main.sync {
                 self.scene.addChild(newMap)
-                self.currentMap = newMap
                 self.ruleSystem.state[RuleSystemValues.map] = newMap
             }
         }
-
-    }
-    
-    private func addTopRow() {
-        let newMap = generateMap()
-        newMap.position = CGPoint(x: currentMap.position.x, y: currentMap.position.y + currentMap.mapSize.height)
-        scene.addChild(newMap)
-        currentMap = newMap
-        ruleSystem.state[RuleSystemValues.map] = newMap
-    }
-    
-    private func addLeftColumn() {
-        let newMap = generateMap()
-        newMap.position = CGPoint(x: currentMap.position.x - currentMap.mapSize.width, y: currentMap.position.y)
-        scene.addChild(newMap)
-        currentMap = newMap
-        ruleSystem.state[RuleSystemValues.map] = newMap
-    }
-    
-    private func addRightColumn() {
-        let newMap = generateMap()
-        newMap.position = CGPoint(x: currentMap.position.x + currentMap.mapSize.width, y: currentMap.position.y)
-        scene.addChild(newMap)
-        currentMap = newMap
-        ruleSystem.state[RuleSystemValues.map] = newMap
     }
 }
 
@@ -275,9 +254,9 @@ extension InfiniteMapComponent {
         return newMap
     }
     
-    private func generateMapOnBackground(completion: @escaping (LayeredMap) -> Void) {
+    private func generateMapOnBackground(position: CGPoint, completion: @escaping (LayeredMap) -> Void) {
         
-        DispatchQueue.global(qos: .unspecified).async {
+        mapGenerationQueue.async {
             let generatedMaps = SKTileMapNode
                 .tileMapNodes(tileSet: self.tileSet!,
                               columns: MapValues.numberOfColumns,
@@ -288,6 +267,7 @@ extension InfiniteMapComponent {
             
             let newMap = LayeredMap(maps: generatedMaps)
             newMap.name = MapValues.mapName
+            newMap.position = position
             completion(newMap)
         }
     }
