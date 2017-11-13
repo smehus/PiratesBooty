@@ -188,16 +188,24 @@ class InfiniteMapComponent: GKAgent2D {
             pos = CGPoint(x: currentMap.position.x + currentMap.mapSize.width, y: currentMap.position.y)
         }
         
+        addMap(position: pos)
+    }
+    
+    private func addMap(position: CGPoint) {
+        guard let currentMap = currentMap else { return }
         let placeholder = PlaceholderMapNode(color: .blue, size: currentMap.mapSize)
         let newMap = LayeredMap(placeholder: placeholder)
-        newMap.position = pos
+        newMap.position = position
         newMap.name = MapValues.mapName
         scene.addChild(newMap)
-
         
         generateMapOnBackground(map: newMap) { (configuredMap) in
             print("Map completed generation")
         }
+    }
+    
+    private func checkForLeftovers(map: LayeredMap) {
+        
     }
 }
 
