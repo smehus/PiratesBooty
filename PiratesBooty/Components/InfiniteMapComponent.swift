@@ -188,11 +188,13 @@ class InfiniteMapComponent: GKAgent2D {
             pos = CGPoint(x: currentMap.position.x + currentMap.mapSize.width, y: currentMap.position.y)
         }
         
-        addMap(position: pos)
+        let map = addMap(position: pos)
+        checkForLeftovers(map: map)
     }
     
-    private func addMap(position: CGPoint) {
-        guard let currentMap = currentMap else { return }
+    @discardableResult
+    private func addMap(position: CGPoint) -> LayeredMap? {
+        guard let currentMap = currentMap else { return nil }
         let placeholder = PlaceholderMapNode(color: .blue, size: currentMap.mapSize)
         let newMap = LayeredMap(placeholder: placeholder)
         newMap.position = position
@@ -202,10 +204,18 @@ class InfiniteMapComponent: GKAgent2D {
         generateMapOnBackground(map: newMap) { (configuredMap) in
             print("Map completed generation")
         }
+        
+        return newMap
     }
     
-    private func checkForLeftovers(map: LayeredMap) {
-        
+    private func checkForLeftovers(map: LayeredMap?) {
+        guard let map = map else { return }
+        let factorPoint = CGPoint(x: 0, y: map.mapSize.height)
+        let positions = [map.position - factorPoint, map.position + factorPoint]
+        for position in positions {
+            guard scene.nodes(at: position).filter({ $0 is SKTileMapNode || $0 is PlaceholderMapNode}).isEmpty else { continue }
+            addMap(position: position)
+        }
     }
 }
 
