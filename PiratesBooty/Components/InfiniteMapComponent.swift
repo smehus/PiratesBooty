@@ -18,6 +18,10 @@ private enum MapState: NSString, CustomStringConvertible {
     var description: String {
         return rawValue as String
     }
+    
+    static var allStates: [MapState] {
+        return [.incrementBottomRow, .incrementTopRow, .incrementLeftColumn, .incrementRightColumn]
+    }
 }
 
 class InfiniteMapComponent: GKAgent2D {
@@ -76,11 +80,16 @@ class InfiniteMapComponent: GKAgent2D {
             print("ADDING MAP \(fact)")
             addMap(state: state)
         }
+        
     }
 
     private func setupFirstMap() {
         let firstMap = generateMap()
         scene.addChild(firstMap)
+        
+        for state in MapState.allStates {
+            addMap(state: state)
+        }
     }
     
     private func setupRules() {
@@ -189,7 +198,7 @@ class InfiniteMapComponent: GKAgent2D {
         }
         
         let map = addMap(position: pos)
-        checkForLeftovers(map: map)
+        populateNeighbors(map: map)
     }
     
     @discardableResult
@@ -208,10 +217,18 @@ class InfiniteMapComponent: GKAgent2D {
         return newMap
     }
     
-    private func checkForLeftovers(map: LayeredMap?) {
+    private func populateNeighbors(map: LayeredMap?) {
         guard let map = map else { return }
-        let factorPoint = CGPoint(x: 0, y: map.mapSize.height)
-        let positions = [map.position - factorPoint, map.position + factorPoint]
+        let verticalNeighborPositions = CGPoint(x: 0, y: map.mapSize.height)
+        let horizontalNeighborPosition = CGPoint(x: map.mapSize.width, y: 0)
+        
+        let positions = [
+            map.position - verticalNeighborPositions, // Bottom Neighbor
+            map.position + verticalNeighborPositions, // Top Neighbor
+            map.position + horizontalNeighborPosition, // Right Neighbor
+            map.position - horizontalNeighborPosition // Left Neightbor
+        ]
+        
         for position in positions {
             guard scene.nodes(at: position).filter({ $0 is SKTileMapNode || $0 is PlaceholderMapNode}).isEmpty else { continue }
             addMap(position: position)
