@@ -32,6 +32,11 @@ class InfiniteMapComponent: GKAgent2D {
     }
     
     private struct MapValues {
+        struct NoiseMap {
+            static let noiseSize: Double = 100
+            static let sampleSize: Int32 = 100
+        }
+        
         static let mapName = "TILE_MAP"
         static let tileSetName = "PirateTiles"
         static let numberOfColumns = 48
@@ -286,10 +291,10 @@ extension InfiniteMapComponent {
         
         mapGenerationQueue.async {
             let noiseMap = GKNoiseMap(self.noise,
-                                      size: vector_double2(Double(MapValues.mapWidth), Double(MapValues.mapHeight)),
+                                      size: vector_double2(MapValues.NoiseMap.noiseSize),
                                       origin: vector_double2(Double(map.position.x), Double(map.position.y)),
-                                      sampleCount: vector_int2(Int32(100)),
-                                      seamless: true)
+                                      sampleCount: vector_int2(MapValues.NoiseMap.sampleSize),
+                                      seamless: false)
             
             let generatedMaps = SKTileMapNode
                 .tileMapNodes(tileSet: self.tileSet!,
@@ -300,9 +305,9 @@ extension InfiniteMapComponent {
                               tileTypeNoiseMapThresholds: MapValues.threshholds)
             
 
-            self.addDebugSprite(map: map, noiseMap: noiseMap)
+//            self.addDebugSprite(map: map, noiseMap: noiseMap)
             DispatchQueue.main.async {
-//                map.addMaps(maps: generatedMaps)
+                map.addMaps(maps: generatedMaps)
                 completion(map)
             }
         }
