@@ -58,7 +58,7 @@ class InfiniteMapComponent: GKAgent2D {
     init(scene: GameScene) {
         self.scene = scene
         
-        source = GKPerlinNoiseSource(frequency: 10.0, octaveCount: 10, persistence: 10.0, lacunarity: 3.0, seed: Int32(Int.random(min: 0, max: 100)))
+        source = GKPerlinNoiseSource(frequency: 5.0, octaveCount: 5, persistence: 10.0, lacunarity: 5.0, seed: Int32(1))
         noise = GKNoise(source)
         super.init()
         
@@ -288,8 +288,8 @@ extension InfiniteMapComponent {
             let noiseMap = GKNoiseMap(self.noise,
                                       size: vector_double2(Double(MapValues.mapWidth), Double(MapValues.mapHeight)),
                                       origin: vector_double2(Double(map.position.x), Double(map.position.y)),
-                                      sampleCount: vector_int2(Int32(500)),
-                                      seamless: false)
+                                      sampleCount: vector_int2(Int32(100)),
+                                      seamless: true)
             
             let generatedMaps = SKTileMapNode
                 .tileMapNodes(tileSet: self.tileSet!,
@@ -300,14 +300,15 @@ extension InfiniteMapComponent {
                               tileTypeNoiseMapThresholds: MapValues.threshholds)
             
 
+            self.addDebugSprite(map: map, noiseMap: noiseMap)
             DispatchQueue.main.async {
-                map.addMaps(maps: generatedMaps)
+//                map.addMaps(maps: generatedMaps)
                 completion(map)
             }
         }
     }
     
-    private func addDebugSprite(noiseMap: GKNoiseMap) {
+    private func addDebugSprite(map: LayeredMap, noiseMap: GKNoiseMap) {
         DispatchQueue.main.async {
             let texture = SKTexture(noiseMap: noiseMap)
             let sprite = SKSpriteNode(texture: texture, color: .white, size: CGSize(width: MapValues.mapWidth, height: MapValues.mapHeight))
