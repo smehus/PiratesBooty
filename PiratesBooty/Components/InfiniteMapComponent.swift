@@ -45,7 +45,7 @@ class InfiniteMapComponent: GKAgent2D {
     private let scene: GameScene!
     private let ruleSystem = GKRuleSystem()
     private let noise: GKNoise
-    private let source = GKPerlinNoiseSource()
+    private let source: GKNoiseSource
     private let tileSet = SKTileSet(named: MapValues.tileSetName)
     private let mapGenerationQueue = DispatchQueue(label: "map_generation_queue")
     
@@ -57,6 +57,8 @@ class InfiniteMapComponent: GKAgent2D {
     
     init(scene: GameScene) {
         self.scene = scene
+        
+        source = GKPerlinNoiseSource(frequency: 10.0, octaveCount: 10, persistence: 10.0, lacunarity: 3.0, seed: Int32(Int.random(min: 0, max: 100)))
         noise = GKNoise(source)
         super.init()
         
@@ -296,11 +298,20 @@ extension InfiniteMapComponent {
                               tileSize: MapValues.tileSize,
                               from: noiseMap,
                               tileTypeNoiseMapThresholds: MapValues.threshholds)
+            
 
             DispatchQueue.main.async {
                 map.addMaps(maps: generatedMaps)
                 completion(map)
             }
+        }
+    }
+    
+    private func addDebugSprite(noiseMap: GKNoiseMap) {
+        DispatchQueue.main.async {
+            let texture = SKTexture(noiseMap: noiseMap)
+            let sprite = SKSpriteNode(texture: texture, color: .white, size: CGSize(width: MapValues.mapWidth, height: MapValues.mapHeight))
+            map.addChild(sprite)
         }
     }
 }
