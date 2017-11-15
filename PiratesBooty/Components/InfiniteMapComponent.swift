@@ -38,12 +38,13 @@ class InfiniteMapComponent: GKAgent2D {
         static let numberOfRows = 48
         static let tileSize = CGSize(width: 64, height: 64)
         static let threshholds: [NSNumber] = [-0.5, 0.0, 0.5, 1.0]
+        static let mapWidth: CGFloat = CGFloat(MapValues.numberOfColumns) * MapValues.tileSize.width
+        static let mapHeight: CGFloat = CGFloat(MapValues.numberOfRows) * MapValues.tileSize.height
     }
     
     private let scene: GameScene!
     private let ruleSystem = GKRuleSystem()
     private let noise: GKNoise
-    private let initialNoiseMap: GKNoiseMap
     private let source = GKPerlinNoiseSource()
     private let tileSet = SKTileSet(named: MapValues.tileSetName)
     private let mapGenerationQueue = DispatchQueue(label: "map_generation_queue")
@@ -57,7 +58,6 @@ class InfiniteMapComponent: GKAgent2D {
     init(scene: GameScene) {
         self.scene = scene
         noise = GKNoise(source)
-        initialNoiseMap = GKNoiseMap(noise)
         super.init()
         
         
@@ -85,9 +85,7 @@ class InfiniteMapComponent: GKAgent2D {
     }
 
     private func setupFirstMap() {
-        let firstMap = generateMap()
-        scene.addChild(firstMap)
-        
+        addMap(position: CGPoint(x: 0, y: 0))
         for state in MapState.allStates {
             addMap(state: state)
         }
@@ -204,8 +202,7 @@ class InfiniteMapComponent: GKAgent2D {
     
     @discardableResult
     private func addMap(position: CGPoint) -> LayeredMap? {
-        guard let currentMap = currentMap else { return nil }
-        let placeholder = PlaceholderMapNode(color: .blue, size: currentMap.mapSize)
+        let placeholder = PlaceholderMapNode(color: .blue, size: CGSize(width: MapValues.mapWidth, height: MapValues.mapHeight))
         let newMap = LayeredMap(placeholder: placeholder)
         newMap.position = position
         newMap.name = MapValues.mapName
@@ -282,28 +279,14 @@ extension InfiniteMapComponent {
 }
 
 extension InfiniteMapComponent {
-    private func generateMap() -> LayeredMap {
-  
-        let generatedMaps = SKTileMapNode
-            .tileMapNodes(tileSet: tileSet!,
-                          columns: MapValues.numberOfColumns,
-                          rows: MapValues.numberOfRows,
-                          tileSize: MapValues.tileSize,
-                          from: initialNoiseMap,
-                          tileTypeNoiseMapThresholds: MapValues.threshholds)
-        
-        let newMap = LayeredMap(maps: generatedMaps)
-        newMap.name = MapValues.mapName
-        return newMap
-    }
     
     private func generateMapOnBackground(map: LayeredMap, completion: @escaping (LayeredMap) -> Void) {
         
         mapGenerationQueue.async {
             let noiseMap = GKNoiseMap(self.noise,
-                                      size: vector_double2(Double(map.mapSize.width), Double(map.mapSize.height)),
+                                      size: vector_double2(Double(MapValues.mapWidth), Double(MapValues.mapHeight)),
                                       origin: vector_double2(Double(map.position.x), Double(map.position.y)),
-                                      sampleCount: vector_int2(Int32(100)),
+                                      sampleCount: vector_int2(Int32(500)),
                                       seamless: false)
             
             let generatedMaps = SKTileMapNode
