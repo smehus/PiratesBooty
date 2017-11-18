@@ -166,7 +166,6 @@
 		A594B66A1F8E325300361E50 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				A594B6981F8E41D900361E50 /* Behaviors */,
 				A594B6611F8E2DC500361E50 /* SpriteComponent.swift */,
 				A58676401F925524001F37C1 /* DirectionalComponent.swift */,
 				A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */,
@@ -218,13 +217,6 @@
 				A59B93D41F93C1A900F37A49 /* SKTileSet+Extensions.swift */,
 			);
 			path = SKTUtils;
-			sourceTree = "<group>";
-		};
-		A594B6981F8E41D900361E50 /* Behaviors */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Behaviors;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
