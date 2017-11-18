@@ -33,15 +33,15 @@ class InfiniteMapComponent: GKAgent2D {
     
     private struct MapValues {
         struct NoiseMap {
-            static let noiseSize: Double = 100
+            static let noiseSize: Double = 3.0
             static let sampleSize: Int32 = 100
         }
         
         static let mapName = "TILE_MAP"
         static let tileSetName = "PirateTiles"
-        static let numberOfColumns = 48
-        static let numberOfRows = 48
-        static let tileSize = CGSize(width: 64, height: 64)
+        static let numberOfColumns = 20
+        static let numberOfRows = 20
+        static let tileSize = CGSize(width: 30, height: 30)
         static let threshholds: [NSNumber] = [-0.5, 0.0, 0.5, 1.0]
         static let mapWidth: CGFloat = CGFloat(MapValues.numberOfColumns) * MapValues.tileSize.width
         static let mapHeight: CGFloat = CGFloat(MapValues.numberOfRows) * MapValues.tileSize.height
@@ -54,6 +54,10 @@ class InfiniteMapComponent: GKAgent2D {
     private let tileSet = SKTileSet(named: MapValues.tileSetName)
     private let mapGenerationQueue = DispatchQueue(label: "map_generation_queue")
     
+    
+    /// Keeps track of the movement of the noise field
+    private var noiseOffset = vector_double2(0, 0)
+    
     private var currentMap: LayeredMap? {
         let possibleNodes = scene.nodes(at: scene.playerShip.position!)
         let tileMap = possibleNodes.filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).first
@@ -63,13 +67,18 @@ class InfiniteMapComponent: GKAgent2D {
     init(scene: GameScene) {
         self.scene = scene
         
-        source = GKPerlinNoiseSource(frequency: 5.0, octaveCount: 5, persistence: 10.0, lacunarity: 5.0, seed: Int32(1))
+        source = GKPerlinNoiseSource(frequency: 0.5,
+                                     octaveCount: 3,
+                                     persistence: 5.0,
+                                     lacunarity: 2.0,
+                                     seed: Int32(50))
+        
         noise = GKNoise(source)
         super.init()
         
         
         setupFirstMap()
-        setupRules()
+//        setupRules()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -204,7 +213,7 @@ class InfiniteMapComponent: GKAgent2D {
         }
         
         let map = addMap(position: pos)
-        populateNeighbors(map: map)
+//        populateNeighbors(map: map)
     }
     
     @discardableResult
@@ -290,9 +299,18 @@ extension InfiniteMapComponent {
     private func generateMapOnBackground(map: LayeredMap, completion: @escaping (LayeredMap) -> Void) {
         
         mapGenerationQueue.async {
+            
+            self.noise.move(by: vector_double3(-self.noiseOffset.x, -self.noiseOffset.y, 0))
+            /// How man units offset is the current map from 0, 0
+            var mapOriginOffset = vector_double2(Double(map.position.x / map.mapSize.width), Double(map.position.y / map.mapSize.height))
+            print("offset \(mapOriginOffset * 3)")
+            mapOriginOffset = mapOriginOffset * MapValues.NoiseMap.noiseSize
+            self.noise.move(by: vector_double3(mapOriginOffset.x, mapOriginOffset.y, 0))
+            self.noiseOffset = mapOriginOffset
+            
             let noiseMap = GKNoiseMap(self.noise,
                                       size: vector_double2(MapValues.NoiseMap.noiseSize),
-                                      origin: vector_double2(Double(map.position.x), Double(map.position.y)),
+                                      origin: vector_double2(0, 0),
                                       sampleCount: vector_int2(MapValues.NoiseMap.sampleSize),
                                       seamless: false)
             
@@ -305,9 +323,9 @@ extension InfiniteMapComponent {
                               tileTypeNoiseMapThresholds: MapValues.threshholds)
             
 
-//            self.addDebugSprite(map: map, noiseMap: noiseMap)
+            self.addDebugSprite(map: map, noiseMap: noiseMap)
             DispatchQueue.main.async {
-                map.addMaps(maps: generatedMaps)
+//                map.addMaps(maps: generatedMaps)
                 completion(map)
             }
         }

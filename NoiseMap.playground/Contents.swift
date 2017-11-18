@@ -38,24 +38,15 @@ class GameScene: SKScene {
                                    size: vector_double2(3, 3),
                                    origin: vector_double2(0, 0),
                                    sampleCount: sampleCount,
-                                   seamless: true)
+                                   seamless: false)
         
 
         let texture = SKTexture(noiseMap: customMap)
-        let sprite = SKSpriteNode(texture: texture, color: .white, size: CGSize(width: 500, height: 500))
-        sprite.position = CGPoint(x: -250, y: 0)
+        let sprite = SKSpriteNode(texture: texture, color: .white, size: CGSize(width: 200, height: 200))
+        sprite.position = CGPoint(x: -100, y: 0)
         
         addChild(sprite)
         
-        
-        
-//        let source2 = GKPerlinNoiseSource(frequency: 1.0,
-//                                         octaveCount: 6,
-//                                         persistence: 1.0,
-//                                         lacunarity: 2.0,
-//                                         seed: Int32(1))
-//        let noise2 = GKNoise(source2,
-//                             gradientColors: [-1: .red, 1: .green])
         
         /// Will need to keep track of the translation - and maybe
         /// reset back to 0 each time a new map is about to be created
@@ -65,13 +56,29 @@ class GameScene: SKScene {
                                     size: vector_double2(3, 3),
                                     origin: double2(0, 0),
                                     sampleCount: sampleCount,
-                                    seamless: true)
+                                    seamless: false)
 
         noise.move(by: vector_double3(-3, 0, 0))
         let texture2 = SKTexture(noiseMap: customMap2)
-        let sprite2 = SKSpriteNode(texture: texture2, color: .white, size: CGSize(width: 500, height: 500))
-        sprite2.position = CGPoint(x: 250, y: 0)
+        let sprite2 = SKSpriteNode(texture: texture2, color: .white, size: CGSize(width: 200, height: 200))
+        sprite2.position = CGPoint(x: 100, y: 0)
         addChild(sprite2)
+        
+        
+        
+        noise.move(by: vector_double3(0, 0, -3))
+        
+        let customMap3 = GKNoiseMap(noise,
+                                    size: vector_double2(3, 3),
+                                    origin: double2(0, 0),
+                                    sampleCount: sampleCount,
+                                    seamless: false)
+        
+        
+        let texture3 = SKTexture(noiseMap: customMap3)
+        let sprite3 = SKSpriteNode(texture: texture3, color: .white, size: CGSize(width: 200, height: 200))
+        sprite3.position = CGPoint(x: -100, y: -200)
+        addChild(sprite3)
         
         
     }
