@@ -74,11 +74,27 @@ class GameScene: SKScene {
                                     sampleCount: sampleCount,
                                     seamless: false)
         
-        
+        noise.move(by: vector_double3(0, 0, 3))
         let texture3 = SKTexture(noiseMap: customMap3)
         let sprite3 = SKSpriteNode(texture: texture3, color: .white, size: CGSize(width: 200, height: 200))
         sprite3.position = CGPoint(x: -100, y: -200)
         addChild(sprite3)
+        
+        
+        
+        noise.move(by: vector_double3(0, 0, 3))
+        
+        let customMap4 = GKNoiseMap(noise,
+                                    size: vector_double2(3, 3),
+                                    origin: double2(0, 0),
+                                    sampleCount: sampleCount,
+                                    seamless: false)
+        
+        
+        let texture4 = SKTexture(noiseMap: customMap4)
+        let sprite4 = SKSpriteNode(texture: texture4, color: .white, size: CGSize(width: 200, height: 200))
+        sprite4.position = CGPoint(x: -100, y: 200)
+        addChild(sprite4)
         
         
     }

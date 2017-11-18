@@ -39,9 +39,9 @@ class InfiniteMapComponent: GKAgent2D {
         
         static let mapName = "TILE_MAP"
         static let tileSetName = "PirateTiles"
-        static let numberOfColumns = 20
-        static let numberOfRows = 20
-        static let tileSize = CGSize(width: 30, height: 30)
+        static let numberOfColumns = 48
+        static let numberOfRows = 48
+        static let tileSize = CGSize(width: 64, height: 64)
         static let threshholds: [NSNumber] = [-0.5, 0.0, 0.5, 1.0]
         static let mapWidth: CGFloat = CGFloat(MapValues.numberOfColumns) * MapValues.tileSize.width
         static let mapHeight: CGFloat = CGFloat(MapValues.numberOfRows) * MapValues.tileSize.height
@@ -53,10 +53,6 @@ class InfiniteMapComponent: GKAgent2D {
     private let source: GKNoiseSource
     private let tileSet = SKTileSet(named: MapValues.tileSetName)
     private let mapGenerationQueue = DispatchQueue(label: "map_generation_queue")
-    
-    
-    /// Keeps track of the movement of the noise field
-    private var noiseOffset = vector_double2(0, 0)
     
     private var currentMap: LayeredMap? {
         let possibleNodes = scene.nodes(at: scene.playerShip.position!)
@@ -78,7 +74,7 @@ class InfiniteMapComponent: GKAgent2D {
         
         
         setupFirstMap()
-//        setupRules()
+        setupRules()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -213,7 +209,7 @@ class InfiniteMapComponent: GKAgent2D {
         }
         
         let map = addMap(position: pos)
-//        populateNeighbors(map: map)
+        populateNeighbors(map: map)
     }
     
     @discardableResult
@@ -300,19 +296,19 @@ extension InfiniteMapComponent {
         
         mapGenerationQueue.async {
             
-            self.noise.move(by: vector_double3(-self.noiseOffset.x, -self.noiseOffset.y, 0))
             /// How man units offset is the current map from 0, 0
             var mapOriginOffset = vector_double2(Double(map.position.x / map.mapSize.width), Double(map.position.y / map.mapSize.height))
-            print("offset \(mapOriginOffset * 3)")
             mapOriginOffset = mapOriginOffset * MapValues.NoiseMap.noiseSize
-            self.noise.move(by: vector_double3(mapOriginOffset.x, mapOriginOffset.y, 0))
-            self.noiseOffset = mapOriginOffset
-            
+
+            self.noise.move(by: vector_double3(mapOriginOffset.x, 0, mapOriginOffset.y))
             let noiseMap = GKNoiseMap(self.noise,
                                       size: vector_double2(MapValues.NoiseMap.noiseSize),
                                       origin: vector_double2(0, 0),
                                       sampleCount: vector_int2(MapValues.NoiseMap.sampleSize),
                                       seamless: false)
+            
+            /// Reset the noise field - the y value actually goes into the z access - because of the way the slice is sampled?
+            self.noise.move(by: vector_double3(-mapOriginOffset.x, 0, -mapOriginOffset.y))
             
             let generatedMaps = SKTileMapNode
                 .tileMapNodes(tileSet: self.tileSet!,
@@ -323,9 +319,9 @@ extension InfiniteMapComponent {
                               tileTypeNoiseMapThresholds: MapValues.threshholds)
             
 
-            self.addDebugSprite(map: map, noiseMap: noiseMap)
+//            self.addDebugSprite(map: map, noiseMap: noiseMap)
             DispatchQueue.main.async {
-//                map.addMaps(maps: generatedMaps)
+                map.addMaps(maps: generatedMaps)
                 completion(map)
             }
         }

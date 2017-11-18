@@ -66,7 +66,7 @@ class GameScene: SKScene {
                     let moveVelocity = CGVector(dx: modifiedPitch, dy: modifiedRoll)
                     if let body = sprite.physicsBody {
                         let newVelocity = body.velocity + moveVelocity
-//                        body.velocity = self.normalizedVelocity(velocity: newVelocity)
+                        body.velocity = self.normalizedVelocity(velocity: newVelocity)
                     }
                 }
             })
