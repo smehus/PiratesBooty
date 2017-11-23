@@ -42,7 +42,7 @@ class InfiniteMapComponent: GKAgent2D {
         static let numberOfColumns = 48
         static let numberOfRows = 48
         static let tileSize = CGSize(width: 64, height: 64)
-        static let threshholds: [NSNumber] = [-0.5, 0.0, 0.5, 1.0]
+        static let threshholds: [NSNumber] = [-1.0, 1.0]
         static let mapWidth: CGFloat = CGFloat(MapValues.numberOfColumns) * MapValues.tileSize.width
         static let mapHeight: CGFloat = CGFloat(MapValues.numberOfRows) * MapValues.tileSize.height
     }
@@ -63,10 +63,15 @@ class InfiniteMapComponent: GKAgent2D {
     init(scene: GameScene) {
         self.scene = scene
         
-        source = GKPerlinNoiseSource(frequency: 0.5,
-                                     octaveCount: 3,
-                                     persistence: 5.0,
-                                     lacunarity: 2.0,
+//        source = GKPerlinNoiseSource(frequency: 0.5,
+//                                     octaveCount: 3,
+//                                     persistence: 5.0,
+//                                     lacunarity: 2.0,
+//                                     seed: Int32(50))
+        
+        source = GKRidgedNoiseSource(frequency: 1.0,
+                                     octaveCount: 10,
+                                     lacunarity: 1.0,
                                      seed: Int32(50))
         
         noise = GKNoise(source)
