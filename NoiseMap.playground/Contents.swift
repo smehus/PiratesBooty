@@ -20,16 +20,21 @@ class GameScene: SKScene {
         
         
         
-//        let source = GKPerlinNoiseSource(frequency: 0.2,
-//                                         octaveCount: 4,
+//        let source = GKPerlinNoiseSource(frequency: 1.0,
+//                                         octaveCount: 6,
 //                                         persistence: 3.0,
 //                                         lacunarity: 2.0,
 //                                         seed: Int32(50))
         
 
+//        let source = GKRidgedNoiseSource(frequency: 1.0,
+//                                         octaveCount: 10,
+//                                         lacunarity: 1.0,
+//                                         seed: Int32(50))
+        
         let source = GKRidgedNoiseSource(frequency: 1.0,
                                          octaveCount: 10,
-                                         lacunarity: 1.0,
+                                         lacunarity: 2.0,
                                          seed: Int32(50))
         
 //        let source = GKBillowNoiseSource()
@@ -40,6 +45,7 @@ class GameScene: SKScene {
         
         let noise = GKNoise(source,
                             gradientColors: [-1: .red, 1: .green])
+        noise.invert()
 
         noise.move(by: vector_double3(50, 0, 100))
         let map = GKNoiseMap(noise)

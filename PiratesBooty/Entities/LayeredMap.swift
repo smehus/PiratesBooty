@@ -42,6 +42,12 @@ class LayeredMap: SKNode {
     func addMaps(maps: [SKTileMapNode]) {
         self.maps = maps
         addChildren(children: maps)
+        
+        for map in maps {
+            if let name = map.tileGroup(atColumn: 0, row: 0)?.name {
+                print("MAP NAME \(Date()) \(name)")
+            }
+        }
     }
 }
 
