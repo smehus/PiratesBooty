@@ -37,16 +37,20 @@ class GameScene: SKScene {
 //                                         lacunarity: 2.0,
 //                                         seed: Int32(50))
         
-        let source = GKBillowNoiseSource(frequency: 50.0,
+        let source = GKBillowNoiseSource(frequency: 6.0,
                                          octaveCount: 6,
-                                         persistence: 2.0,
-                                         lacunarity: 0.5,
+                                         persistence: 10.0,
+                                         lacunarity: 0.6,
                                          seed: Int32(2))
         
         // Frequency basically zooms out
         
         // Persistence: How quickly the hills drop
         // aka - How quickly the red bits turn into green bits
+        // Smooths it out kinda
+        
+        // Lacunarity: less green splots - but larger - more uniformity
+        // or more green spots and smaller
         
 //        let source = GKVoronoiNoiseSource()
 //        let source = GKSpheresNoiseSource()

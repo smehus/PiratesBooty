@@ -74,10 +74,10 @@ class InfiniteMapComponent: GKAgent2D {
 //                                     lacunarity: 2.0,
 //                                     seed: Int32(50))
         
-        source = GKBillowNoiseSource(frequency: 10.0,
+        source = GKBillowNoiseSource(frequency: 6.0,
                                      octaveCount: 6,
-                                     persistence: 2.0,
-                                     lacunarity: 0.5,
+                                     persistence: 10.0,
+                                     lacunarity: 0.6,
                                      seed: Int32(2))
         
         noise = GKNoise(source, gradientColors:[-1: .red, 1: .green])
