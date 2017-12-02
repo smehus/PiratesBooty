@@ -97,8 +97,8 @@ class GameScene: SKScene {
     
     private func setupCamera() {
         let cam = SKCameraNode()
-        cam.xScale = 2.0
-        cam.yScale = 2.0
+        cam.xScale = cameraScale.xScale
+        cam.yScale = cameraScale.yScale
         addChild(cam)
         camera = cam
         
@@ -121,5 +121,15 @@ class GameScene: SKScene {
         edgeConstraint.referenceNode = self
         
         camera?.constraints = [followConstraint/*, edgeConstraint*/]
+    }
+}
+
+extension GameScene: MultiScaledScene {
+    var sceneScale: (xScale: CGFloat, yScale: CGFloat) {
+        return (2.0, 2.0)
+    }
+    
+    var cameraScale: (xScale: CGFloat, yScale: CGFloat) {
+        return (10.0, 10.0)
     }
 }

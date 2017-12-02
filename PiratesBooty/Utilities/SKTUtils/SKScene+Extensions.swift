@@ -77,20 +77,27 @@ extension SKScene {
         let joint = SKPhysicsJointFixed.joint(withBodyA: bodyA, bodyB: bodyB, anchor: position)
         physicsWorld.add(joint)
     }
-    
+}
+
+protocol MultiScaledScene: class {
+    var sceneScale: (xScale: CGFloat, yScale: CGFloat) { get }
+    var cameraScale: (xScale: CGFloat, yScale: CGFloat) { get }
+}
+
+extension MultiScaledScene where Self: SKScene {
     var scaledHeight: CGFloat {
-        return size.height * max(camera!.xScale, camera!.yScale)
+        return size.height * max(sceneScale.xScale, sceneScale.yScale)
     }
     
     var scaledWidth: CGFloat {
-        return size.width * max(camera!.xScale, camera!.yScale)
+        return size.width * max(sceneScale.xScale, sceneScale.yScale)
     }
     
     var scaledHalfHeight: CGFloat {
-        return size.halfHeight * max(camera!.xScale, camera!.yScale)
+        return size.halfHeight * max(sceneScale.xScale, sceneScale.yScale)
     }
     
     var scaledHalfWidth: CGFloat {
-        return size.halfWidth * max(camera!.xScale, camera!.yScale)
+        return size.halfWidth * max(sceneScale.xScale, sceneScale.yScale)
     }
 }
