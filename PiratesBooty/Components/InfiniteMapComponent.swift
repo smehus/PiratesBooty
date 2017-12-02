@@ -221,25 +221,32 @@ class InfiniteMapComponent: GKAgent2D {
             pos = CGPoint(x: currentMap.position.x + currentMap.mapSize.width, y: currentMap.position.y)
         }
         
-        let map = addMap(position: pos)
-        populateNeighbors(map: map)
+        addMap(position: pos)
     }
     
     @discardableResult
     private func addMap(position: CGPoint) -> LayeredMap? {
+        
+        /// Check the position is within desired range to create a new map
+        if let current = currentMap, abs(position.distanceTo(current.position)) > (MapValues.mapWidth * 3) {
+            return nil
+        }
+        
         let placeholder = PlaceholderMapNode(color: .blue, size: CGSize(width: MapValues.mapWidth, height: MapValues.mapHeight))
         let newMap = LayeredMap(placeholder: placeholder)
         newMap.position = position
         newMap.name = MapValues.mapName
         scene.addChild(newMap)
         
-        generateMapOnBackground(map: newMap) { (configuredMap) in
-            print("Map completed generation")
-        }
+        generateMapOnBackground(map: newMap) { (configuredMap) in }
+        populateNeighbors(map: newMap)
         
         return newMap
     }
     
+    private func positionIsWithinRange(_ position: CGPoint, target: CGPoint, range: CGFloat) -> Bool {
+        return abs(position.distanceTo(target)) < range
+    }
     private func populateNeighbors(map: LayeredMap?) {
         guard let map = map else { return }
         let verticalNeighborPositions = CGPoint(x: 0, y: map.mapSize.height)
