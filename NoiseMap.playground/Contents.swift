@@ -21,23 +21,23 @@ class GameScene: SKScene {
         
         
 //        let source = GKPerlinNoiseSource(frequency: 1.0,
-//                                         octaveCount: 6,
-//                                         persistence: 3.0,
-//                                         lacunarity: 2.0,
+//                                         octaveCount: 2,
+//                                         persistence: 2.0,
+//                                         lacunarity: 1.0,
 //                                         seed: Int32(50))
-        
+//
 
 //        let source = GKRidgedNoiseSource(frequency: 1.0,
 //                                         octaveCount: 10,
 //                                         lacunarity: 1.0,
 //                                         seed: Int32(50))
         
-        let source = GKRidgedNoiseSource(frequency: 1.0,
-                                         octaveCount: 10,
-                                         lacunarity: 2.0,
-                                         seed: Int32(50))
+//        let source = GKRidgedNoiseSource(frequency: 0.5,
+//                                         octaveCount: 10,
+//                                         lacunarity: 2.0,
+//                                         seed: Int32(50))
         
-//        let source = GKBillowNoiseSource()
+        let source = GKBillowNoiseSource()
 //        let source = GKVoronoiNoiseSource()
 //        let source = GKSpheresNoiseSource()
 //        let source = GKCoherentNoiseSource()

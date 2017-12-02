@@ -69,12 +69,13 @@ class InfiniteMapComponent: GKAgent2D {
 //                                     lacunarity: 2.0,
 //                                     seed: Int32(50))
         
-        source = GKRidgedNoiseSource(frequency: 1.0,
-                                     octaveCount: 10,
-                                     lacunarity: 2.0,
-                                     seed: Int32(50))
+//        source = GKRidgedNoiseSource(frequency: 1.0,
+//                                     octaveCount: 10,
+//                                     lacunarity: 2.0,
+//                                     seed: Int32(50))
+        source = GKBillowNoiseSource()
         
-        noise = GKNoise(source/*, gradientColors:[-1: .red, 1: .green]*/)
+        noise = GKNoise(source, gradientColors:[-1: .red, 1: .green])
         noise.invert()
         
         super.init()
@@ -326,9 +327,9 @@ extension InfiniteMapComponent {
                               tileTypeNoiseMapThresholds: MapValues.threshholds)
             
 
-//            self.addDebugSprite(map: map, noiseMap: noiseMap)
+            self.addDebugSprite(map: map, noiseMap: noiseMap)
             DispatchQueue.main.async {
-                map.addMaps(maps: generatedMaps)
+//                map.addMaps(maps: generatedMaps)
                 completion(map)
             }
         }
