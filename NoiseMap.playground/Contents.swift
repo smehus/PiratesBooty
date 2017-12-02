@@ -37,7 +37,17 @@ class GameScene: SKScene {
 //                                         lacunarity: 2.0,
 //                                         seed: Int32(50))
         
-        let source = GKBillowNoiseSource()
+        let source = GKBillowNoiseSource(frequency: 50.0,
+                                         octaveCount: 6,
+                                         persistence: 2.0,
+                                         lacunarity: 0.5,
+                                         seed: Int32(2))
+        
+        // Frequency basically zooms out
+        
+        // Persistence: How quickly the hills drop
+        // aka - How quickly the red bits turn into green bits
+        
 //        let source = GKVoronoiNoiseSource()
 //        let source = GKSpheresNoiseSource()
 //        let source = GKCoherentNoiseSource()
@@ -45,9 +55,9 @@ class GameScene: SKScene {
         
         let noise = GKNoise(source,
                             gradientColors: [-1: .red, 1: .green])
-        noise.invert()
+//        noise.invert()
 
-        noise.move(by: vector_double3(50, 0, 100))
+//        noise.move(by: vector_double3(0, 0, 0))
         let map = GKNoiseMap(noise)
         print("sample count \(map.sampleCount)")
         print("size \(map.size)")
@@ -81,6 +91,7 @@ class GameScene: SKScene {
         let texture2 = SKTexture(noiseMap: customMap2)
         let sprite2 = SKSpriteNode(texture: texture2, color: .white, size: CGSize(width: 200, height: 200))
         sprite2.position = CGPoint(x: 100, y: 0)
+        
         addChild(sprite2)
 
 
@@ -109,18 +120,33 @@ class GameScene: SKScene {
                                     sampleCount: sampleCount,
                                     seamless: false)
 
-
+        noise.move(by: vector_double3(0, 0, -3))
+        
         let texture4 = SKTexture(noiseMap: customMap4)
         let sprite4 = SKSpriteNode(texture: texture4, color: .white, size: CGSize(width: 200, height: 200))
         sprite4.position = CGPoint(x: -100, y: 200)
         addChild(sprite4)
         
         
+        noise.move(by: vector_double3(-3, 0, 0))
+        let customMap5 = GKNoiseMap(noise,
+                                    size: vector_double2(3, 3),
+                                    origin: double2(0, 0),
+                                    sampleCount: sampleCount,
+                                    seamless: false)
+        
+        
+        let texture5 = SKTexture(noiseMap: customMap5)
+        let sprite5 = SKSpriteNode(texture: texture5, color: .white, size: CGSize(width: 200, height: 200))
+        sprite5.position = CGPoint(x: -300, y: 0)
+        addChild(sprite5)
+        
+        
     }
     
     func printValues(with map: GKNoiseMap, name: String) {
         for i in 0..<map.sampleCount.x {
-            print("\(name): idx: \(i) -> \(map.value(at: vector_int2(i, 0)))")
+//            print("\(name): idx: \(i) -> \(map.value(at: vector_int2(i, 0)))")
         }
     }
 }

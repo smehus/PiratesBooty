@@ -42,7 +42,7 @@ class InfiniteMapComponent: GKAgent2D {
         static let numberOfColumns = 48
         static let numberOfRows = 48
         static let tileSize = CGSize(width: 64, height: 64)
-        static let threshholds: [NSNumber] = [-0.8, 1.0]
+        static let threshholds: [NSNumber] = [0.0, 1.0]
         static let mapWidth: CGFloat = CGFloat(MapValues.numberOfColumns) * MapValues.tileSize.width
         static let mapHeight: CGFloat = CGFloat(MapValues.numberOfRows) * MapValues.tileSize.height
     }
@@ -73,10 +73,15 @@ class InfiniteMapComponent: GKAgent2D {
 //                                     octaveCount: 10,
 //                                     lacunarity: 2.0,
 //                                     seed: Int32(50))
-        source = GKBillowNoiseSource()
+        
+        source = GKBillowNoiseSource(frequency: 10.0,
+                                     octaveCount: 6,
+                                     persistence: 2.0,
+                                     lacunarity: 0.5,
+                                     seed: Int32(2))
         
         noise = GKNoise(source, gradientColors:[-1: .red, 1: .green])
-        noise.invert()
+//        noise.invert()
         
         super.init()
         
@@ -315,7 +320,7 @@ extension InfiniteMapComponent {
                                       sampleCount: vector_int2(MapValues.NoiseMap.sampleSize),
                                       seamless: false)
             
-            /// Reset the noise field - the y value actually goes into the z access - because of the way the slice is sampled?
+            /// Reset the noise field - the y value actually goes into the z axis - because of the way the slice is sampled?
             self.noise.move(by: vector_double3(-mapOriginOffset.x, 0, -mapOriginOffset.y))
             
             let generatedMaps = SKTileMapNode
@@ -327,9 +332,9 @@ extension InfiniteMapComponent {
                               tileTypeNoiseMapThresholds: MapValues.threshholds)
             
 
-            self.addDebugSprite(map: map, noiseMap: noiseMap)
+//            self.addDebugSprite(map: map, noiseMap: noiseMap)
             DispatchQueue.main.async {
-//                map.addMaps(maps: generatedMaps)
+                map.addMaps(maps: generatedMaps)
                 completion(map)
             }
         }
