@@ -13,7 +13,7 @@ class GameScene: SKScene {
         }
         
     
-        let sampleCount = vector_int2(100, 100)
+        let sampleCount = vector_int2(500, 500)
         
         let fakeSource = GKPerlinNoiseSource()
         print("freq \(fakeSource.frequency)  octave \(fakeSource.octaveCount) persistence \(fakeSource.persistence) lacunarity \(fakeSource.lacunarity) seed \(fakeSource.seed) ")

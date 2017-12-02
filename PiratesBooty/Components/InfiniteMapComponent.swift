@@ -34,7 +34,7 @@ class InfiniteMapComponent: GKAgent2D {
     private struct MapValues {
         struct NoiseMap {
             static let noiseSize: Double = 3.0
-            static let sampleSize: Int32 = 100
+            static let sampleSize: Int32 = 200
         }
         
         static let mapName = "TILE_MAP"
@@ -77,7 +77,7 @@ class InfiniteMapComponent: GKAgent2D {
         source = GKBillowNoiseSource(frequency: 6.0,
                                      octaveCount: 6,
                                      persistence: 10.0,
-                                     lacunarity: 0.6,
+                                     lacunarity: 0.5,
                                      seed: Int32(2))
         
         noise = GKNoise(source, gradientColors:[-1: .red, 1: .green])
