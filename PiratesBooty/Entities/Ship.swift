@@ -22,9 +22,18 @@ enum ShipType: Directional {
 }
 
 struct ShipPhysics: PhysicsConfiguration {
-    var categoryBitMask: UInt32 { return 0 }
-    var contactTestBitMask: UInt32 { return 0 }
-    var collisionBitMask: UInt32 { return 0 }
+    var categoryBitMask: UInt32 {
+        return PhysicsCategory.land
+    }
+    
+    var contactTestBitMask: UInt32 {
+        return PhysicsCategory.land | PhysicsCategory.ship
+    }
+    
+    var collisionBitMask: UInt32 {
+        return PhysicsCategory.land | PhysicsCategory.ship
+    }
+    
     var isDynamic: Bool = true
     var affectedByGravity: Bool = false
 }

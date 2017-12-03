@@ -18,6 +18,18 @@ final class ShipWreckComponent: GKComponent {
 
 extension ShipWreckComponent: CollisionDetector {
     func didBegin(_ contact: SKPhysicsContact) {
+        guard let ship = entity as? Ship else {
+            assertionFailure("ShipWreckComponents should only be added to Ship entities")
+            return
+        }
         
+        guard let collision = Collision(rawValue: contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask) else {
+            return
+        }
+        
+        switch collision {
+        case .shipWreck:
+            break
+        }
     }
 }
