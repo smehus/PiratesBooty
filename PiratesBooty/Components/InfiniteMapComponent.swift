@@ -9,47 +9,7 @@
 import GameplayKit
 import SpriteKit
 
-private enum MapState: NSString, CustomStringConvertible {
-    
-    
-    /// Direct neighbors
-    
-    case incrementBottomRow = "incrementBottomRow"
-    case incrementTopRow = "incrementTopRow"
-    case incrementLeftColumn = "incrementLeftColumn"
-    case incrementRightColumn = "incrementRightColumn"
-    
-    
-    /// Corner neighbors
-    
-    case topRightCorner = "topRightCorner"
-    case bottomRightCorner = "bottomRightCorner"
-    
-    case topLeftCorner = "topLeftCorner"
-    case bottomLeftCorner = "bottomLeftCorner"
-    
-    var description: String {
-        return rawValue as String
-    }
-    
-    static var allStates: [MapState] {
-        return [.incrementBottomRow,
-                .incrementTopRow,
-                .incrementLeftColumn,
-                .incrementRightColumn,
-                .topRightCorner,
-                .bottomRightCorner,
-                .topLeftCorner,
-                .bottomLeftCorner]
-    }
-}
-
 class InfiniteMapComponent: GKAgent2D {
-    
-    private struct RuleSystemValues {
-        static let map = "map"
-        static let scene = "scene"
-    }
     
     private struct MapValues {
         struct NoiseMap {
@@ -139,163 +99,8 @@ class InfiniteMapComponent: GKAgent2D {
     private func setupRules() {
         guard let currentMap = self.currentMap else { return }
         ruleSystem.state.addEntries(from: [RuleSystemValues.scene: scene, RuleSystemValues.map: currentMap])
-
-        let belowMinTileMapYRule = GKRule(blockPredicate: { (system) -> Bool in
-            
-            guard
-                let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let map = system.state[RuleSystemValues.map] as? LayeredMap
-            else {
-                return false
-            }
-    
-            let estimatedNextMapArea = CGPoint(x: map.position.x, y: map.position.y - map.mapSize.height)
-            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
-                return true
-            }
-            
-            return false
-            
-        }) { (system) in
-            system.assertFact(MapState.incrementBottomRow.rawValue)
-        }
         
-        let aboveMaxTileMapYRule = GKRule(blockPredicate: { (system) -> Bool in
-            guard
-                let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let map = system.state[RuleSystemValues.map] as? LayeredMap
-            else {
-                return false
-            }
-
-            let estimatedNextMapArea = CGPoint(x: map.position.x, y: map.position.y + map.mapSize.height)
-            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
-                return true
-            }
-            
-            return false
-        }) { (system) in
-            system.assertFact(MapState.incrementTopRow.rawValue)
-        }
-        
-        
-        let leftMaxTileMapRule = GKRule(blockPredicate: { (system) -> Bool in
-            guard
-                let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let map = system.state[RuleSystemValues.map] as? LayeredMap
-                else {
-                    return false
-            }
-
-            let estimatedNextMapArea = CGPoint(x: map.position.x - map.mapSize.width, y: map.position.y)
-            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
-                return true
-            }
-            
-            return false
-            
-        }) { (system) in
-            system.assertFact(MapState.incrementLeftColumn.rawValue)
-        }
-        
-        let rightMaxTileMapRule = GKRule(blockPredicate: { (system) -> Bool in
-            guard
-                let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let map = system.state[RuleSystemValues.map] as? LayeredMap
-            else {
-                return false
-            }
-            
-            let estimatedNextMapArea = CGPoint(x: map.position.x + map.mapSize.width, y: map.position.y)
-            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
-                return true
-            }
-            
-            return false
-        }) { (system) in
-            system.assertFact(MapState.incrementRightColumn.rawValue)
-        }
-        
-        let topRightCorner = GKRule(blockPredicate: { (system) -> Bool in
-            guard
-                let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let map = system.state[RuleSystemValues.map] as? LayeredMap
-                else {
-                    return false
-            }
-            
-            let estimatedNextMapArea = CGPoint(x: map.position.x + map.mapSize.width, y: map.position.y + map.mapSize.height)
-            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
-                return true
-            }
-            
-            return false
-        }) { (system) in
-            system.assertFact(MapState.topRightCorner.rawValue)
-        }
-        
-        let bottomRightCorner = GKRule(blockPredicate: { (system) -> Bool in
-            guard
-                let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let map = system.state[RuleSystemValues.map] as? LayeredMap
-                else {
-                    return false
-            }
-            
-            let estimatedNextMapArea = CGPoint(x: map.position.x + map.mapSize.width, y: map.position.y - map.mapSize.height)
-            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
-                return true
-            }
-            
-            return false
-        }) { (system) in
-            system.assertFact(MapState.bottomRightCorner.rawValue)
-        }
-        
-        let topLeftCorner = GKRule(blockPredicate: { (system) -> Bool in
-            guard
-                let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let map = system.state[RuleSystemValues.map] as? LayeredMap
-                else {
-                    return false
-            }
-            
-            let estimatedNextMapArea = CGPoint(x: map.position.x - map.mapSize.width, y: map.position.y + map.mapSize.height)
-            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
-                return true
-            }
-            
-            return false
-        }) { (system) in
-            system.assertFact(MapState.topLeftCorner.rawValue)
-        }
-        
-        let bottomLeftCorner = GKRule(blockPredicate: { (system) -> Bool in
-            guard
-                let scene = system.state[RuleSystemValues.scene] as? GameScene,
-                let map = system.state[RuleSystemValues.map] as? LayeredMap
-                else {
-                    return false
-            }
-            
-            let estimatedNextMapArea = CGPoint(x: map.position.x - map.mapSize.width, y: map.position.y - map.mapSize.height)
-            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
-                return true
-            }
-            
-            return false
-        }) { (system) in
-            system.assertFact(MapState.bottomLeftCorner.rawValue)
-        }
-        
-        ruleSystem.add([belowMinTileMapYRule,
-                        aboveMaxTileMapYRule,
-                        leftMaxTileMapRule,
-                        rightMaxTileMapRule,
-                        topRightCorner,
-                        bottomRightCorner,
-                        topLeftCorner,
-                        bottomLeftCorner])
+        ruleSystem.add(MapGenRules.generateRules())
     }
     
     private func addMap(state: MapState) {
@@ -344,6 +149,8 @@ class InfiniteMapComponent: GKAgent2D {
     }
 }
 
+
+// MARK: - Map Cleaning
 extension InfiniteMapComponent {
     private func cleanMaps() {
         let rules = [offScreenBottom(), offScreenTop(), offScreenRight(), offScreenLeft()]
@@ -388,6 +195,8 @@ extension InfiniteMapComponent {
     }
 }
 
+
+// MARK: - Map Generation
 extension InfiniteMapComponent {
     
     private func generateMapOnBackground(map: LayeredMap, completion: @escaping (LayeredMap) -> Void) {

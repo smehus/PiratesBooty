@@ -44,6 +44,8 @@
 		A594B6971F8E3D5600361E50 /* Vector3.swift in Sources */ = {isa = PBXBuildFile; fileRef = A594B6831F8E3D5500361E50 /* Vector3.swift */; };
 		A59B93D51F93C1A900F37A49 /* SKTileSet+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59B93D41F93C1A900F37A49 /* SKTileSet+Extensions.swift */; };
 		A5A3118D1F9B8DE400E54EA7 /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A3118C1F9B8DE400E54EA7 /* World.swift */; };
+		A5A6EAD81FD38ED600DE31F2 /* MapGenerationRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A6EAD71FD38ED500DE31F2 /* MapGenerationRules.swift */; };
+		A5A6EADA1FD38F4000DE31F2 /* MapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A6EAD91FD38F4000DE31F2 /* MapState.swift */; };
 		A5A8FFF91FB75A7500D96EBD /* LayeredMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A8FFF81FB75A7500D96EBD /* LayeredMap.swift */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +89,8 @@
 		A594B6831F8E3D5500361E50 /* Vector3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vector3.swift; sourceTree = "<group>"; };
 		A59B93D41F93C1A900F37A49 /* SKTileSet+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKTileSet+Extensions.swift"; sourceTree = "<group>"; };
 		A5A3118C1F9B8DE400E54EA7 /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
+		A5A6EAD71FD38ED500DE31F2 /* MapGenerationRules.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapGenerationRules.swift; sourceTree = "<group>"; };
+		A5A6EAD91FD38F4000DE31F2 /* MapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapState.swift; sourceTree = "<group>"; };
 		A5A8FFF81FB75A7500D96EBD /* LayeredMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayeredMap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -166,6 +170,7 @@
 		A594B66A1F8E325300361E50 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				A5A6EAD61FD38ED500DE31F2 /* MapGenerationRules */,
 				A594B6611F8E2DC500361E50 /* SpriteComponent.swift */,
 				A58676401F925524001F37C1 /* DirectionalComponent.swift */,
 				A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */,
@@ -217,6 +222,15 @@
 				A59B93D41F93C1A900F37A49 /* SKTileSet+Extensions.swift */,
 			);
 			path = SKTUtils;
+			sourceTree = "<group>";
+		};
+		A5A6EAD61FD38ED500DE31F2 /* MapGenerationRules */ = {
+			isa = PBXGroup;
+			children = (
+				A5A6EAD71FD38ED500DE31F2 /* MapGenerationRules.swift */,
+				A5A6EAD91FD38F4000DE31F2 /* MapState.swift */,
+			);
+			path = MapGenerationRules;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -319,6 +333,7 @@
 				A594B6901F8E3D5600361E50 /* SKNode+Extensions.swift in Sources */,
 				A52EF6711F8CE931005636D3 /* GameViewController.swift in Sources */,
 				A594B68F1F8E3D5600361E50 /* SKColor+Extensions.swift in Sources */,
+				A5A6EAD81FD38ED600DE31F2 /* MapGenerationRules.swift in Sources */,
 				A58676411F925524001F37C1 /* DirectionalComponent.swift in Sources */,
 				A5A3118D1F9B8DE400E54EA7 /* World.swift in Sources */,
 				A52EF6691F8CE931005636D3 /* AppDelegate.swift in Sources */,
@@ -326,6 +341,7 @@
 				A594B6931F8E3D5600361E50 /* SKTAudio.swift in Sources */,
 				A594B6871F8E3D5600361E50 /* CGFloat+Extensions.swift in Sources */,
 				A594B6951F8E3D5600361E50 /* SKTexture+Extensions.swift in Sources */,
+				A5A6EADA1FD38F4000DE31F2 /* MapState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
