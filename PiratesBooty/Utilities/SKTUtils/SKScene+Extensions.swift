@@ -79,7 +79,7 @@ extension SKScene {
     }
 }
 
-protocol MultiScaledScene: class {
+protocol MultiScaledScene {
     var sceneScale: (xScale: CGFloat, yScale: CGFloat) { get }
     var cameraScale: (xScale: CGFloat, yScale: CGFloat) { get }
 }

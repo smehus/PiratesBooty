@@ -124,6 +124,9 @@ class GameScene: SKScene {
     }
 }
 
+
+
+// MARK: - Game Scales
 extension GameScene: MultiScaledScene {
     var sceneScale: (xScale: CGFloat, yScale: CGFloat) {
         return (2.0, 2.0)

@@ -128,15 +128,13 @@ class InfiniteMapComponent: GKAgent2D {
             else {
                 return false
             }
-        
-            let bottomCameraEdge = scene.camera!.position.y - scene.scaledHalfHeight
-            let bottomMapEdge = map.position.y - map.mapSize.halfHeight
-            guard bottomCameraEdge < bottomMapEdge else { return false }
+    
+            let estimatedNextMapArea = CGPoint(x: map.position.x, y: map.position.y - map.mapSize.height)
+            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
+                return true
+            }
             
-            let estimatedNextMapArea = CGPoint(x: map.position.x, y: bottomCameraEdge - scene.scaledHalfHeight)
-            guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty else { return false }
-            
-            return true
+            return false
             
         }) { (system) in
             system.assertFact(MapState.incrementBottomRow.rawValue)
@@ -149,15 +147,13 @@ class InfiniteMapComponent: GKAgent2D {
             else {
                 return false
             }
+
+            let estimatedNextMapArea = CGPoint(x: map.position.x, y: map.position.y + map.mapSize.height)
+            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
+                return true
+            }
             
-            let cameraTopEdge = scene.camera!.position.y + scene.scaledHalfHeight
-            let mapTopEdge = map.position.y + map.mapSize.halfHeight
-            guard  cameraTopEdge > mapTopEdge else { return false }
-            
-            let estimatedNextMapArea = CGPoint(x: map.position.x, y: cameraTopEdge + scene.scaledHalfHeight)
-            guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty else { return false }
-            
-            return true
+            return false
         }) { (system) in
             system.assertFact(MapState.incrementTopRow.rawValue)
         }
@@ -170,15 +166,13 @@ class InfiniteMapComponent: GKAgent2D {
                 else {
                     return false
             }
+
+            let estimatedNextMapArea = CGPoint(x: map.position.x - map.mapSize.width, y: map.position.y)
+            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
+                return true
+            }
             
-            let cameraLeftEdge = scene.camera!.position.x - scene.scaledHalfWidth
-            let mapLeftEdge = map.position.x - map.mapSize.halfWidth
-            guard cameraLeftEdge < mapLeftEdge else { return false }
-            
-            let estimatedNextMapArea = CGPoint(x: cameraLeftEdge - scene.scaledHalfWidth, y: map.position.y)
-           guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty else { return false }
-            
-            return true
+            return false
             
         }) { (system) in
             system.assertFact(MapState.incrementLeftColumn.rawValue)
@@ -192,14 +186,12 @@ class InfiniteMapComponent: GKAgent2D {
                 return false
             }
             
-            let cameraRightEdge = scene.camera!.position.x + scene.scaledHalfWidth
-            let mapRightEdge = map.position.x + map.mapSize.halfWidth
-            guard cameraRightEdge > mapRightEdge else { return false }
+            let estimatedNextMapArea = CGPoint(x: map.position.x + map.mapSize.width, y: map.position.y)
+            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
+                return true
+            }
             
-            let estimatedNextMapArea = CGPoint(x: cameraRightEdge + scene.scaledHalfWidth, y: map.position.y)
-            guard scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty else { return false }
-            
-            return true
+            return false
         }) { (system) in
             system.assertFact(MapState.incrementRightColumn.rawValue)
         }
@@ -244,9 +236,6 @@ class InfiniteMapComponent: GKAgent2D {
         return newMap
     }
     
-    private func positionIsWithinRange(_ position: CGPoint, target: CGPoint, range: CGFloat) -> Bool {
-        return abs(position.distanceTo(target)) < range
-    }
     private func populateNeighbors(map: LayeredMap?) {
         guard let map = map else { return }
         let verticalNeighborPositions = CGPoint(x: 0, y: map.mapSize.height)
