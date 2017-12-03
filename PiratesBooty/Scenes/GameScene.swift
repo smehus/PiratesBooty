@@ -124,6 +124,12 @@ class GameScene: SKScene {
     }
 }
 
+extension GameScene: SKPhysicsContactDelegate {
+    func didBegin(_ contact: SKPhysicsContact) {
+        entityManager?.didBegin(contact)
+    }
+}
+
 
 
 // MARK: - Game Scales

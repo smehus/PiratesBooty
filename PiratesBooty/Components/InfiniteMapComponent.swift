@@ -9,7 +9,7 @@
 import GameplayKit
 import SpriteKit
 
-class InfiniteMapComponent: GKAgent2D {
+class InfiniteMapComponent: GKComponent {
     
     private struct MapValues {
         struct NoiseMap {

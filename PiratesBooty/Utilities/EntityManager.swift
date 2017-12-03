@@ -10,6 +10,21 @@ import Foundation
 import SpriteKit
 import GameplayKit
 
+protocol CollisionDetector {
+    func didBegin(_ contact: SKPhysicsContact)
+}
+
+/// Subclass to support collision detection
+class ComponentSystem: GKComponentSystem<GKComponent> {
+    func didBegin(_ contact: SKPhysicsContact) {
+        for component in components {
+            if let detector = component as? CollisionDetector {
+                detector.didBegin(contact)
+            }
+        }
+    }
+}
+
 class EntityManager {
     
     // MARK: - Public
@@ -22,10 +37,10 @@ class EntityManager {
     
     private let scene: SKScene
     
-    lazy var componentSystems: [GKComponentSystem] = {
+    lazy var componentSystems: [ComponentSystem] = {
         // Manages all instances of the DirectionalComponent
-        let directional = GKComponentSystem(componentClass: DirectionalComponent.self)
-        let infiniteMapSystem = GKComponentSystem(componentClass: InfiniteMapComponent.self)
+        let directional = ComponentSystem(componentClass: DirectionalComponent.self)
+        let infiniteMapSystem = ComponentSystem(componentClass: InfiniteMapComponent.self)
         return [directional, infiniteMapSystem]
     }()
     
@@ -68,5 +83,11 @@ class EntityManager {
         }
         
         toRemove.removeAll()
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        componentSystems.forEach { (system) in
+            system.didBegin(contact)
+        }
     }
 }

@@ -13,7 +13,7 @@ protocol Directional {
     var directionOffset: CGFloat { get }
 }
 
-class DirectionalComponent: GKAgent2D, GKAgentDelegate {
+class DirectionalComponent: GKComponent {
     
     private let offset: CGFloat
     
