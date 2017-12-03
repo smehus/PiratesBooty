@@ -10,17 +10,37 @@ import GameplayKit
 import SpriteKit
 
 private enum MapState: NSString, CustomStringConvertible {
+    
+    
+    /// Direct neighbors
+    
     case incrementBottomRow = "incrementBottomRow"
     case incrementTopRow = "incrementTopRow"
     case incrementLeftColumn = "incrementLeftColumn"
     case incrementRightColumn = "incrementRightColumn"
+    
+    
+    /// Corner neighbors
+    
+    case topRightCorner = "topRightCorner"
+    case bottomRightCorner = "bottomRightCorner"
+    
+    case topLeftCorner = "topLeftCorner"
+    case bottomLeftCorner = "bottomLeftCorner"
     
     var description: String {
         return rawValue as String
     }
     
     static var allStates: [MapState] {
-        return [.incrementBottomRow, .incrementTopRow, .incrementLeftColumn, .incrementRightColumn]
+        return [.incrementBottomRow,
+                .incrementTopRow,
+                .incrementLeftColumn,
+                .incrementRightColumn,
+                .topRightCorner,
+                .bottomRightCorner,
+                .topLeftCorner,
+                .bottomLeftCorner]
     }
 }
 
@@ -196,7 +216,86 @@ class InfiniteMapComponent: GKAgent2D {
             system.assertFact(MapState.incrementRightColumn.rawValue)
         }
         
-        ruleSystem.add([belowMinTileMapYRule, aboveMaxTileMapYRule, leftMaxTileMapRule, rightMaxTileMapRule])
+        let topRightCorner = GKRule(blockPredicate: { (system) -> Bool in
+            guard
+                let scene = system.state[RuleSystemValues.scene] as? GameScene,
+                let map = system.state[RuleSystemValues.map] as? LayeredMap
+                else {
+                    return false
+            }
+            
+            let estimatedNextMapArea = CGPoint(x: map.position.x + map.mapSize.width, y: map.position.y + map.mapSize.height)
+            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
+                return true
+            }
+            
+            return false
+        }) { (system) in
+            system.assertFact(MapState.topRightCorner.rawValue)
+        }
+        
+        let bottomRightCorner = GKRule(blockPredicate: { (system) -> Bool in
+            guard
+                let scene = system.state[RuleSystemValues.scene] as? GameScene,
+                let map = system.state[RuleSystemValues.map] as? LayeredMap
+                else {
+                    return false
+            }
+            
+            let estimatedNextMapArea = CGPoint(x: map.position.x + map.mapSize.width, y: map.position.y - map.mapSize.height)
+            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
+                return true
+            }
+            
+            return false
+        }) { (system) in
+            system.assertFact(MapState.bottomRightCorner.rawValue)
+        }
+        
+        let topLeftCorner = GKRule(blockPredicate: { (system) -> Bool in
+            guard
+                let scene = system.state[RuleSystemValues.scene] as? GameScene,
+                let map = system.state[RuleSystemValues.map] as? LayeredMap
+                else {
+                    return false
+            }
+            
+            let estimatedNextMapArea = CGPoint(x: map.position.x - map.mapSize.width, y: map.position.y + map.mapSize.height)
+            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
+                return true
+            }
+            
+            return false
+        }) { (system) in
+            system.assertFact(MapState.topLeftCorner.rawValue)
+        }
+        
+        let bottomLeftCorner = GKRule(blockPredicate: { (system) -> Bool in
+            guard
+                let scene = system.state[RuleSystemValues.scene] as? GameScene,
+                let map = system.state[RuleSystemValues.map] as? LayeredMap
+                else {
+                    return false
+            }
+            
+            let estimatedNextMapArea = CGPoint(x: map.position.x - map.mapSize.width, y: map.position.y - map.mapSize.height)
+            if scene.nodes(at: estimatedNextMapArea).filter ({ $0 is SKTileMapNode || $0 is PlaceholderMapNode }).isEmpty {
+                return true
+            }
+            
+            return false
+        }) { (system) in
+            system.assertFact(MapState.bottomLeftCorner.rawValue)
+        }
+        
+        ruleSystem.add([belowMinTileMapYRule,
+                        aboveMaxTileMapYRule,
+                        leftMaxTileMapRule,
+                        rightMaxTileMapRule,
+                        topRightCorner,
+                        bottomRightCorner,
+                        topLeftCorner,
+                        bottomLeftCorner])
     }
     
     private func addMap(state: MapState) {
@@ -211,6 +310,15 @@ class InfiniteMapComponent: GKAgent2D {
             pos = CGPoint(x: currentMap.position.x - currentMap.mapSize.width, y: currentMap.position.y)
         case .incrementRightColumn:
             pos = CGPoint(x: currentMap.position.x + currentMap.mapSize.width, y: currentMap.position.y)
+            
+        case .topRightCorner:
+            pos = CGPoint(x: currentMap.position.x + currentMap.mapSize.width, y: currentMap.position.y + currentMap.mapSize.height)
+        case .bottomRightCorner:
+            pos = CGPoint(x: currentMap.position.x + currentMap.mapSize.width, y: currentMap.position.y - currentMap.mapSize.height)
+        case .topLeftCorner:
+            pos = CGPoint(x: currentMap.position.x - currentMap.mapSize.width, y: currentMap.position.y + currentMap.mapSize.height)
+        case .bottomLeftCorner:
+            pos = CGPoint(x: currentMap.position.x - currentMap.mapSize.width, y: currentMap.position.y - currentMap.mapSize.height)
         }
         
         addMap(position: pos)
@@ -231,27 +339,8 @@ class InfiniteMapComponent: GKAgent2D {
         scene.addChild(newMap)
         
         generateMapOnBackground(map: newMap) { (configuredMap) in }
-        populateNeighbors(map: newMap)
         
         return newMap
-    }
-    
-    private func populateNeighbors(map: LayeredMap?) {
-        guard let map = map else { return }
-        let verticalNeighborPositions = CGPoint(x: 0, y: map.mapSize.height)
-        let horizontalNeighborPosition = CGPoint(x: map.mapSize.width, y: 0)
-        
-        let positions = [
-            map.position - verticalNeighborPositions, // Bottom Neighbor
-            map.position + verticalNeighborPositions, // Top Neighbor
-            map.position + horizontalNeighborPosition, // Right Neighbor
-            map.position - horizontalNeighborPosition // Left Neightbor
-        ]
-        
-        for position in positions {
-            guard scene.nodes(at: position).filter({ $0 is SKTileMapNode || $0 is PlaceholderMapNode}).isEmpty else { continue }
-            addMap(position: position)
-        }
     }
 }
 
