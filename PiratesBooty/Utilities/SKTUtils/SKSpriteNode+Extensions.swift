@@ -42,11 +42,11 @@ extension SKSpriteNode {
         }
         
         physicsBody = SKPhysicsBody(texture: text, size: text.size())
-        physicsBody?.categoryBitMask = config.categoryBitMask
-        physicsBody?.contactTestBitMask = config.contactTestBitMask
+        physicsBody?.categoryBitMask = config.categoryBitMask.rawValue
+        physicsBody?.contactTestBitMask = config.contactTestBitMask.rawValue
         physicsBody?.isDynamic = config.isDynamic
         physicsBody?.affectedByGravity = config.affectedByGravity
-        physicsBody?.collisionBitMask = config.collisionBitMask
+        physicsBody?.collisionBitMask = config.collisionBitMask.rawValue
     }
 }
 

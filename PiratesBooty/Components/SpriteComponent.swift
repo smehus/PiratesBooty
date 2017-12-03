@@ -10,9 +10,9 @@ import SpriteKit
 import GameplayKit
 
 protocol PhysicsConfiguration {
-    var categoryBitMask: UInt32 { get }
-    var contactTestBitMask: UInt32 { get }
-    var collisionBitMask: UInt32 { get }
+    var categoryBitMask: Collision { get }
+    var contactTestBitMask: Collision { get }
+    var collisionBitMask: Collision { get }
     var isDynamic: Bool { get }
     var affectedByGravity: Bool { get }
 }

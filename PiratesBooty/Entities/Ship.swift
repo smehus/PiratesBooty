@@ -22,16 +22,16 @@ enum ShipType: Directional {
 }
 
 struct ShipPhysics: PhysicsConfiguration {
-    var categoryBitMask: UInt32 {
-        return PhysicsCategory.land
+    var categoryBitMask: Collision {
+        return .land
     }
     
-    var contactTestBitMask: UInt32 {
-        return PhysicsCategory.land | PhysicsCategory.ship
+    var contactTestBitMask: Collision {
+        return [.land, .ship]
     }
     
-    var collisionBitMask: UInt32 {
-        return PhysicsCategory.land | PhysicsCategory.ship
+    var collisionBitMask: Collision {
+        return [.land, .ship]
     }
     
     var isDynamic: Bool = true
