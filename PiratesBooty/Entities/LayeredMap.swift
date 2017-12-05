@@ -87,6 +87,7 @@ class LayeredMap: SKNode {
                     let texture = tile.textures.first
                     else { continue }
                 
+                //TODO: Need to only attach bodies to the edges of land masses
                 let center = map.centerOfTile(atColumn: column, row: row)
                 let body = SKPhysicsBody(rectangleOf: texture.size(), center: center)
                 physicsBodies.append(body)

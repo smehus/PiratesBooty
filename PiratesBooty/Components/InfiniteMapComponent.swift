@@ -58,7 +58,7 @@ class InfiniteMapComponent: GKComponent {
                                      octaveCount: 6,
                                      persistence: 10.0,
                                      lacunarity: 0.5,
-                                     seed: Int32(2))
+                                     seed: Int32(3))
         
         noise = GKNoise(source, gradientColors:[-1: .red, 1: .green])
 //        noise.invert()
