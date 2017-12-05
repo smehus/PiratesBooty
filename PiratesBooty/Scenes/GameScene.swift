@@ -40,6 +40,7 @@ class GameScene: SKScene {
     
     private func setupRequiredNodes() {
         
+        physicsWorld.contactDelegate = self
         entityManager = EntityManager(scene: self)
         
         playerShip = Ship(shipType: .defaultShip)

@@ -41,7 +41,8 @@ class EntityManager {
         // Manages all instances of the DirectionalComponent
         let directional = ComponentSystem(componentClass: DirectionalComponent.self)
         let infiniteMapSystem = ComponentSystem(componentClass: InfiniteMapComponent.self)
-        return [directional, infiniteMapSystem]
+        let shipWreckSystem = ComponentSystem(componentClass: ShipWreckComponent.self)
+        return [directional, infiniteMapSystem, shipWreckSystem]
     }()
     
     init(scene: SKScene) {

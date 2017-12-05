@@ -23,7 +23,7 @@ enum ShipType: Directional {
 
 struct ShipPhysics: PhysicsConfiguration {
     var categoryBitMask: Collision {
-        return .land
+        return .ship
     }
     
     var contactTestBitMask: Collision {
@@ -49,6 +49,7 @@ class Ship: GKEntity, Sprite {
         let spriteComponent = SpriteComponent(texture: shipType.texture, physicsConfiguration: ShipPhysics())
         addComponent(spriteComponent)
         addComponent(DirectionalComponent(directional: shipType))
+        addComponent(ShipWreckComponent())
     }
     
     required init?(coder aDecoder: NSCoder) {

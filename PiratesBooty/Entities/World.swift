@@ -9,17 +9,6 @@
 import GameplayKit
 import SpriteKit
 
-enum Nodes: String, CustomStringConvertible {
-    case waterGroup = "water"
-    case islandGroup = "land"
-    case tileSet = "tileSet"
-    case tileMap = "tileMap"
-    
-    var description: String {
-        return rawValue
-    }
-}
-
 class World: GKEntity {
     
     init(scene: GameScene) {
