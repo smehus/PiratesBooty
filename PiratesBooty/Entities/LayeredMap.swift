@@ -91,7 +91,7 @@ class LayeredMap: SKNode {
                     let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
                     isEdge,
                     let texture = tile.textures.first
-                    else { continue }
+                else { continue }
                 
                 let center = map.centerOfTile(atColumn: column, row: row)
                 let body = SKPhysicsBody(rectangleOf: texture.size(), center: center)
