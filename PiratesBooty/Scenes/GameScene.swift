@@ -57,28 +57,6 @@ class GameScene: SKScene {
         motionManager.start()
     }
     
-    private func normalizedVelocity(velocity: CGVector) -> CGVector {
-        var y: CGFloat
-        var x: CGFloat
-        if velocity.dx < -Ship.MAX_VELOCITY {
-            x = -Ship.MAX_VELOCITY
-        } else if velocity.dx > Ship.MAX_VELOCITY {
-            x = Ship.MAX_VELOCITY
-        } else {
-            x = velocity.dx
-        }
-        
-        if velocity.dy < -Ship.MAX_VELOCITY {
-            y = -Ship.MAX_VELOCITY
-        } else if velocity.dy > Ship.MAX_VELOCITY {
-            y = Ship.MAX_VELOCITY
-        } else {
-            y = velocity.dy
-        }
-        
-        return CGVector(dx: x, dy: y)
-    }
-    
     private func setupCamera() {
         let cam = SKCameraNode()
         cam.xScale = cameraScale.xScale
@@ -123,6 +101,28 @@ extension GameScene: MotionManagerDelegate {
             let newVelocity = body.velocity + moveVelocity
             body.velocity = self.normalizedVelocity(velocity: newVelocity)
         }
+    }
+    
+    private func normalizedVelocity(velocity: CGVector) -> CGVector {
+        var y: CGFloat
+        var x: CGFloat
+        if velocity.dx < -Ship.MAX_VELOCITY {
+            x = -Ship.MAX_VELOCITY
+        } else if velocity.dx > Ship.MAX_VELOCITY {
+            x = Ship.MAX_VELOCITY
+        } else {
+            x = velocity.dx
+        }
+        
+        if velocity.dy < -Ship.MAX_VELOCITY {
+            y = -Ship.MAX_VELOCITY
+        } else if velocity.dy > Ship.MAX_VELOCITY {
+            y = Ship.MAX_VELOCITY
+        } else {
+            y = velocity.dy
+        }
+        
+        return CGVector(dx: x, dy: y)
     }
 }
 
