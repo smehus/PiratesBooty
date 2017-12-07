@@ -49,6 +49,7 @@
 		A5A6EADE1FD4A5F500DE31F2 /* ShipWreckComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A6EADD1FD4A5F500DE31F2 /* ShipWreckComponent.swift */; };
 		A5A6EAE01FD4A9BF00DE31F2 /* BitMasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A6EADF1FD4A9BF00DE31F2 /* BitMasks.swift */; };
 		A5A8FFF91FB75A7500D96EBD /* LayeredMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A8FFF81FB75A7500D96EBD /* LayeredMap.swift */; };
+		A5B58CEA1FD969C500B62A7F /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B58CE91FD969C500B62A7F /* MotionManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +97,7 @@
 		A5A6EADD1FD4A5F500DE31F2 /* ShipWreckComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShipWreckComponent.swift; sourceTree = "<group>"; };
 		A5A6EADF1FD4A9BF00DE31F2 /* BitMasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitMasks.swift; sourceTree = "<group>"; };
 		A5A8FFF81FB75A7500D96EBD /* LayeredMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayeredMap.swift; sourceTree = "<group>"; };
+		A5B58CE91FD969C500B62A7F /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +200,7 @@
 				A594B66F1F8E3D5500361E50 /* SKTUtils */,
 				A594B6631F8E2F2000361E50 /* EntityManager.swift */,
 				A5A6EADF1FD4A9BF00DE31F2 /* BitMasks.swift */,
+				A5B58CE91FD969C500B62A7F /* MotionManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 				A594B6861F8E3D5600361E50 /* Bool+Extensions.swift in Sources */,
 				A594B6931F8E3D5600361E50 /* SKTAudio.swift in Sources */,
 				A594B6871F8E3D5600361E50 /* CGFloat+Extensions.swift in Sources */,
+				A5B58CEA1FD969C500B62A7F /* MotionManager.swift in Sources */,
 				A594B6951F8E3D5600361E50 /* SKTexture+Extensions.swift in Sources */,
 				A5A6EADA1FD38F4000DE31F2 /* MapState.swift in Sources */,
 			);

@@ -8,7 +8,7 @@
 
 import SpriteKit
 import GameplayKit
-import CoreMotion
+
 
 /// NOTES
 /// use GKGraphNode2D for enemy path finding around obstacles (islands)
@@ -16,10 +16,9 @@ import CoreMotion
 
 class GameScene: SKScene {
     
+    private var motionManager: MovementManager = MotionManager(modifier: 30.0)
     private var entityManager: EntityManager!
     private var lastUpdatedTime: TimeInterval = 0
-    private var motionManager = CMMotionManager()
-    private let motionQueue = OperationQueue()
     
     var playerShip: Ship!
     
@@ -41,6 +40,7 @@ class GameScene: SKScene {
     private func setupRequiredNodes() {
         
         physicsWorld.contactDelegate = self
+        motionManager.delegate = self
         entityManager = EntityManager(scene: self)
         
         playerShip = Ship(shipType: .defaultShip)
@@ -54,24 +54,7 @@ class GameScene: SKScene {
     }
     
     private func setupMotion() {
-        if motionManager.isDeviceMotionAvailable {
-            motionManager.deviceMotionUpdateInterval = 0.1
-            let reference = motionManager.attitudeReferenceFrame
-            motionManager.startDeviceMotionUpdates(using: reference, to: motionQueue, withHandler: { (motion, error) in
-                guard let attitude = motion?.attitude else { return }
-        
-                guard let sprite = self.playerShip.sprite() else { return }
-                OperationQueue.main.addOperation {
-                    let modifiedPitch = CGFloat(attitude.pitch * abs(30.0))
-                    let modifiedRoll = CGFloat(attitude.roll * abs(30.0))
-                    let moveVelocity = CGVector(dx: modifiedPitch, dy: modifiedRoll)
-                    if let body = sprite.physicsBody {
-                        let newVelocity = body.velocity + moveVelocity
-                        body.velocity = self.normalizedVelocity(velocity: newVelocity)
-                    }
-                }
-            })
-        }
+        motionManager.start()
     }
     
     private func normalizedVelocity(velocity: CGVector) -> CGVector {
@@ -131,7 +114,17 @@ extension GameScene: SKPhysicsContactDelegate {
     }
 }
 
-
+extension GameScene: MotionManagerDelegate {
+    func didRecieveMotionUpdate(pitch: CGFloat, roll: CGFloat) {
+        guard let sprite = self.playerShip.sprite() else { return }
+        
+        let moveVelocity = CGVector(dx: pitch, dy: roll)
+        if let body = sprite.physicsBody {
+            let newVelocity = body.velocity + moveVelocity
+            body.velocity = self.normalizedVelocity(velocity: newVelocity)
+        }
+    }
+}
 
 // MARK: - Game Scales
 extension GameScene: MultiScaledScene {
