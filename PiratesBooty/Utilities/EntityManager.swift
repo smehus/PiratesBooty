@@ -35,7 +35,7 @@ class EntityManager {
     
     // MARK: - Private
     
-    private let scene: SKScene
+    private weak var scene: SKScene!
     
     lazy var componentSystems: [ComponentSystem] = {
         // Manages all instances of the DirectionalComponent

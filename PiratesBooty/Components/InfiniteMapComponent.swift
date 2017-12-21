@@ -27,7 +27,7 @@ class InfiniteMapComponent: GKComponent {
         static let mapHeight: CGFloat = CGFloat(MapValues.numberOfRows) * MapValues.tileSize.height
     }
     
-    private let scene: GameScene!
+    private weak var scene: GameScene!
     private let ruleSystem = GKRuleSystem()
     private let noise: GKNoise
     private let source: GKNoiseSource
