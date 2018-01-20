@@ -203,6 +203,10 @@ extension InfiniteMapComponent {
         
         mapGenerationQueue.async {
             
+            // What? chaneg color when actively loading file
+            map.placeholderMap?.color = .red
+            
+            
             /// How man units offset is the current map from 0, 0
             var mapOriginOffset = vector_double2(Double(map.position.x / map.mapSize.width), Double(map.position.y / map.mapSize.height))
             mapOriginOffset = mapOriginOffset * MapValues.NoiseMap.noiseSize
