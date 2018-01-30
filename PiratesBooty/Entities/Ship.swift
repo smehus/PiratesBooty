@@ -18,7 +18,7 @@ enum ShipType: Directional {
     
     var directionOffset: CGFloat {
         return CGFloat(90).degreesToRadians()
-    }
+     }
 }
 
 struct ShipPhysics: PhysicsConfiguration {

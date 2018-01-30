@@ -27,6 +27,7 @@ extension ShipWreckComponent: CollisionDetector {
         
         switch collision {
         case .shipWreck:
+            assertionFailure("FUCKKKK")
             break
         default:
             break
