@@ -35,7 +35,7 @@ class GameScene: SKScene {
         /// WATER LAND SOURCES
         ///
         
-        let source = GKPerlinNoiseSource(frequency: 1.0,
+        let source = GKPerlinNoiseSource(frequency: 0.2,
                                      octaveCount: 6,
                                      persistence: 0.5,
                                      lacunarity: 2.0,

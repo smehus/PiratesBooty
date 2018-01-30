@@ -60,11 +60,11 @@ class InfiniteMapComponent: GKComponent {
 //                                     lacunarity: 0.5,
 //                                     seed: Int32(3))
         
-        source = GKPerlinNoiseSource(frequency: 1.0,
+        source = GKPerlinNoiseSource(frequency: 0.2,
                                          octaveCount: 6,
                                          persistence: 0.5,
                                          lacunarity: 2.0,
-                                         seed: Int32(50))
+                                         seed: Int32(2))
         
         noise = GKNoise(source, gradientColors:[-1: .blue, 1: .green])
         noise.remapValues(toTerracesWithPeaks: [-1, 0.0, 1.0], terracesInverted: false)
