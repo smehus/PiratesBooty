@@ -36,10 +36,10 @@ class GameScene: SKScene {
         ///
         
         let source = GKPerlinNoiseSource(frequency: 1.0,
-                                         octaveCount: 6,
-                                         persistence: 0.5,
-                                         lacunarity: 2.0,
-                                         seed: Int32(50))
+                                     octaveCount: 6,
+                                     persistence: 0.5,
+                                     lacunarity: 2.0,
+                                     seed: Int32(50))
 //
 
 //        let source = GKRidgedNoiseSource(frequency: 1.0,
@@ -88,7 +88,8 @@ class GameScene: SKScene {
         
         // Land water noise
         let noise = GKNoise(source,
-                            gradientColors: [0.2: .blue, 1: .green])
+                            gradientColors: [0: .blue, 1: .green])
+        noise.remapValues(toTerracesWithPeaks: [-1, 0.0, 1.0], terracesInverted: false)
 //        noise.invert()
 
 //        noise.move(by: vector_double3(0, 0, 0))
@@ -131,6 +132,7 @@ class GameScene: SKScene {
 
 
         noise.move(by: vector_double3(0, 0, -3))
+        
 
         let customMap3 = GKNoiseMap(noise,
                                     size: vector_double2(3, 3),

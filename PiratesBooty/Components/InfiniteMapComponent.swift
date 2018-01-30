@@ -59,15 +59,15 @@ class InfiniteMapComponent: GKComponent {
 //                                     persistence: 10.0,
 //                                     lacunarity: 0.5,
 //                                     seed: Int32(3))
-
         
         source = GKPerlinNoiseSource(frequency: 1.0,
-                                     octaveCount: 6,
-                                     persistence: 0.5,
-                                     lacunarity: 2.0,
-                                     seed: Int32(50))
+                                         octaveCount: 6,
+                                         persistence: 0.5,
+                                         lacunarity: 2.0,
+                                         seed: Int32(50))
         
-        noise = GKNoise(source, gradientColors:[0: .red, 1: .green])
+        noise = GKNoise(source, gradientColors:[-1: .blue, 1: .green])
+        noise.remapValues(toTerracesWithPeaks: [-1, 0.0, 1.0], terracesInverted: false)
 //        noise.invert()
         
         super.init()
@@ -93,7 +93,12 @@ class InfiniteMapComponent: GKComponent {
             print("ADDING MAP \(fact)")
             addMap(state: state)
         }
-    
+        
+//        if let shipPosition = scene.playerShip.position {
+//            let sample = noise.value(atPosition: vector_float2(Float(shipPosition.x), Float(shipPosition.y)))
+//            print("🌮 SAMPLE: \(sample)")
+//        }
+        
     }
 
     private func setupFirstMap() {
@@ -237,9 +242,10 @@ extension InfiniteMapComponent {
                               tileTypeNoiseMapThresholds: MapValues.threshholds)
             
 
-//            self.addDebugSprite(map: map, noiseMap: noiseMap)
+            
             DispatchQueue.main.async {
                 map.addMaps(maps: generatedMaps)
+                self.addDebugSprite(map: map, noiseMap: noiseMap)
                 completion(map)
             }
         }
@@ -249,6 +255,7 @@ extension InfiniteMapComponent {
         DispatchQueue.main.async {
             let texture = SKTexture(noiseMap: noiseMap)
             let sprite = SKSpriteNode(texture: texture, color: .white, size: CGSize(width: MapValues.mapWidth, height: MapValues.mapHeight))
+            sprite.alpha = 0.5
             map.addChild(sprite)
         }
     }
