@@ -17,48 +17,78 @@ class GameScene: SKScene {
         
         let fakeSource = GKPerlinNoiseSource()
         print("freq \(fakeSource.frequency)  octave \(fakeSource.octaveCount) persistence \(fakeSource.persistence) lacunarity \(fakeSource.lacunarity) seed \(fakeSource.seed) ")
+
         
+        ///
+        /// ENEMY SHIP SOURCES
+        ///
         
+        // Do we want spawn enemies using noise?
         
-//        let source = GKPerlinNoiseSource(frequency: 1.0,
-//                                         octaveCount: 2,
-//                                         persistence: 2.0,
-//                                         lacunarity: 1.0,
-//                                         seed: Int32(50))
+//        let source = GKBillowNoiseSource(frequency: 2.0,
+//                                         octaveCount: 6,
+//                                         persistence: 0.5,
+//                                         lacunarity: 0.2,
+//                                         seed: Int32(2))
+        
+        ///
+        /// WATER LAND SOURCES
+        ///
+        
+        let source = GKPerlinNoiseSource(frequency: 1.0,
+                                         octaveCount: 6,
+                                         persistence: 0.5,
+                                         lacunarity: 2.0,
+                                         seed: Int32(50))
 //
 
 //        let source = GKRidgedNoiseSource(frequency: 1.0,
 //                                         octaveCount: 10,
 //                                         lacunarity: 1.0,
 //                                         seed: Int32(50))
-        
+//
 //        let source = GKRidgedNoiseSource(frequency: 0.5,
 //                                         octaveCount: 10,
 //                                         lacunarity: 2.0,
 //                                         seed: Int32(50))
         
-        let source = GKBillowNoiseSource(frequency: 6.0,
-                                         octaveCount: 6,
-                                         persistence: 10.0,
-                                         lacunarity: 0.6,
-                                         seed: Int32(2))
+//        let source = GKBillowNoiseSource(frequency: 6.0,
+//                                         octaveCount: 6,
+//                                         persistence: 10.0,
+//                                         lacunarity: 0.6,
+//                                         seed: Int32(2))
         
         // Frequency basically zooms out
+//        number and size of visible features in any given unit area of generated noise
         
         // Persistence: How quickly the hills drop
         // aka - How quickly the red bits turn into green bits
         // Smooths it out kinda
+//        Smaller values result in smoother noise; larger values increase roughness. The default value is 0.5.
+        
         
         // Lacunarity: less green splots - but larger - more uniformity
         // or more green spots and smaller
+//        Smaller values result in coarser noise with more visible structure; finer values result in finer, more uniform noise. The default value is 2.0.
+        
+        
+        // Octave Count:
+//        Coherent noise is composed from several applications of a pseudorandom function. Each                 successive application, or octave, increases in frequency and decreases in amplitude relative to the previous octave. This combination of many octaves produces the fractal appearance that makes coherent noise resemble natural phenomena like clouds, stone, and water.
+        
+//        This property determines the number of octaves of the noise function that the noise source combines to produce noise. A smaller number results in smoother, simpler output; larger numbers result in rougher, more complex output.
+        
         
 //        let source = GKVoronoiNoiseSource()
 //        let source = GKSpheresNoiseSource()
 //        let source = GKCoherentNoiseSource()
 //        let source = GKCylindersNoiseSource()
         
+//        let noise = GKNoise(source,
+//                            gradientColors: [0.8: .blue, 1: .red])
+        
+        // Land water noise
         let noise = GKNoise(source,
-                            gradientColors: [-1: .red, 1: .green])
+                            gradientColors: [0.2: .blue, 1: .green])
 //        noise.invert()
 
 //        noise.move(by: vector_double3(0, 0, 0))
@@ -149,10 +179,33 @@ class GameScene: SKScene {
     }
     
     func printValues(with map: GKNoiseMap, name: String) {
-        for i in 0..<map.sampleCount.x {
-//            print("\(name): idx: \(i) -> \(map.value(at: vector_int2(i, 0)))")
-        }
+//        for i in 0..<map.sampleCount.x {
+////            print("\(name): idx: \(i) -> \(map.value(at: vector_int2(i, 0)))")
+//        }
     }
+    
+    /// This will use a map to decide which noise object to use. So that within each section of the selection map, varying values of the sub noise can be used. Water noise can have its own map, and land can have its own map.
+    func componentNoise() {
+        let waterSource = GKRidgedNoiseSource()
+        let waterNoise = GKNoise(waterSource, gradientColors: [-1: .blue, 1: .blue])
+        
+        let landSource = GKPerlinNoiseSource()
+        let landNoise = GKNoise(landSource, gradientColors: [-1: .green, 1: .green])
+        
+        
+        let selectionSource = GKPerlinNoiseSource()
+        let selectionNoise = GKNoise(selectionSource)
+        
+        let mapNoise = GKNoise(componentNoises: [waterNoise, landNoise], selectionNoise: selectionNoise)
+        
+        let map = GKNoiseMap(mapNoise)
+        let texture = SKTexture(noiseMap: map)
+        let sprite = SKSpriteNode(texture: texture)
+        sprite.position = CGPoint(x: 0, y: 0)
+        
+        addChild(sprite)
+    }
+    
 }
 
 // Load the SKScene from 'GameScene.sks'

@@ -54,13 +54,20 @@ class InfiniteMapComponent: GKComponent {
 //                                     lacunarity: 2.0,
 //                                     seed: Int32(50))
         
-        source = GKBillowNoiseSource(frequency: 6.0,
-                                     octaveCount: 6,
-                                     persistence: 10.0,
-                                     lacunarity: 0.5,
-                                     seed: Int32(3))
+//        source = GKBillowNoiseSource(frequency: 6.0,
+//                                     octaveCount: 6,
+//                                     persistence: 10.0,
+//                                     lacunarity: 0.5,
+//                                     seed: Int32(3))
+
         
-        noise = GKNoise(source, gradientColors:[-1: .red, 1: .green])
+        source = GKPerlinNoiseSource(frequency: 1.0,
+                                     octaveCount: 6,
+                                     persistence: 0.5,
+                                     lacunarity: 2.0,
+                                     seed: Int32(50))
+        
+        noise = GKNoise(source, gradientColors:[0: .red, 1: .green])
 //        noise.invert()
         
         super.init()
