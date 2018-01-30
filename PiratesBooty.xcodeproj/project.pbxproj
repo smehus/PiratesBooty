@@ -15,6 +15,7 @@
 		A52EF6761F8CE931005636D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6751F8CE931005636D3 /* Assets.xcassets */; };
 		A52EF6791F8CE931005636D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6771F8CE931005636D3 /* LaunchScreen.storyboard */; };
 		A52EF6811F8CEA84005636D3 /* PirateTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */; };
+		A544CA142021384500EB914E /* ToDo in Resources */ = {isa = PBXBuildFile; fileRef = A544CA132021384500EB914E /* ToDo */; };
 		A5749A901F9B937D00E906DC /* InfiniteMapComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */; };
 		A57C9F281FB9057A003B4905 /* PlaceholderMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57C9F271FB9057A003B4905 /* PlaceholderMapNode.swift */; };
 		A58676411F925524001F37C1 /* DirectionalComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58676401F925524001F37C1 /* DirectionalComponent.swift */; };
@@ -63,6 +64,7 @@
 		A52EF6781F8CE931005636D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A52EF67A1F8CE931005636D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PirateTileSet.sks; sourceTree = "<group>"; };
+		A544CA132021384500EB914E /* ToDo */ = {isa = PBXFileReference; lastKnownFileType = text; path = ToDo; sourceTree = "<group>"; };
 		A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteMapComponent.swift; sourceTree = "<group>"; };
 		A57C9F271FB9057A003B4905 /* PlaceholderMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderMapNode.swift; sourceTree = "<group>"; };
 		A58676401F925524001F37C1 /* DirectionalComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalComponent.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				A52EF6751F8CE931005636D3 /* Assets.xcassets */,
 				A52EF6771F8CE931005636D3 /* LaunchScreen.storyboard */,
 				A52EF67A1F8CE931005636D3 /* Info.plist */,
+				A544CA132021384500EB914E /* ToDo */,
 			);
 			path = PiratesBooty;
 			sourceTree = "<group>";
@@ -303,6 +306,7 @@
 			files = (
 				A52EF6741F8CE931005636D3 /* Main.storyboard in Resources */,
 				A52EF66B1F8CE931005636D3 /* GameScene.sks in Resources */,
+				A544CA142021384500EB914E /* ToDo in Resources */,
 				A52EF6761F8CE931005636D3 /* Assets.xcassets in Resources */,
 				A52EF6791F8CE931005636D3 /* LaunchScreen.storyboard in Resources */,
 				A52EF6811F8CEA84005636D3 /* PirateTileSet.sks in Resources */,

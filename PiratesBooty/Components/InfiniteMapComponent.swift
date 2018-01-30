@@ -60,6 +60,7 @@ class InfiniteMapComponent: GKComponent {
 //                                     lacunarity: 0.5,
 //                                     seed: Int32(3))
         
+        // Basically the default values except for frequency - to zoom in
         source = GKPerlinNoiseSource(frequency: 0.2,
                                          octaveCount: 6,
                                          persistence: 0.5,
