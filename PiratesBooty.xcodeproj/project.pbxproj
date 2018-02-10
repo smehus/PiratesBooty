@@ -16,6 +16,7 @@
 		A52EF6791F8CE931005636D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6771F8CE931005636D3 /* LaunchScreen.storyboard */; };
 		A52EF6811F8CEA84005636D3 /* PirateTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */; };
 		A544CA142021384500EB914E /* ToDo in Resources */ = {isa = PBXBuildFile; fileRef = A544CA132021384500EB914E /* ToDo */; };
+		A544CA16202139CE00EB914E /* EnemySpawningComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A544CA15202139CE00EB914E /* EnemySpawningComponent.swift */; };
 		A5749A901F9B937D00E906DC /* InfiniteMapComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */; };
 		A57C9F281FB9057A003B4905 /* PlaceholderMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57C9F271FB9057A003B4905 /* PlaceholderMapNode.swift */; };
 		A58676411F925524001F37C1 /* DirectionalComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58676401F925524001F37C1 /* DirectionalComponent.swift */; };
@@ -65,6 +66,7 @@
 		A52EF67A1F8CE931005636D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PirateTileSet.sks; sourceTree = "<group>"; };
 		A544CA132021384500EB914E /* ToDo */ = {isa = PBXFileReference; lastKnownFileType = text; path = ToDo; sourceTree = "<group>"; };
+		A544CA15202139CE00EB914E /* EnemySpawningComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemySpawningComponent.swift; sourceTree = "<group>"; };
 		A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteMapComponent.swift; sourceTree = "<group>"; };
 		A57C9F271FB9057A003B4905 /* PlaceholderMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderMapNode.swift; sourceTree = "<group>"; };
 		A58676401F925524001F37C1 /* DirectionalComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalComponent.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				A58676401F925524001F37C1 /* DirectionalComponent.swift */,
 				A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */,
 				A5A6EADD1FD4A5F500DE31F2 /* ShipWreckComponent.swift */,
+				A544CA15202139CE00EB914E /* EnemySpawningComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 				A594B6911F8E3D5600361E50 /* SKScene+Extensions.swift in Sources */,
 				A594B6601F8E2D6100361E50 /* Ship.swift in Sources */,
 				A594B6681F8E320600361E50 /* Sprite.swift in Sources */,
+				A544CA16202139CE00EB914E /* EnemySpawningComponent.swift in Sources */,
 				A594B6901F8E3D5600361E50 /* SKNode+Extensions.swift in Sources */,
 				A52EF6711F8CE931005636D3 /* GameViewController.swift in Sources */,
 				A594B68F1F8E3D5600361E50 /* SKColor+Extensions.swift in Sources */,
