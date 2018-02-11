@@ -74,18 +74,29 @@ class EnemySpawnComponent: GKComponent {
         
         for row in 0..<enumerator.numberOfRows {
             for column in 0..<enumerator.numberOfColumns {
-                for tMap in map.maps {
-                    guard let definition = tMap.tileDefinition(atColumn: column, row: row) else {
-                        continue
+                
+                let isEmpty = map.maps.reduce(into: true, { (isWater, nextMap) in
+                    if !isWater {
+                        return
                     }
                     
-                    guard let name = definition.name else { continue }
+                    guard
+                        let definition = nextMap.tileDefinition(atColumn: column, row: row),
+                        let name = definition.name
+                    else {
+                        return
+                    }
                     
-                    guard name == "water" else { return nil }
+                    if name != "water" {
+                        isWater = false
+                    }
+                })
+                
+                if isEmpty {
+                    return enumerator.centerOfTile(atColumn: column, row: row)
                 }
             }
         }
-        
         
         return nil
     }
