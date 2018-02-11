@@ -35,14 +35,15 @@ class EntityManager {
     
     // MARK: - Private
     
-    private weak var scene: SKScene!
+    private unowned var scene: SKScene
     
     lazy var componentSystems: [ComponentSystem] = {
         // Manages all instances of the DirectionalComponent
         let directional = ComponentSystem(componentClass: DirectionalComponent.self)
         let infiniteMapSystem = ComponentSystem(componentClass: InfiniteMapComponent.self)
         let shipWreckSystem = ComponentSystem(componentClass: ShipWreckComponent.self)
-        return [directional, infiniteMapSystem, shipWreckSystem]
+        let enemySpawnSystem = ComponentSystem(componentClass: EnemySpawnComponent.self)
+        return [directional, infiniteMapSystem, shipWreckSystem, enemySpawnSystem]
     }()
     
     init(scene: SKScene) {

@@ -14,6 +14,7 @@ class World: GKEntity {
     init(scene: GameScene) {
         super.init()
         addComponent(InfiniteMapComponent(scene: scene))
+        addComponent(EnemySpawnComponent(scene: scene))
     }
     
     required init?(coder aDecoder: NSCoder) {
