@@ -80,6 +80,9 @@ class EnemySpawnComponent: GKComponent {
         return true
     }
     
+    // I should start the enumerator at the mid point of the columns/ rows.
+    // Then if we don't find any water tile to put the ship in, start at zero, zero and try again
+    
     private func findEmptyPosition(map: LayeredMap) -> CGPoint? {
         guard let enumerator = map.maps.first else { return nil }
         
