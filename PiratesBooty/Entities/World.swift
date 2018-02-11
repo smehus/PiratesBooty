@@ -11,10 +11,10 @@ import SpriteKit
 
 class World: GKEntity {
     
-    init(scene: GameScene) {
+    init(scene: GameScene, entityManager: EntityManager) {
         super.init()
         addComponent(InfiniteMapComponent(scene: scene))
-        addComponent(EnemySpawnComponent(scene: scene))
+        addComponent(EnemySpawnComponent(scene: scene, entityManager: entityManager))
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -50,7 +50,7 @@ class GameScene: SKScene {
     }
     
     private func setupNodes() {
-        entityManager.add(World(scene: self))
+        entityManager.add(World(scene: self, entityManager: entityManager))
     }
     
     private func setupMotion() {
@@ -133,6 +133,6 @@ extension GameScene: MultiScaledScene {
     }
     
     var cameraScale: (xScale: CGFloat, yScale: CGFloat) {
-        return (2.0, 2.0)
+        return (4.0, 4.0)
     }
 }

@@ -15,6 +15,8 @@ import GameplayKit
 class EnemySpawnComponent: GKComponent {
     
     private unowned var scene: GameScene
+    private unowned var entityManager: EntityManager
+    
     private var lastMap: LayeredMap?
     private let ruleSystem = GKRuleSystem()
     
@@ -26,8 +28,9 @@ class EnemySpawnComponent: GKComponent {
         return Int.random(min: 1, max: 2)
     }
     
-    init(scene: GameScene) {
+    init(scene: GameScene, entityManager: EntityManager) {
         self.scene = scene
+        self.entityManager = entityManager
         super.init()
     }
     
@@ -56,6 +59,7 @@ class EnemySpawnComponent: GKComponent {
         
         numMapsTraveled += 1
         guard  targetMapCount <= numMapsTraveled else { return }
+        guard currentMap.enemyCount == 0 else { return }
         guard spawnEnemyShip(map: currentMap) else { return }
         
         numMapsTraveled = 0
@@ -63,8 +67,15 @@ class EnemySpawnComponent: GKComponent {
     }
     
     private func spawnEnemyShip(map: LayeredMap) -> Bool {
-        guard let _ = findEmptyPosition(map: map) else { return false }
+        guard let pos = findEmptyPosition(map: map) else { return false }
         
+        let scenePosition = map.convert(pos, to: scene)
+        print("*** Creating Enemy Ship at \(scenePosition) -> My Position \(scene.playerShip.position!)")
+        var ship = Ship(shipType: .defaultShip)
+        ship.position = scenePosition
+        ship.sprite()?.zPosition = 10
+        entityManager.add(ship)
+        map.enemyCount += 1
         
         return true
     }

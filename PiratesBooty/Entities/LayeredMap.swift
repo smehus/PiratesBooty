@@ -44,6 +44,7 @@ class LayeredMap: SKNode {
     
     var maps: [SKTileMapNode] = []
     var placeholderMap: PlaceholderMapNode?
+    var enemyCount = 0
     
     var mapName = ""
     
