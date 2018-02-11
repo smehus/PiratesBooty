@@ -16,10 +16,15 @@ class EnemySpawnComponent: GKComponent {
     
     private unowned var scene: GameScene
     private var lastMap: LayeredMap?
+    private let ruleSystem = GKRuleSystem()
     
     /// Number of maps the player has crossed
     private var numMapsTraveled = 0
     private var targetMapCount = Int.random(min: 1, max: 2)
+    
+    private var randomNumber: Int {
+        return Int.random(min: 1, max: 2)
+    }
     
     init(scene: GameScene) {
         self.scene = scene
@@ -46,16 +51,43 @@ class EnemySpawnComponent: GKComponent {
         
         guard let lastPOS = lastMap?.position else { return }
         guard currentMap.position != lastPOS else { return }
+        
         lastMap = currentMap
         
         numMapsTraveled += 1
-        guard  targetMapCount == numMapsTraveled else { return }
-        spawnEnemyShip()
+        guard  targetMapCount <= numMapsTraveled else { return }
+        guard spawnEnemyShip(map: currentMap) else { return }
+        
         numMapsTraveled = 0
+        targetMapCount = randomNumber
     }
     
-    private func spawnEnemyShip() {
+    private func spawnEnemyShip(map: LayeredMap) -> Bool {
+        guard let _ = findEmptyPosition(map: map) else { return false }
         
+        
+        return true
+    }
+    
+    private func findEmptyPosition(map: LayeredMap) -> CGPoint? {
+        guard let enumerator = map.maps.first else { return nil }
+        
+        for row in 0..<enumerator.numberOfRows {
+            for column in 0..<enumerator.numberOfColumns {
+                for tMap in map.maps {
+                    guard let definition = tMap.tileDefinition(atColumn: column, row: row) else {
+                        continue
+                    }
+                    
+                    guard let name = definition.name else { continue }
+                    
+                    guard name == "water" else { return nil }
+                }
+            }
+        }
+        
+        
+        return nil
     }
     
 }
