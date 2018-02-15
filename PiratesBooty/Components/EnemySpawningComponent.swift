@@ -79,40 +79,63 @@ class EnemySpawnComponent: GKComponent {
         
         return true
     }
-    
-    // I should start the enumerator at the mid point of the columns/ rows.
-    // Then if we don't find any water tile to put the ship in, start at zero, zero and try again
-    
+
     private func findEmptyPosition(map: LayeredMap) -> CGPoint? {
         guard let enumerator = map.maps.first else { return nil }
         
-        for row in 0..<enumerator.numberOfRows {
-            for column in 0..<enumerator.numberOfColumns {
-                
+        // Start at middle, and find water going forward in columns / rows
+        if let point = findPoint(with: map,
+                                 rowRange: stride(from: enumerator.numberOfRows/2, to: enumerator.numberOfRows, by: 1),
+                                 columnRange: stride(from: enumerator.numberOfColumns/2, to: enumerator.numberOfColumns, by: 1))
+        {
+            return point
+        }
+        
+        // Start at middle, and find water going BACKWARDS in columns / rows
+        if let point = findPoint(with: map,
+                                  rowRange: stride(from: enumerator.numberOfRows/2, to: 0, by: -1),
+                                  columnRange: stride(from: enumerator.numberOfColumns/2, to: 0, by: -1))
+        {
+            return point
+        }
+        
+        return nil
+    }
+    
+    
+    private func findPoint(with map: LayeredMap, rowRange: StrideTo<Int>, columnRange: StrideTo<Int>) -> CGPoint? {
+        guard let baseMap = map.maps.first else {
+            assertionFailure("❌ Couldn't find the first map in a layered amp")
+            return nil
+        }
+        
+        // Start at the middle and go forwards
+        for row in rowRange {
+            for column in columnRange {
+
                 let isEmpty = map.maps.reduce(into: true, { (isWater, nextMap) in
                     if !isWater {
                         return
                     }
-                    
+
                     guard
                         let definition = nextMap.tileDefinition(atColumn: column, row: row),
                         let name = definition.name
-                    else {
-                        return
+                        else {
+                            return
                     }
-                    
+
                     if name != "water" {
                         isWater = false
                     }
                 })
-                
+
                 if isEmpty {
-                    return enumerator.centerOfTile(atColumn: column, row: row)
+                    return baseMap.centerOfTile(atColumn: column, row: row)
                 }
             }
         }
         
         return nil
     }
-    
 }

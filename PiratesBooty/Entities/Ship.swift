@@ -31,7 +31,7 @@ struct ShipPhysics: PhysicsConfiguration {
     }
     
     var collisionBitMask: Collision {
-        return [/*.land,*/ .ship]
+        return [.land, .ship]
     }
     
     var isDynamic: Bool = true
