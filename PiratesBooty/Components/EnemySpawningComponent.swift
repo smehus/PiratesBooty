@@ -121,8 +121,8 @@ class EnemySpawnComponent: GKComponent {
                     guard
                         let definition = nextMap.tileDefinition(atColumn: column, row: row),
                         let name = definition.name
-                        else {
-                            return
+                    else {
+                        return
                     }
 
                     if name != "water" {
