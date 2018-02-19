@@ -9,6 +9,11 @@
 import SpriteKit
 import GameplayKit
 
+protocol TileOperation {
+    func run(with map: SKTileMapNode, row: Int, column: Int)
+    func finish(with map: SKTileMapNode)
+}
+
 enum MapGroups: String, CustomStringConvertible {
     case water = "water"
     case land = "land"
@@ -75,38 +80,56 @@ class LayeredMap: SKNode {
         self.maps = maps
         addChildren(children: maps)
         
+        enumerateTiles(with: maps)
+    }
+    
+    private func enumerateTiles(with maps: [SKTileMapNode]) {
+        let operations = [PhysicsTileOperation()]
         for map in maps {
-            configurePhysics(for: map)
+            for row in 0..<map.numberOfRows {
+                for column in 0..<map.numberOfColumns {
+                    for ops in operations {
+                        ops.run(with: map, row: row, column: column)
+                    }
+                }
+            }
+            
+            for ops in operations {
+                ops.finish(with: map)
+            }
+            
+            // End of map
         }
     }
     
-    func configurePhysics(for map: SKTileMapNode) {
+    private class PhysicsTileOperation: TileOperation {
         var physicsBodies = [SKPhysicsBody]()
-        for row in 0..<map.numberOfRows {
-            for column in 0..<map.numberOfColumns {
-                guard
-                    let groupName = map.tileGroup(atColumn: column, row: row)?.name,
-                    let group = MapGroups(rawValue: groupName),
-                    case .land = group,
-                    let tile = map.tileDefinition(atColumn: column, row: row),
-                    let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
-                    isEdge,
-                    let texture = tile.textures.first
-                else { continue }
-                
-                let center = map.centerOfTile(atColumn: column, row: row)
-                let body = SKPhysicsBody(rectangleOf: texture.size(), center: center)
-                physicsBodies.append(body)
-            }
+        
+        func run(with map: SKTileMapNode, row: Int, column: Int) {
+            guard
+                let groupName = map.tileGroup(atColumn: column, row: row)?.name,
+                let group = MapGroups(rawValue: groupName),
+                case .land = group,
+                let tile = map.tileDefinition(atColumn: column, row: row),
+                let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
+                isEdge,
+                let texture = tile.textures.first
+                else { return }
+            
+            let center = map.centerOfTile(atColumn: column, row: row)
+            let body = SKPhysicsBody(rectangleOf: texture.size(), center: center)
+            physicsBodies.append(body)
         }
         
-        let physics = LandPhysics()
-        map.physicsBody = SKPhysicsBody(bodies: physicsBodies)
-        map.physicsBody?.categoryBitMask = physics.categoryBitMask.rawValue
-        map.physicsBody?.collisionBitMask = physics.collisionBitMask.rawValue
-        map.physicsBody?.contactTestBitMask = physics.contactTestBitMask.rawValue
-        map.physicsBody?.affectedByGravity = physics.affectedByGravity
-        map.physicsBody?.isDynamic = physics.isDynamic
+        func finish(with map: SKTileMapNode) {
+            let physics = LandPhysics()
+            map.physicsBody = SKPhysicsBody(bodies: physicsBodies)
+            map.physicsBody?.categoryBitMask = physics.categoryBitMask.rawValue
+            map.physicsBody?.collisionBitMask = physics.collisionBitMask.rawValue
+            map.physicsBody?.contactTestBitMask = physics.contactTestBitMask.rawValue
+            map.physicsBody?.affectedByGravity = physics.affectedByGravity
+            map.physicsBody?.isDynamic = physics.isDynamic
+        }
     }
 }
 
