@@ -107,6 +107,13 @@ class LayeredMap: SKNode {
         
         func run(with map: SKTileMapNode, row: Int, column: Int) {
             
+            guard
+                let groupName = map.tileGroup(atColumn: column, row: row)?.name,
+                let _ = MapGroups(rawValue: groupName)
+            else {
+                return
+            }
+            
         }
         
         func finish(with map: SKTileMapNode) {
