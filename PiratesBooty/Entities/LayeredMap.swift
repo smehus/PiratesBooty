@@ -102,6 +102,18 @@ class LayeredMap: SKNode {
         }
     }
     
+    private class GraphNodeOperation: TileOperation {
+        var nodes: [GKGraphNode] = []
+        
+        func run(with map: SKTileMapNode, row: Int, column: Int) {
+            
+        }
+        
+        func finish(with map: SKTileMapNode) {
+            
+        }
+    }
+    
     private class PhysicsTileOperation: TileOperation {
         var physicsBodies = [SKPhysicsBody]()
         
