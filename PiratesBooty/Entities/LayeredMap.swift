@@ -48,6 +48,7 @@ private struct LandPhysics: PhysicsConfiguration {
 class LayeredMap: SKNode {
     
     var maps: [SKTileMapNode] = []
+    var polygonObstacles: [GKPolygonObstacle] = []
     var placeholderMap: PlaceholderMapNode?
     var enemyCount = 0
     
@@ -115,6 +116,10 @@ class LayeredMap: SKNode {
         map.physicsBody?.affectedByGravity = physics.affectedByGravity
         map.physicsBody?.isDynamic = physics.isDynamic
         // End of map
+        
+        polygonObstacles = SKNode.obstacles(fromNodePhysicsBodies: [map])
+        
+        print("wtlsdjf")
     }
 }
 

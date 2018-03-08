@@ -47,6 +47,7 @@ class Ship: GKEntity, Sprite {
         super.init()
         
         let spriteComponent = SpriteComponent(texture: shipType.texture, physicsConfiguration: ShipPhysics())
+        spriteComponent.node.name = "FUCK"
         addComponent(spriteComponent)
         addComponent(DirectionalComponent(directional: shipType))
         addComponent(ShipWreckComponent())

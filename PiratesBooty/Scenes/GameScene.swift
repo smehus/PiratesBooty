@@ -21,6 +21,8 @@ class GameScene: SKScene {
     private var lastUpdatedTime: TimeInterval = 0
     
     var playerShip: Ship!
+    var polygonObstacles: [GKPolygonObstacle]!
+    var obstacles: [SKSpriteNode]!
     
     private let attitudeMultiplier: Double = 30.0
     
@@ -47,6 +49,16 @@ class GameScene: SKScene {
         playerShip.position = CGPoint(x: 0, y: 0)
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)
+        
+        
+        let sprite = SKSpriteNode(texture: nil, color: .white, size: CGSize(width: 100, height: 100))
+        let body = SKPhysicsBody(rectangleOf: sprite.size)
+        sprite.physicsBody = body
+        addChild(sprite)
+        obstacles = [sprite]
+        polygonObstacles = SKNode.obstacles(fromNodePhysicsBodies: obstacles)
+        
+        print("laksjdlf")
     }
     
     private func setupNodes() {
