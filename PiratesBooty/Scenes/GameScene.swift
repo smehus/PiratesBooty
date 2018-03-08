@@ -51,6 +51,10 @@ class GameScene: SKScene {
         entityManager.add(playerShip)
         
         
+        // NEED TO HOLD ONTO AN INSTANCE ARRAY OF THE SKSPRITENODE OBSTACLES
+        // ALSO NEED TO HOLD ONTO AN INSTANCE ARRAY OF GKPOLYGONOBSTACLES!!!
+        // JESUS CHRIST
+        
         let sprite = SKSpriteNode(texture: nil, color: .white, size: CGSize(width: 100, height: 100))
         let body = SKPhysicsBody(rectangleOf: sprite.size)
         sprite.physicsBody = body
