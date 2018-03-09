@@ -43,7 +43,8 @@ class EntityManager {
         let infiniteMapSystem = ComponentSystem(componentClass: InfiniteMapComponent.self)
         let shipWreckSystem = ComponentSystem(componentClass: ShipWreckComponent.self)
         let enemySpawnSystem = ComponentSystem(componentClass: EnemySpawnComponent.self)
-        return [directional, infiniteMapSystem, shipWreckSystem, enemySpawnSystem]
+        let pathFindingSystem = ComponentSystem(componentClass: PathFindingComponent.self)
+        return [directional, infiniteMapSystem, shipWreckSystem, enemySpawnSystem, pathFindingSystem]
     }()
     
     init(scene: SKScene) {

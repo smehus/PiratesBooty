@@ -78,6 +78,28 @@ class LayeredMap: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    static func obstacleTiles(from map: SKTileMapNode) -> [(center: CGPoint, texture: SKTexture)] {
+        var response: [(CGPoint, SKTexture)] = []
+        for row in 0..<map.numberOfRows {
+            for column in 0..<map.numberOfColumns {
+                guard
+                    let groupName = map.tileGroup(atColumn: column, row: row)?.name,
+                    let group = MapGroups(rawValue: groupName),
+                    case .land = group,
+                    let tile = map.tileDefinition(atColumn: column, row: row),
+                    let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
+                    isEdge,
+                    let texture = tile.textures.first
+                    else { continue }
+                
+                let center = map.centerOfTile(atColumn: column, row: row)
+                response.append((center, texture))
+            }
+        }
+        
+        return response
+    }
+    
     func addMaps(maps: [SKTileMapNode]) {
         self.maps = maps
         addChildren(children: maps)
@@ -85,25 +107,14 @@ class LayeredMap: SKNode {
         configure(maps: maps)
     }
     
+    
     private func configure(maps: [SKTileMapNode]) {
         for map in maps {
             var physicsBodies: [SKPhysicsBody] = []
-            for row in 0..<map.numberOfRows {
-                for column in 0..<map.numberOfColumns {
-                    guard
-                        let groupName = map.tileGroup(atColumn: column, row: row)?.name,
-                        let group = MapGroups(rawValue: groupName),
-                        case .land = group,
-                        let tile = map.tileDefinition(atColumn: column, row: row),
-                        let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
-                        isEdge,
-                        let texture = tile.textures.first
-                        else { continue }
-                    
-                    let center = map.centerOfTile(atColumn: column, row: row)
-                    let body = SKPhysicsBody(rectangleOf: texture.size(), center: center)
-                    physicsBodies.append(body)
-                }
+            
+            for (center, texture) in LayeredMap.obstacleTiles(from: map) {
+                let body = SKPhysicsBody(rectangleOf: texture.size(), center: center)
+                physicsBodies.append(body)
             }
             
             let physics = LandPhysics()
