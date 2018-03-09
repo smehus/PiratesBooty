@@ -49,6 +49,7 @@ class LayeredMap: SKNode {
     
     var maps: [SKTileMapNode] = []
     var polygonObstacles: [GKPolygonObstacle] = []
+    var polygonSprites: [SKNode] = []
     var placeholderMap: PlaceholderMapNode?
     var enemyCount = 0
     
@@ -81,45 +82,52 @@ class LayeredMap: SKNode {
         self.maps = maps
         addChildren(children: maps)
         
-        for map in maps {
-            configure(map: map)
-        }
-        
+        configure(maps: maps)
     }
     
-    private func configure(map: SKTileMapNode) {
-        var physicsBodies = [SKPhysicsBody]()
-        for row in 0..<map.numberOfRows {
-            for column in 0..<map.numberOfColumns {
-                guard
-                    let groupName = map.tileGroup(atColumn: column, row: row)?.name,
-                    let group = MapGroups(rawValue: groupName),
-                    case .land = group,
-                    let tile = map.tileDefinition(atColumn: column, row: row),
-                    let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
-                    isEdge,
-                    let texture = tile.textures.first
-                else { continue }
-                
-                let center = map.centerOfTile(atColumn: column, row: row)
-                let body = SKPhysicsBody(rectangleOf: texture.size(), center: center)
-                physicsBodies.append(body)
-                
+    private func configure(maps: [SKTileMapNode]) {
+        for map in maps {
+            for row in 0..<map.numberOfRows {
+                for column in 0..<map.numberOfColumns {
+                    guard
+                        let groupName = map.tileGroup(atColumn: column, row: row)?.name,
+                        let group = MapGroups(rawValue: groupName),
+                        case .land = group,
+                        let tile = map.tileDefinition(atColumn: column, row: row),
+                        let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
+                        isEdge,
+                        let texture = tile.textures.first
+                        else { continue }
+                    
+                    let center = map.centerOfTile(atColumn: column, row: row)
+                    let sprite = SKSpriteNode(texture: nil, color: .white, size: texture.size())
+                    sprite.name = "SHIT"
+                    sprite.position = map.convert(center, to: scene!)
+                    sprite.physicsBody = body(of: texture.size())
+    
+                    scene!.addChild(sprite)
+                    if scene!.nodes(at: sprite.position).filter ({ $0.name == sprite.name }).count <= 1 {
+                        polygonSprites.append(sprite)
+                    }
+                }
             }
         }
-        
+
+        if !polygonSprites.isEmpty, let gameScene = scene as? GameScene {
+            polygonObstacles = SKNode.obstacles(fromNodePhysicsBodies: polygonSprites)
+            gameScene.set(obstacles: polygonObstacles)
+        }
+    }
+    
+    private func body(of size: CGSize) -> SKPhysicsBody {
         let physics = LandPhysics()
-        map.physicsBody = SKPhysicsBody(bodies: physicsBodies)
-        map.physicsBody?.categoryBitMask = physics.categoryBitMask.rawValue
-        map.physicsBody?.collisionBitMask = physics.collisionBitMask.rawValue
-        map.physicsBody?.contactTestBitMask = physics.contactTestBitMask.rawValue
-        map.physicsBody?.affectedByGravity = physics.affectedByGravity
-        map.physicsBody?.isDynamic = physics.isDynamic
-        // End of map
-        
-        polygonObstacles = SKNode.obstacles(fromNodePhysicsBodies: [map])
-        
-        print("wtlsdjf")
+        let body = SKPhysicsBody(rectangleOf: size)
+        body.categoryBitMask = physics.categoryBitMask.rawValue
+        body.collisionBitMask = physics.collisionBitMask.rawValue
+        body.contactTestBitMask = physics.contactTestBitMask.rawValue
+        body.affectedByGravity = physics.affectedByGravity
+        body.isDynamic = physics.isDynamic
+        return body
     }
 }
 

@@ -14,17 +14,21 @@ import GameplayKit
 /// use GKGraphNode2D for enemy path finding around obstacles (islands)
 
 
-class GameScene: SKScene {
+final class GameScene: SKScene {
+    
+    var playerShip: Ship!
+    var obstacleGraph: GKObstacleGraph<GKGraphNode2D>!
     
     private var motionManager: MovementManager = MotionManager(modifier: 30.0)
     private var entityManager: EntityManager!
     private var lastUpdatedTime: TimeInterval = 0
-    
-    var playerShip: Ship!
-    var polygonObstacles: [GKPolygonObstacle]!
-    var obstacles: [SKSpriteNode]!
-    
     private let attitudeMultiplier: Double = 30.0
+    
+    func set(obstacles: [GKPolygonObstacle]) {
+        DispatchQueue.global(qos: .background).async {
+            self.obstacleGraph.addObstacles(obstacles)
+        }
+    }
     
     override func didMove(to view: SKView) {
         setupRequiredNodes()
@@ -49,21 +53,7 @@ class GameScene: SKScene {
         playerShip.position = CGPoint(x: 0, y: 0)
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)
-        
-        
-        // NEED TO HOLD ONTO AN INSTANCE ARRAY OF THE SKSPRITENODE OBSTACLES
-        // ALSO NEED TO HOLD ONTO AN INSTANCE ARRAY OF GKPOLYGONOBSTACLES!!!
-        // JESUS CHRIST
-        // Can't use compound physics body?
-        
-        let sprite = SKSpriteNode(texture: nil, color: .white, size: CGSize(width: 100, height: 100))
-        let body = SKPhysicsBody(rectangleOf: sprite.size)
-        sprite.physicsBody = body
-        addChild(sprite)
-        obstacles = [sprite]
-        polygonObstacles = SKNode.obstacles(fromNodePhysicsBodies: obstacles)
-        
-        print("laksjdlf")
+        obstacleGraph = GKObstacleGraph(obstacles: [], bufferRadius: 30)
     }
     
     private func setupNodes() {
