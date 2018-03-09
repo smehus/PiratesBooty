@@ -23,12 +23,7 @@ final class GameScene: SKScene {
     private var entityManager: EntityManager!
     private var lastUpdatedTime: TimeInterval = 0
     private let attitudeMultiplier: Double = 30.0
-    
-    func set(obstacles: [GKPolygonObstacle]) {
-        DispatchQueue.global(qos: .background).async {
-            self.obstacleGraph.addObstacles(obstacles)
-        }
-    }
+    private var queuedObstacles: [GKPolygonObstacle]?
     
     override func didMove(to view: SKView) {
         setupRequiredNodes()

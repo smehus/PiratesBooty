@@ -87,6 +87,7 @@ class LayeredMap: SKNode {
     
     private func configure(maps: [SKTileMapNode]) {
         for map in maps {
+            var physicsBodies: [SKPhysicsBody] = []
             for row in 0..<map.numberOfRows {
                 for column in 0..<map.numberOfColumns {
                     guard
@@ -100,34 +101,19 @@ class LayeredMap: SKNode {
                         else { continue }
                     
                     let center = map.centerOfTile(atColumn: column, row: row)
-                    let sprite = SKSpriteNode(texture: nil, color: .white, size: texture.size())
-                    sprite.name = "SHIT"
-                    sprite.position = map.convert(center, to: scene!)
-                    sprite.physicsBody = body(of: texture.size())
-    
-                    scene!.addChild(sprite)
-                    if scene!.nodes(at: sprite.position).filter ({ $0.name == sprite.name }).count <= 1 {
-                        polygonSprites.append(sprite)
-                    }
+                    let body = SKPhysicsBody(rectangleOf: texture.size(), center: center)
+                    physicsBodies.append(body)
                 }
             }
+            
+            let physics = LandPhysics()
+            map.physicsBody = SKPhysicsBody(bodies: physicsBodies)
+            map.physicsBody?.categoryBitMask = physics.categoryBitMask.rawValue
+            map.physicsBody?.collisionBitMask = physics.collisionBitMask.rawValue
+            map.physicsBody?.contactTestBitMask = physics.contactTestBitMask.rawValue
+            map.physicsBody?.affectedByGravity = physics.affectedByGravity
+            map.physicsBody?.isDynamic = physics.isDynamic
         }
-
-        if !polygonSprites.isEmpty, let gameScene = scene as? GameScene {
-            polygonObstacles = SKNode.obstacles(fromNodePhysicsBodies: polygonSprites)
-            gameScene.set(obstacles: polygonObstacles)
-        }
-    }
-    
-    private func body(of size: CGSize) -> SKPhysicsBody {
-        let physics = LandPhysics()
-        let body = SKPhysicsBody(rectangleOf: size)
-        body.categoryBitMask = physics.categoryBitMask.rawValue
-        body.collisionBitMask = physics.collisionBitMask.rawValue
-        body.contactTestBitMask = physics.contactTestBitMask.rawValue
-        body.affectedByGravity = physics.affectedByGravity
-        body.isDynamic = physics.isDynamic
-        return body
     }
 }
 
