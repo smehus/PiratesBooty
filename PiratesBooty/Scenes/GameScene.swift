@@ -17,7 +17,7 @@ import GameplayKit
 final class GameScene: SKScene {
     
     var playerShip: Ship!
-    var obstacleGraph: GKObstacleGraph<GKGraphNode2D>!
+    var obstacleGraph: GKObstacleGraph<GKGraphNode2D>?
     
     private var motionManager: MovementManager = MotionManager(modifier: 30.0)
     private var entityManager: EntityManager!
@@ -44,7 +44,7 @@ final class GameScene: SKScene {
         motionManager.delegate = self
         entityManager = EntityManager(scene: self)
         
-        playerShip = Ship(shipType: .defaultShip)
+        playerShip = Ship(scene: self, shipType: .defaultShip)
         playerShip.position = CGPoint(x: 0, y: 0)
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)

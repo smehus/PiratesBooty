@@ -10,9 +10,7 @@ import Foundation
 import GameplayKit
 
 final class PathFindingComponent: GKComponent {
-    
-    let graph = GKMeshGraph()
-    
+
     private unowned let scene: GameScene
     private var currentMap: LayeredMap?
     
@@ -58,8 +56,8 @@ final class PathFindingComponent: GKComponent {
         }
         
         print("ADDING OBSTACLES \(obstacles.count)")
-        DispatchQueue.global(qos: .background).async {
-            self.scene.obstacleGraph.addObstacles(obstacles)
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            self?.scene.obstacleGraph?.addObstacles(obstacles)
         }
     }
     

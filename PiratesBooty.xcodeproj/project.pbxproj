@@ -17,6 +17,7 @@
 		A52EF6811F8CEA84005636D3 /* PirateTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */; };
 		A544CA142021384500EB914E /* ToDo in Resources */ = {isa = PBXBuildFile; fileRef = A544CA132021384500EB914E /* ToDo */; };
 		A544CA16202139CE00EB914E /* EnemySpawningComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A544CA15202139CE00EB914E /* EnemySpawningComponent.swift */; };
+		A548F16820543B6E001F1D45 /* EnemyPathfindingComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A548F16720543B6E001F1D45 /* EnemyPathfindingComponent.swift */; };
 		A5749A901F9B937D00E906DC /* InfiniteMapComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */; };
 		A57C9F281FB9057A003B4905 /* PlaceholderMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57C9F271FB9057A003B4905 /* PlaceholderMapNode.swift */; };
 		A58676411F925524001F37C1 /* DirectionalComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58676401F925524001F37C1 /* DirectionalComponent.swift */; };
@@ -68,6 +69,7 @@
 		A52EF6801F8CEA84005636D3 /* PirateTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PirateTileSet.sks; sourceTree = "<group>"; };
 		A544CA132021384500EB914E /* ToDo */ = {isa = PBXFileReference; lastKnownFileType = text; path = ToDo; sourceTree = "<group>"; };
 		A544CA15202139CE00EB914E /* EnemySpawningComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemySpawningComponent.swift; sourceTree = "<group>"; };
+		A548F16720543B6E001F1D45 /* EnemyPathfindingComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyPathfindingComponent.swift; sourceTree = "<group>"; };
 		A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteMapComponent.swift; sourceTree = "<group>"; };
 		A57C9F271FB9057A003B4905 /* PlaceholderMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderMapNode.swift; sourceTree = "<group>"; };
 		A58676401F925524001F37C1 /* DirectionalComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalComponent.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				A5A6EADD1FD4A5F500DE31F2 /* ShipWreckComponent.swift */,
 				A544CA15202139CE00EB914E /* EnemySpawningComponent.swift */,
 				A5B8F93E203DB9B600B92367 /* PathFindingComponent.swift */,
+				A548F16720543B6E001F1D45 /* EnemyPathfindingComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -326,6 +329,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A548F16820543B6E001F1D45 /* EnemyPathfindingComponent.swift in Sources */,
 				A52EF66F1F8CE931005636D3 /* GameScene.swift in Sources */,
 				A57C9F281FB9057A003B4905 /* PlaceholderMapNode.swift in Sources */,
 				A594B6961F8E3D5600361E50 /* SKTTimingFunctions.swift in Sources */,

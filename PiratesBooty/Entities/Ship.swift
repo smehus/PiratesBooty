@@ -11,6 +11,7 @@ import GameplayKit
 
 enum ShipType: Directional {
     case defaultShip
+    case enemyShip
     
     var texture: SKTexture {
         return SKTexture(image: #imageLiteral(resourceName: "ship (1)"))
@@ -43,7 +44,10 @@ class Ship: GKEntity, Sprite {
     
     static let MAX_VELOCITY: CGFloat = 500
     
-    init(shipType: ShipType) {
+    private unowned let scene: GameScene
+    
+    init(scene: GameScene, shipType: ShipType) {
+        self.scene = scene
         super.init()
         
         let spriteComponent = SpriteComponent(texture: shipType.texture, physicsConfiguration: ShipPhysics())
@@ -51,6 +55,10 @@ class Ship: GKEntity, Sprite {
         addComponent(spriteComponent)
         addComponent(DirectionalComponent(directional: shipType))
         addComponent(ShipWreckComponent())
+        
+        if shipType == .enemyShip {
+            addComponent(EnemyPathfindingComponent(scene: scene))
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

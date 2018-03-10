@@ -71,7 +71,7 @@ class EnemySpawnComponent: GKComponent {
         
         let scenePosition = map.convert(pos, to: scene)
         print("*** Creating Enemy Ship at \(scenePosition) -> My Position \(scene.playerShip.position!)")
-        var ship = Ship(shipType: .defaultShip)
+        var ship = Ship(scene: scene, shipType: .enemyShip)
         ship.position = scenePosition
         ship.sprite()?.zPosition = 10
         entityManager.add(ship)
