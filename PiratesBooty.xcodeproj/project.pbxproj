@@ -18,6 +18,7 @@
 		A544CA142021384500EB914E /* ToDo in Resources */ = {isa = PBXBuildFile; fileRef = A544CA132021384500EB914E /* ToDo */; };
 		A544CA16202139CE00EB914E /* EnemySpawningComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A544CA15202139CE00EB914E /* EnemySpawningComponent.swift */; };
 		A548F16820543B6E001F1D45 /* EnemyPathfindingComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A548F16720543B6E001F1D45 /* EnemyPathfindingComponent.swift */; };
+		A548F16A20544617001F1D45 /* GraphManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A548F16920544617001F1D45 /* GraphManager.swift */; };
 		A5749A901F9B937D00E906DC /* InfiniteMapComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */; };
 		A57C9F281FB9057A003B4905 /* PlaceholderMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57C9F271FB9057A003B4905 /* PlaceholderMapNode.swift */; };
 		A58676411F925524001F37C1 /* DirectionalComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58676401F925524001F37C1 /* DirectionalComponent.swift */; };
@@ -70,6 +71,7 @@
 		A544CA132021384500EB914E /* ToDo */ = {isa = PBXFileReference; lastKnownFileType = text; path = ToDo; sourceTree = "<group>"; };
 		A544CA15202139CE00EB914E /* EnemySpawningComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemySpawningComponent.swift; sourceTree = "<group>"; };
 		A548F16720543B6E001F1D45 /* EnemyPathfindingComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyPathfindingComponent.swift; sourceTree = "<group>"; };
+		A548F16920544617001F1D45 /* GraphManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphManager.swift; sourceTree = "<group>"; };
 		A5749A8F1F9B937D00E906DC /* InfiniteMapComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteMapComponent.swift; sourceTree = "<group>"; };
 		A57C9F271FB9057A003B4905 /* PlaceholderMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderMapNode.swift; sourceTree = "<group>"; };
 		A58676401F925524001F37C1 /* DirectionalComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalComponent.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				A594B6631F8E2F2000361E50 /* EntityManager.swift */,
 				A5A6EADF1FD4A9BF00DE31F2 /* BitMasks.swift */,
 				A5B58CE91FD969C500B62A7F /* MotionManager.swift */,
+				A548F16920544617001F1D45 /* GraphManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 				A594B6961F8E3D5600361E50 /* SKTTimingFunctions.swift in Sources */,
 				A594B6851F8E3D5600361E50 /* Assert+SKNode.swift in Sources */,
 				A594B6891F8E3D5600361E50 /* CGSize+Extensions.swift in Sources */,
+				A548F16A20544617001F1D45 /* GraphManager.swift in Sources */,
 				A594B68E1F8E3D5600361E50 /* SKAction+SpecialEffects.swift in Sources */,
 				A594B6841F8E3D5600361E50 /* Array+Extensions.swift in Sources */,
 				A594B6971F8E3D5600361E50 /* Vector3.swift in Sources */,
