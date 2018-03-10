@@ -11,6 +11,10 @@ import GameplayKit
 
 final class EnemyPathfindingComponent: GKComponent {
     
+    private struct ActionKeys {
+        static let currentAction = "currentAction"
+    }
+    
     private var player: Ship {
         return scene.playerShip
     }
@@ -40,7 +44,10 @@ final class EnemyPathfindingComponent: GKComponent {
         createNodes()
     }
     
+    var shouldAction = true
     func createNodes() {
+        guard shouldAction else { return }
+        shipEntity.sprite()?.removeAction(forKey: ActionKeys.currentAction)
         
         let playerNode = GKGraphNode2D(point: vector_float2(Float(player.sprite()!.position.x), Float(player.sprite()!.position.y)))
         guard let graph = scene.obstacleGraph else { fatalError() }
@@ -53,10 +60,13 @@ final class EnemyPathfindingComponent: GKComponent {
 
         var actions: [SKAction] = []
         for node in pathNodes {
-            let act = SKAction.move(to: CGPoint(node.position), duration: 1.0)
+            actions.append(SKAction.move(to: CGPoint(node.position), duration: 1.0))
         }
         
         
+        let sequence = SKAction.sequence(actions)
+        shipEntity.sprite()!.run(sequence, withKey: ActionKeys.currentAction)
+        shouldAction = false
         defer {
             graph.remove([playerNode, enemyNode])
         }
