@@ -20,6 +20,7 @@ final class EnemyPathfindingComponent: GKComponent {
     }
     
     private unowned let scene: GameScene
+    private var currentActions: [SKAction] = []
     
     init(scene: GameScene) {
         self.scene = scene
@@ -49,8 +50,7 @@ final class EnemyPathfindingComponent: GKComponent {
         graph.connectUsingObstacles(node: enemyNode)
         
         let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
-        
-        
+
         
         
         defer {
