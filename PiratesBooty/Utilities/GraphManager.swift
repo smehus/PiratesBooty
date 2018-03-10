@@ -12,25 +12,42 @@ import GameplayKit
 final class GraphManager {
     
     private let graph: GKObstacleGraph<GKGraphNode2D>
+    private let lock = NSRecursiveLock()
     
     init(graph: GKObstacleGraph<GKGraphNode2D>) {
         self.graph = graph
     }
     
     func addObstacles(_ obstacles: [GKPolygonObstacle]) {
-        
+        lockedProcedure { [weak self] in
+            self?.graph.addObstacles(obstacles)
+        }
     }
     
     func connectUsingObstacles(node: GKGraphNode2D) {
-        
+        lockedProcedure { [weak self] in
+            self?.graph.connectUsingObstacles(node: node)
+        }
     }
     
     func remove(_ nodes: [GKGraphNode2D]) {
-        
+        lockedProcedure { [weak self] in
+            self?.graph.remove(nodes)
+        }
     }
     
     func findPath(from fromNode: GKGraphNode2D, to toNode: GKGraphNode2D) {
-        
+        lockedProcedure { [weak self] in
+            self?.graph.findPath(from: fromNode, to: toNode)
+        }
     }
     
+    private func lockedProcedure(procedure: () -> ()) {
+        defer {
+            lock.unlock()
+        }
+        
+        lock.lock()
+        procedure()
+    }
 }
