@@ -51,6 +51,10 @@ final class EnemyPathfindingComponent: GKComponent {
         
         let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
 
+        var actions: [SKAction] = []
+        for node in pathNodes {
+            let act = SKAction.move(to: CGPoint(node.position), duration: 1.0)
+        }
         
         
         defer {

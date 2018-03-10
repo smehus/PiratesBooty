@@ -36,12 +36,12 @@ final class GraphManager {
         }
     }
     
-    func findPath(from fromNode: GKGraphNode2D, to toNode: GKGraphNode2D) -> [GKGraphNode] {
+    func findPath(from fromNode: GKGraphNode2D, to toNode: GKGraphNode2D) -> [GKGraphNode2D] {
         var paths: [GKGraphNode] = []
         lock.lock()
         paths = graph.findPath(from: fromNode, to: toNode)
         lock.unlock()
-        return paths
+        return paths as! [GKGraphNode2D]
     }
     
     private func lockedProcedure(procedure: () -> ()) {

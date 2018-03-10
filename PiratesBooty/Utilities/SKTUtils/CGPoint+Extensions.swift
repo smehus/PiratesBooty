@@ -24,6 +24,11 @@ import CoreGraphics
 import SpriteKit
 
 public extension CGPoint {
+
+    public init(_ position: vector_float2) {
+        self.init(x: CGFloat(position.x), y: CGFloat(position.y))
+    }
+    
   /**
    * Creates a new CGPoint given a CGVector.
    */
@@ -263,3 +268,4 @@ public func /= (left: inout CGPoint, right: CGVector) {
 public func lerp(start: CGPoint, end: CGPoint, t: CGFloat) -> CGPoint {
   return start + (end - start) * t
 }
+
