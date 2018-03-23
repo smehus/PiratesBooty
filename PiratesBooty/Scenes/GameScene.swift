@@ -51,10 +51,10 @@ final class GameScene: SKScene {
         obstacleGraph = GraphManager(graph: GKObstacleGraph(obstacles: [], bufferRadius: 30))
         
         
-        var ship = Ship(scene: self, shipType: .enemyShip)
-        ship.position = CGPoint(x: 0, y: 0)
-        ship.sprite()?.zPosition = 10
-        entityManager.add(ship)
+//        var ship = Ship(scene: self, shipType: .enemyShip)
+//        ship.position = CGPoint(x: 0, y: 0)
+//        ship.sprite()?.zPosition = 10
+//        entityManager.add(ship)
     }
     
     private func setupNodes() {

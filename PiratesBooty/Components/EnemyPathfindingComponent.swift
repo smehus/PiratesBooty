@@ -26,11 +26,19 @@ final class EnemyPathfindingComponent: GKComponent {
     private unowned let scene: GameScene
     private var currentActions: [SKAction] = []
     private let movePointsPerSec: CGFloat = 5.0
-    private var currentPaths: [CGPoint] = []
+    private var currentDT: TimeInterval = 0
+    private var currentPaths: [CGPoint] = [] {
+        didSet {
+            print("CURRENT PATHS COUNT: \(currentPaths.count)")
+        }
+    }
+    
+    private let radius = CGPoint(x: 50, y: 50)
     
     init(scene: GameScene) {
         self.scene = scene
         super.init()
+        createNodes()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -39,18 +47,29 @@ final class EnemyPathfindingComponent: GKComponent {
     
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
-        checkProximity(dt: seconds)
+//        currentDT = seconds
+//        checkProximity(dt: seconds)
+//        move()
+    }
+    
+    private func checkProximity(dt: TimeInterval) {
+        if let currentPath = currentPaths.first, (currentPath - shipEntity.position!) < radius {
+            currentPaths.removeFirst()
+        }
+    }
+    
+    private func move() {
         
-
+        guard let nextPath = currentPaths.first else { return }
+        let offset = nextPath - self.shipEntity.sprite()!.position
+        let direction = offset.normalized()
+        let velocity = direction * self.movePointsPerSec
+        
+        self.shipEntity.sprite()!.position += velocity
+        self.shipEntity.sprite()!.zRotation = direction.angle
     }
     
-    func checkProximity(dt: TimeInterval) {
-        createNodes(dt: dt)
-    }
-    
-    var shouldAction = true
-    func createNodes(dt: TimeInterval) {
-        shipEntity.sprite()?.removeAction(forKey: ActionKeys.currentAction)
+    private func createNodes() {
         
         DispatchQueue.global().async {
             
@@ -67,15 +86,19 @@ final class EnemyPathfindingComponent: GKComponent {
             let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
             self.currentPaths.append(contentsOf: newPaths)
             
+            var actions: [SKAction] = []
+            for path in newPaths {
+                let offset = path - self.shipEntity.sprite()!.position
+                let time = offset.length() / self.movePointsPerSec
+                print("Time it takes to get anywhere \(time)")
+                let action = SKAction.move(to: path, duration: Double(time / 100))
+                actions.append(action)
+            }
+            
             DispatchQueue.main.async {
-                if pathNodes.count >= 2 {
-                    let offset = CGPoint(pathNodes[1].position) - self.shipEntity.sprite()!.position
-                    let direction = offset.normalized()
-                    let velocity = direction * self.movePointsPerSec
-                    
-                    self.shipEntity.sprite()!.position += velocity
-                    self.shipEntity.sprite()!.zRotation = direction.angle
-                }
+                self.shipEntity.sprite()!.run(SKAction.sequence(actions), completion: {
+                    self.createNodes()
+                })
             }
         }
     }
