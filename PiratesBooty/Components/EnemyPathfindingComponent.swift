@@ -26,6 +26,7 @@ final class EnemyPathfindingComponent: GKComponent {
     private unowned let scene: GameScene
     private var currentActions: [SKAction] = []
     private let movePointsPerSec: CGFloat = 5.0
+    private var currentPaths: [CGPoint] = []
     
     init(scene: GameScene) {
         self.scene = scene
@@ -38,14 +39,9 @@ final class EnemyPathfindingComponent: GKComponent {
     
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
-//        checkProximity(dt: seconds)
+        checkProximity(dt: seconds)
         
-        let offset = player.sprite()!.position - shipEntity.sprite()!.position
-        let length = sqrt(offset.x * offset.x + offset.y * offset.y)
-        let direction = CGPoint(x: offset.x / CGFloat(length), y: offset.y / CGFloat(length))
-        let velocity = CGPoint(x: direction.x * movePointsPerSec, y: direction.y * movePointsPerSec)
-        
-        shipEntity.sprite()!.position += velocity
+
     }
     
     func checkProximity(dt: TimeInterval) {
@@ -66,15 +62,20 @@ final class EnemyPathfindingComponent: GKComponent {
             graph.connectUsingObstacles(node: enemyNode)
             
             let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
-            
             graph.remove([playerNode, enemyNode])
-            guard pathNodes.count > 1 else { return }
-            let newPoint = CGPoint(pathNodes[1].position) * CGFloat(dt)
-            let playerPoint = self.player.sprite()!.position * CGFloat(dt)
             
-//            print("NODES: \(pathNodes)")
+            let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
+            self.currentPaths.append(contentsOf: newPaths)
+            
             DispatchQueue.main.async {
-                self.shipEntity.sprite()!.position += playerPoint
+                if pathNodes.count >= 2 {
+                    let offset = CGPoint(pathNodes[1].position) - self.shipEntity.sprite()!.position
+                    let direction = offset.normalized()
+                    let velocity = direction * self.movePointsPerSec
+                    
+                    self.shipEntity.sprite()!.position += velocity
+                    self.shipEntity.sprite()!.zRotation = direction.angle
+                }
             }
         }
     }
