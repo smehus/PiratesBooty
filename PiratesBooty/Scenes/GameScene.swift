@@ -49,6 +49,12 @@ final class GameScene: SKScene {
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)
         obstacleGraph = GraphManager(graph: GKObstacleGraph(obstacles: [], bufferRadius: 30))
+        
+        
+        var ship = Ship(scene: self, shipType: .enemyShip)
+        ship.position = CGPoint(x: 0, y: 0)
+        ship.sprite()?.zPosition = 10
+        entityManager.add(ship)
     }
     
     private func setupNodes() {
@@ -135,6 +141,6 @@ extension GameScene: MultiScaledScene {
     }
     
     var cameraScale: (xScale: CGFloat, yScale: CGFloat) {
-        return (2.0, 2.0)
+        return (4.0, 4.0)
     }
 }

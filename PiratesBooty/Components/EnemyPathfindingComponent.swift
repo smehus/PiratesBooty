@@ -25,6 +25,7 @@ final class EnemyPathfindingComponent: GKComponent {
     
     private unowned let scene: GameScene
     private var currentActions: [SKAction] = []
+    private let movePointsPerSec: CGFloat = 5.0
     
     init(scene: GameScene) {
         self.scene = scene
@@ -37,38 +38,44 @@ final class EnemyPathfindingComponent: GKComponent {
     
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
-        checkProximity()
+//        checkProximity(dt: seconds)
+        
+        let offset = player.sprite()!.position - shipEntity.sprite()!.position
+        let length = sqrt(offset.x * offset.x + offset.y * offset.y)
+        let direction = CGPoint(x: offset.x / CGFloat(length), y: offset.y / CGFloat(length))
+        let velocity = CGPoint(x: direction.x * movePointsPerSec, y: direction.y * movePointsPerSec)
+        
+        shipEntity.sprite()!.position += velocity
     }
     
-    func checkProximity() {
-        createNodes()
+    func checkProximity(dt: TimeInterval) {
+        createNodes(dt: dt)
     }
     
     var shouldAction = true
-    func createNodes() {
-        guard shouldAction else { return }
+    func createNodes(dt: TimeInterval) {
         shipEntity.sprite()?.removeAction(forKey: ActionKeys.currentAction)
         
-        let playerNode = GKGraphNode2D(point: vector_float2(Float(player.sprite()!.position.x), Float(player.sprite()!.position.y)))
-        guard let graph = scene.obstacleGraph else { fatalError() }
-        graph.connectUsingObstacles(node: playerNode)
-        
-        let enemyNode = GKGraphNode2D(point: vector_float2(Float(shipEntity.sprite()!.position.x), Float(shipEntity.sprite()!.position.y)))
-        graph.connectUsingObstacles(node: enemyNode)
-        
-        let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
-
-        var actions: [SKAction] = []
-        for node in pathNodes {
-            actions.append(SKAction.move(to: CGPoint(node.position), duration: 1.0))
-        }
-        
-        
-        let sequence = SKAction.sequence(actions)
-        shipEntity.sprite()!.run(sequence, withKey: ActionKeys.currentAction)
-        shouldAction = false
-        defer {
+        DispatchQueue.global().async {
+            
+            let playerNode = GKGraphNode2D(point: vector_float2(Float(self.player.sprite()!.position.x), Float(self.player.sprite()!.position.y)))
+            guard let graph = self.scene.obstacleGraph else { fatalError() }
+            graph.connectUsingObstacles(node: playerNode)
+            
+            let enemyNode = GKGraphNode2D(point: vector_float2(Float(self.shipEntity.sprite()!.position.x), Float(self.shipEntity.sprite()!.position.y)))
+            graph.connectUsingObstacles(node: enemyNode)
+            
+            let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
+            
             graph.remove([playerNode, enemyNode])
+            guard pathNodes.count > 1 else { return }
+            let newPoint = CGPoint(pathNodes[1].position) * CGFloat(dt)
+            let playerPoint = self.player.sprite()!.position * CGFloat(dt)
+            
+//            print("NODES: \(pathNodes)")
+            DispatchQueue.main.async {
+                self.shipEntity.sprite()!.position += playerPoint
+            }
         }
     }
 }
