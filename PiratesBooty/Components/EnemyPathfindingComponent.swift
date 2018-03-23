@@ -29,7 +29,7 @@ final class EnemyPathfindingComponent: GKComponent {
     private var currentDT: TimeInterval = 0
     private var currentPaths: [CGPoint] = [] {
         didSet {
-            print("CURRENT PATHS COUNT: \(currentPaths.count)")
+//            print("CURRENT PATHS COUNT: \(currentPaths.count)")
         }
     }
     
@@ -73,30 +73,40 @@ final class EnemyPathfindingComponent: GKComponent {
         
         DispatchQueue.global().async {
             
+            print("CONNECTING NODES")
             let playerNode = GKGraphNode2D(point: vector_float2(Float(self.player.sprite()!.position.x), Float(self.player.sprite()!.position.y)))
             guard let graph = self.scene.obstacleGraph else { fatalError() }
             graph.connectUsingObstacles(node: playerNode)
             
             let enemyNode = GKGraphNode2D(point: vector_float2(Float(self.shipEntity.sprite()!.position.x), Float(self.shipEntity.sprite()!.position.y)))
+            
             graph.connectUsingObstacles(node: enemyNode)
             
+            print("CREATING NODES")
             let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
-            graph.remove([playerNode, enemyNode])
+//            graph.remove([playerNode, enemyNode])
+            
             
             let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
             self.currentPaths.append(contentsOf: newPaths)
+            
+            if newPaths.isEmpty {
+                self.createNodes()
+            }
             
             var actions: [SKAction] = []
             for path in newPaths {
                 let offset = path - self.shipEntity.sprite()!.position
                 let time = offset.length() / self.movePointsPerSec
-                print("Time it takes to get anywhere \(time)")
+//                print("Time it takes to get anywhere \(time)")
                 let action = SKAction.move(to: path, duration: Double(time / 100))
                 actions.append(action)
             }
             
             DispatchQueue.main.async {
+                
                 self.shipEntity.sprite()!.run(SKAction.sequence(actions), completion: {
+                    print("ACTIONS COMPLETED")
                     self.createNodes()
                 })
             }

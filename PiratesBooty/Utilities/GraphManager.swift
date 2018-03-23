@@ -25,9 +25,11 @@ final class GraphManager {
     }
     
     func connectUsingObstacles(node: GKGraphNode2D) {
-        lockedProcedure { [weak self] in
-            self?.graph.connectUsingObstacles(node: node)
-        }
+        
+        graph.connectUsingObstacles(node: node)
+//        lockedProcedure { [weak self] in
+//            self?.graph.connectUsingObstacles(node: node)
+//        }
     }
     
     func remove(_ nodes: [GKGraphNode2D]) {
@@ -37,11 +39,13 @@ final class GraphManager {
     }
     
     func findPath(from fromNode: GKGraphNode2D, to toNode: GKGraphNode2D) -> [GKGraphNode2D] {
-        var paths: [GKGraphNode] = []
-        lock.lock()
-        paths = graph.findPath(from: fromNode, to: toNode)
-        lock.unlock()
-        return paths as! [GKGraphNode2D]
+        
+        return graph.findPath(from: fromNode, to: toNode) as! [GKGraphNode2D]
+//        var paths: [GKGraphNode] = []
+//        lock.lock()
+//        paths = graph.findPath(from: fromNode, to: toNode)
+//        lock.unlock()
+//        return paths as! [GKGraphNode2D]
     }
     
     private func lockedProcedure(procedure: () -> ()) {
