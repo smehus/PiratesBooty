@@ -1,5 +1,5 @@
 TODO:
 
-- When damaged - add ability to heal the ship - but when healing, you have to be motionless. Also enemies will recognize this and go after you.
-
+Figure out why enemies aren't pathfinding around obstacles
+When damaged - add ability to heal the ship - but when healing, you have to be motionless. Also enemies will recognize this and go after you.
 

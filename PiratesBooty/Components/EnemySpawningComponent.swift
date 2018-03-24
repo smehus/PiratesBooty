@@ -68,10 +68,9 @@ class EnemySpawnComponent: GKComponent {
     }
     
     private func spawnEnemyShip(map: LayeredMap) -> Bool {
-        guard totalEnemies == 0, let pos = findEmptyPosition(map: map) else { return false }
+        guard totalEnemies < 3, let pos = findEmptyPosition(map: map) else { return false }
         
         let scenePosition = map.convert(pos, to: scene)
-//        print("*** Creating Enemy Ship at \(scenePosition) -> My Position \(scene.playerShip.position!)")
         var ship = Ship(scene: scene, shipType: .enemyShip)
         ship.position = scenePosition
         ship.sprite()?.zPosition = 10

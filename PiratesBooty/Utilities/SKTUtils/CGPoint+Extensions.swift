@@ -24,6 +24,10 @@ import CoreGraphics
 import SpriteKit
 
 public extension CGPoint {
+    
+    public func vector_float() -> vector_float2 {
+        return vector_float2(Float(x), Float(y))
+    }
 
     public init(_ position: vector_float2) {
         self.init(x: CGFloat(position.x), y: CGFloat(position.y))

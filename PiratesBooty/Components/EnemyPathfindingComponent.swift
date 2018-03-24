@@ -27,6 +27,7 @@ final class EnemyPathfindingComponent: GKComponent {
     private var currentActions: [SKAction] = []
     private let movePointsPerSec: CGFloat = 5.0
     private var currentDT: TimeInterval = 0
+    private var hasCreatedNodes = false
     private var currentPaths: [CGPoint] = [] {
         didSet {
 //            print("CURRENT PATHS COUNT: \(currentPaths.count)")
@@ -38,7 +39,6 @@ final class EnemyPathfindingComponent: GKComponent {
     init(scene: GameScene) {
         self.scene = scene
         super.init()
-        createNodes()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -47,9 +47,10 @@ final class EnemyPathfindingComponent: GKComponent {
     
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
-//        currentDT = seconds
-//        checkProximity(dt: seconds)
-//        move()
+        if let _ = entity, !hasCreatedNodes {
+            hasCreatedNodes = true
+            createNodes()
+        }
     }
     
     private func checkProximity(dt: TimeInterval) {
@@ -74,31 +75,29 @@ final class EnemyPathfindingComponent: GKComponent {
         DispatchQueue.global().async {
             
             print("CONNECTING NODES")
-            let playerNode = GKGraphNode2D(point: vector_float2(Float(self.player.sprite()!.position.x), Float(self.player.sprite()!.position.y)))
+            let playerNode = GKGraphNode2D.node(withPoint: vector_float2(Float(self.player.sprite()!.position.x), Float(self.player.sprite()!.position.y)))
             guard let graph = self.scene.obstacleGraph else { fatalError() }
             graph.connectUsingObstacles(node: playerNode)
             
-            let enemyNode = GKGraphNode2D(point: vector_float2(Float(self.shipEntity.sprite()!.position.x), Float(self.shipEntity.sprite()!.position.y)))
+            let enemyNode = GKGraphNode2D.node(withPoint: vector_float2(Float(self.shipEntity.sprite()!.position.x), Float(self.shipEntity.sprite()!.position.y)))
             
             graph.connectUsingObstacles(node: enemyNode)
             
             print("CREATING NODES")
             let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
-//            graph.remove([playerNode, enemyNode])
-            
-            
+
             let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
             self.currentPaths.append(contentsOf: newPaths)
             
             if newPaths.isEmpty {
                 self.createNodes()
+                return
             }
             
             var actions: [SKAction] = []
             for path in newPaths {
                 let offset = path - self.shipEntity.sprite()!.position
                 let time = offset.length() / self.movePointsPerSec
-//                print("Time it takes to get anywhere \(time)")
                 let action = SKAction.move(to: path, duration: Double(time / 100))
                 actions.append(action)
             }

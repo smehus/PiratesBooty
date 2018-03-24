@@ -49,12 +49,7 @@ final class GameScene: SKScene {
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)
         obstacleGraph = GraphManager(graph: GKObstacleGraph(obstacles: [], bufferRadius: 30))
-        
-        
-//        var ship = Ship(scene: self, shipType: .enemyShip)
-//        ship.position = CGPoint(x: 0, y: 0)
-//        ship.sprite()?.zPosition = 10
-//        entityManager.add(ship)
+
     }
     
     private func setupNodes() {
@@ -62,7 +57,7 @@ final class GameScene: SKScene {
     }
     
     private func setupMotion() {
-        motionManager.start()
+//        motionManager.start()
     }
     
     private func setupCamera() {
@@ -131,6 +126,33 @@ extension GameScene: MotionManagerDelegate {
         }
         
         return CGVector(dx: x, dy: y)
+    }
+}
+
+
+// MARK: - Touch handling
+extension GameScene {
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first?.location(in: self) else { return }
+        guard let playerVector = playerShip.position?.vector_float() else { return }
+        
+        let playerNode = GKGraphNode2D.node(withPoint: playerVector)
+        let touchNode = GKGraphNode2D.node(withPoint: touch.vector_float())
+        obstacleGraph.connectUsingObstacles(node: touchNode)
+        obstacleGraph.connectUsingObstacles(node: playerNode)
+        
+        let paths = obstacleGraph.findPath(from: playerNode, to: touchNode)
+        let actions = paths.enumerated().flatMap { (index, node) -> SKAction? in
+            let point = CGPoint(node.position)
+    
+            let offset = playerShip.position! - point
+            let time = offset.length() / 5.0
+            return SKAction.move(to: point, duration: Double(time / 100))
+        }
+        
+        playerShip.sprite()!.run(SKAction.sequence(actions))
+        
     }
 }
 
