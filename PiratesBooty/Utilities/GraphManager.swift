@@ -34,7 +34,7 @@ final class GraphManager {
     }
     
     func addNodes(_ obstacles:[SKNode], fromSource name: String) {
-        
+        print("ADDING \(obstacles.count) OBSTACLES FOR SOURCE: \(name)")
         queue.async(flags: .barrier) {
             
             let nodes = SKNode.obstacles(fromNodePhysicsBodies: obstacles)
@@ -43,8 +43,10 @@ final class GraphManager {
         }
     }
     
-    private func addObstacles(_ obstacles: [GKPolygonObstacle]) {
-        self.graph.addObstacles(obstacles)
+    func addObstacles(_ obstacles: [GKPolygonObstacle]) {
+        queue.async(flags: .barrier) {
+            self.graph.addObstacles(obstacles)
+        }
     }
     
     func connectUsingObstacles(node: GKGraphNode2D) {

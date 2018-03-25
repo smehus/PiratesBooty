@@ -117,6 +117,11 @@ class LayeredMap: SKNode {
             var physicsBodies: [SKPhysicsBody] = []
             
             for (center, texture) in LayeredMap.obstacleTiles(from: map) {
+                
+                guard polygonSprites.first (where : { $0.position == center }) == nil else {
+                    return
+                }
+                
                 let pos = map.convert(center, to: scene!)
                 let sprite = SKSpriteNode(texture: nil, color: .white, size: texture.size())
                 sprite.position = pos
@@ -129,9 +134,6 @@ class LayeredMap: SKNode {
                 polygonSprites.append(sprite)
                 physicsBodies.append(body)
             }
-            
-            print("*** ADDING OBSTACLES NODES TO GRAPH FOR MAP #: \(mapName)")
-            gameScene.obstacleGraph.addNodes(polygonSprites, fromSource: mapName)
         }
     }
 }

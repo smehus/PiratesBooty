@@ -48,29 +48,17 @@ final class PathFindingComponent: GKComponent {
     
     private func createObstacles() {
         guard let layeredMap = currentMap else { return }
-        var obstacles: [SKNode] = []
-//        for map in layeredMap.maps {
-//            for (center, texture) in LayeredMap.obstacleTiles(from: map) {
-//                obstacles.append(createPolygonObstacle(from: map, center: center, texture: texture))
-//            }
-//        }
-//
-        DispatchQueue.global(qos: .background).async { [weak self] in
-//            self?.scene.obstacleGraph?.addNodes(layeredMap.polygonSprites)
-        }
+        scene.obstacleGraph?.addNodes(layeredMap.polygonSprites, fromSource: layeredMap.mapName)
     }
     
-    private func createPolygonObstacle(from map: SKTileMapNode, center: CGPoint, texture: SKTexture) -> GKPolygonObstacle {
-        let point = map.convert(center, to: scene)
-        
-    
-        let topRight = float2(Float(point.y + map.tileSize.height), Float(point.x + map.tileSize.height))
-        let bottomRight = float2(Float(point.y - map.tileSize.height), Float(point.x + map.tileSize.height))
-        let bottomLeft = float2(Float(point.y - map.tileSize.height), Float(point.x - map.tileSize.height))
-        let topLeft = float2(Float(point.y + map.tileSize.height), Float(point.x - map.tileSize.height))
-        
-        return GKPolygonObstacle(points: [topRight, bottomRight, bottomLeft, topLeft])
-    }
+//    private func createPolygonObstacle(from map: SKTileMapNode, center: CGPoint, texture: SKTexture) -> GKPolygonObstacle {
+//        let point = map.convert(center, to: scene)
+//        let topRight = float2(Float(point.y + map.tileSize.height), Float(point.x + map.tileSize.height))
+//        let bottomRight = float2(Float(point.y - map.tileSize.height), Float(point.x + map.tileSize.height))
+//        let bottomLeft = float2(Float(point.y - map.tileSize.height), Float(point.x - map.tileSize.height))
+//        let topLeft = float2(Float(point.y + map.tileSize.height), Float(point.x - map.tileSize.height))
+//        return GKPolygonObstacle(points: [topRight, bottomRight, bottomLeft, topLeft])
+//    }
     
     private func getCurrentMap() -> LayeredMap? {
         let possibleNodes = scene.nodes(at: scene.playerShip.position!)
