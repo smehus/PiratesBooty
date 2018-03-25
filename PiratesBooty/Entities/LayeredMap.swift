@@ -59,6 +59,10 @@ class LayeredMap: SKNode {
         return maps.first?.mapSize ?? placeholderMap!.size
     }
     
+    var gameScene: GameScene {
+        return scene as! GameScene
+    }
+    
     init(placeholder: PlaceholderMapNode) {
         self.placeholderMap = placeholder
         super.init()
@@ -113,17 +117,32 @@ class LayeredMap: SKNode {
             var physicsBodies: [SKPhysicsBody] = []
             
             for (center, texture) in LayeredMap.obstacleTiles(from: map) {
-                let body = SKPhysicsBody(rectangleOf: texture.size(), center: center)
+                let pos = map.convert(center, to: scene!)
+                let sprite = SKSpriteNode(texture: nil, color: .white, size: texture.size())
+                sprite.position = pos
+                
+                let body = SKPhysicsBody(rectangleOf: texture.size(), center: CGPoint(x: 0, y: 0))
+                sprite.physicsBody = body
+                sprite.move(toParent: map)
+                
+                
+                polygonSprites.append(sprite)
                 physicsBodies.append(body)
             }
             
-            let physics = LandPhysics()
-            map.physicsBody = SKPhysicsBody(bodies: physicsBodies)
-            map.physicsBody?.categoryBitMask = physics.categoryBitMask.rawValue
-            map.physicsBody?.collisionBitMask = physics.collisionBitMask.rawValue
-            map.physicsBody?.contactTestBitMask = physics.contactTestBitMask.rawValue
-            map.physicsBody?.affectedByGravity = physics.affectedByGravity
-            map.physicsBody?.isDynamic = physics.isDynamic
+            DispatchQueue.global(qos: .userInitiated).async {
+                let obstacles = SKNode.obstacles(fromNodeBounds: self.polygonSprites)
+                self.gameScene.obstacleGraph.addObstacles(obstacles)
+            }
+
+            
+//            let physics = LandPhysics()
+//            map.physicsBody = SKPhysicsBody(bodies: physicsBodies)
+//            map.physicsBody?.categoryBitMask = physics.categoryBitMask.rawValue
+//            map.physicsBody?.collisionBitMask = physics.collisionBitMask.rawValue
+//            map.physicsBody?.contactTestBitMask = physics.contactTestBitMask.rawValue
+//            map.physicsBody?.affectedByGravity = physics.affectedByGravity
+//            map.physicsBody?.isDynamic = physics.isDynamic
         }
     }
 }

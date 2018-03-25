@@ -91,7 +91,6 @@ class InfiniteMapComponent: GKComponent {
         
         for fact in ruleSystem.facts {
             guard let state = MapState(rawValue: fact as! NSString) else { continue }
-//            print("ADDING MAP \(fact)")
             addMap(state: state)
         }
         

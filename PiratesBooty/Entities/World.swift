@@ -9,13 +9,13 @@
 import GameplayKit
 import SpriteKit
 
-class World: GKEntity {
+final class World: GKEntity {
     
     init(scene: GameScene, entityManager: EntityManager) {
         super.init()
         addComponent(InfiniteMapComponent(scene: scene))
 //        addComponent(EnemySpawnComponent(scene: scene, entityManager: entityManager))
-        addComponent(PathFindingComponent(scene: scene))
+//        addComponent(PathFindingComponent(scene: scene))
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -9,9 +9,13 @@
 import Foundation
 import GameplayKit
 
+
+
+/// I put stuff in locks because accessing the graph was crashing the game.
+/// However, when i did that, it seemed like obstacles weren't being added
 final class GraphManager {
     
-    private let graph: GKObstacleGraph<GKGraphNode2D>
+    let graph: GKObstacleGraph<GKGraphNode2D>
     private let lock = NSRecursiveLock()
     
     init(graph: GKObstacleGraph<GKGraphNode2D>) {
@@ -19,9 +23,11 @@ final class GraphManager {
     }
     
     func addObstacles(_ obstacles: [GKPolygonObstacle]) {
-        lockedProcedure { [weak self] in
-            self?.graph.addObstacles(obstacles)
-        }
+        graph.addObstacles(obstacles)
+        
+//        lockedProcedure { [weak self] in
+//
+//        }
     }
     
     func connectUsingObstacles(node: GKGraphNode2D) {
@@ -33,9 +39,11 @@ final class GraphManager {
     }
     
     func remove(_ nodes: [GKGraphNode2D]) {
-        lockedProcedure { [weak self] in
-            self?.graph.remove(nodes)
-        }
+        graph.remove(nodes)
+        
+//        lockedProcedure { [weak self] in
+//            self?.graph.remove(nodes)
+//        }
     }
     
     func findPath(from fromNode: GKGraphNode2D, to toNode: GKGraphNode2D) -> [GKGraphNode2D] {

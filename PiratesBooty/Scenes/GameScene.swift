@@ -142,9 +142,12 @@ extension GameScene {
         obstacleGraph.connectUsingObstacles(node: touchNode)
         obstacleGraph.connectUsingObstacles(node: playerNode)
         
-        let paths = obstacleGraph.findPath(from: playerNode, to: touchNode)
+        let paths = obstacleGraph.graph.findPath(from: playerNode, to: touchNode)
+    
+//        printDebugInfo(with: touch)
         let actions = paths.enumerated().flatMap { (index, node) -> SKAction? in
-            let point = CGPoint(node.position)
+            guard let graphNode = node as? GKGraphNode2D else { fatalError() }
+            let point = CGPoint(graphNode.position)
     
             let offset = playerShip.position! - point
             let time = offset.length() / 5.0
@@ -153,6 +156,24 @@ extension GameScene {
         
         playerShip.sprite()!.run(SKAction.sequence(actions))
         
+    }
+    
+    func printDebugInfo(with touch: CGPoint) {
+        let filter = obstacleGraph.graph.obstacles.sorted(by: { (first, second) -> Bool in
+            return first.vertex(at: 0).x > second.vertex(at: 0).x
+        })
+        
+        for v in filter {
+            print("\(v.vertex(at: 0)) \n")
+        }
+        
+        print("TOUCH \(touch)")
+        let vertex = filter.first { (obstacle) -> Bool in
+            let range: CountableClosedRange<Int> = -100...100
+            let matchX = range ~= Int((obstacle.vertex(at: 0).x - Float(touch.x)))
+            let matchY = range ~= Int((obstacle.vertex(at: 0).y - Float(touch.y)))
+            return matchX && matchY
+        }
     }
 }
 
