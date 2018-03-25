@@ -62,6 +62,11 @@ final class EnemyPathfindingComponent: GKComponent {
         }
     }
     
+    
+    /// Need to figure out a way to only create nodes once, when we need them. Before the create nodes
+    /// function was getting called like 98 times in a row. NO NO NO. Also, I think that crashed the 'findPath' method.
+    /// Should probably put that in a barrier as well. 
+    
     private func findNextPath() -> CGPoint? {
         
         guard let firstPath = currentPaths.first else {
