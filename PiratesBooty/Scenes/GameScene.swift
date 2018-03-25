@@ -139,12 +139,12 @@ extension GameScene {
         
         let playerNode = GKGraphNode2D.node(withPoint: playerVector)
         let touchNode = GKGraphNode2D.node(withPoint: touch.vector_float())
-        obstacleGraph.connectUsingObstacles(node: touchNode)
-        obstacleGraph.connectUsingObstacles(node: playerNode)
+        obstacleGraph?.connectUsingObstacles(node: touchNode)
+        obstacleGraph?.connectUsingObstacles(node: playerNode)
         
         let paths = obstacleGraph.graph.findPath(from: playerNode, to: touchNode)
     
-//        printDebugInfo(with: touch)
+        printDebugInfo(with: touch)
         let actions = paths.enumerated().flatMap { (index, node) -> SKAction? in
             guard let graphNode = node as? GKGraphNode2D else { fatalError() }
             let point = CGPoint(graphNode.position)
@@ -164,16 +164,18 @@ extension GameScene {
         })
         
         for v in filter {
-            print("\(v.vertex(at: 0)) \n")
+//            print("\(v.vertex(at: 0)) \n")
         }
         
-        print("TOUCH \(touch)")
+//        print("TOUCH \(touch)")
         let vertex = filter.first { (obstacle) -> Bool in
             let range: CountableClosedRange<Int> = -100...100
             let matchX = range ~= Int((obstacle.vertex(at: 0).x - Float(touch.x)))
             let matchY = range ~= Int((obstacle.vertex(at: 0).y - Float(touch.y)))
             return matchX && matchY
         }
+        
+        
     }
 }
 

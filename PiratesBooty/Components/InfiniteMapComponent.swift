@@ -33,6 +33,7 @@ class InfiniteMapComponent: GKComponent {
     private let source: GKNoiseSource
     private let tileSet = SKTileSet(named: MapValues.tileSetName)
     private let mapGenerationQueue = DispatchQueue(label: "map_generation_queue")
+    private var numOfMaps = 0
     
     private var currentMap: LayeredMap? {
         let possibleNodes = scene.nodes(at: scene.playerShip.position!)
@@ -143,14 +144,14 @@ class InfiniteMapComponent: GKComponent {
     
     @discardableResult
     private func addMap(position: CGPoint) -> LayeredMap? {
-        
+        numOfMaps += 1
         /// Check the position is within desired range to create a new map
         if let current = currentMap, abs(position.distanceTo(current.position)) > (MapValues.mapWidth * 3) {
             return nil
         }
         
         let placeholder = PlaceholderMapNode(color: .blue, size: CGSize(width: MapValues.mapWidth, height: MapValues.mapHeight))
-        let newMap = LayeredMap(placeholder: placeholder)
+        let newMap = LayeredMap(placeholder: placeholder, mapNumber: numOfMaps)
         newMap.position = position
         newMap.name = MapValues.mapName
         scene.addChild(newMap)

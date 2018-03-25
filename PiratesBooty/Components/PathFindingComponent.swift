@@ -48,17 +48,15 @@ final class PathFindingComponent: GKComponent {
     
     private func createObstacles() {
         guard let layeredMap = currentMap else { return }
-        var obstacles: [GKPolygonObstacle] = []
-        for map in layeredMap.maps {
+        var obstacles: [SKNode] = []
+//        for map in layeredMap.maps {
 //            for (center, texture) in LayeredMap.obstacleTiles(from: map) {
 //                obstacles.append(createPolygonObstacle(from: map, center: center, texture: texture))
 //            }
-        }
-        
-        obstacles.append(contentsOf: SKNode.obstacles(fromNodePhysicsBodies: layeredMap.polygonSprites))
-        
+//        }
+//
         DispatchQueue.global(qos: .background).async { [weak self] in
-            self?.scene.obstacleGraph?.addObstacles(obstacles)
+//            self?.scene.obstacleGraph?.addNodes(layeredMap.polygonSprites)
         }
     }
     

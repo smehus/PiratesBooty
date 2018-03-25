@@ -10,6 +10,15 @@ import Foundation
 import GameplayKit
 
 
+protocol ReadWriteLock {
+    
+    // Get a shared reader lock, run the given block, and unlock
+    mutating func withReadLock(block: () -> ())
+    
+    // Get an exclusive writer lock, run the given block, and unlock
+    mutating func withWriteLock(block: () -> ())
+}
+
 
 /// I put stuff in locks because accessing the graph was crashing the game.
 /// However, when i did that, it seemed like obstacles weren't being added
@@ -17,51 +26,36 @@ final class GraphManager {
     
     let graph: GKObstacleGraph<GKGraphNode2D>
     private let lock = NSRecursiveLock()
+    private let addLock = NSRecursiveLock()
+    private let queue = DispatchQueue(label: "what", attributes: .concurrent)
     
     init(graph: GKObstacleGraph<GKGraphNode2D>) {
         self.graph = graph
     }
     
-    func addObstacles(_ obstacles: [GKPolygonObstacle]) {
-        graph.addObstacles(obstacles)
+    func addNodes(_ obstacles:[SKNode], fromSource name: String) {
         
-//        lockedProcedure { [weak self] in
-//
-//        }
+        queue.async(flags: .barrier) {
+            
+            let nodes = SKNode.obstacles(fromNodePhysicsBodies: obstacles)
+            self.graph.addObstacles(nodes)
+            print("OBSTACLES ADDED FOR SOURCE \(name)")
+        }
+    }
+    
+    private func addObstacles(_ obstacles: [GKPolygonObstacle]) {
+        self.graph.addObstacles(obstacles)
     }
     
     func connectUsingObstacles(node: GKGraphNode2D) {
-        
         graph.connectUsingObstacles(node: node)
-//        lockedProcedure { [weak self] in
-//            self?.graph.connectUsingObstacles(node: node)
-//        }
     }
     
     func remove(_ nodes: [GKGraphNode2D]) {
         graph.remove(nodes)
-        
-//        lockedProcedure { [weak self] in
-//            self?.graph.remove(nodes)
-//        }
     }
     
     func findPath(from fromNode: GKGraphNode2D, to toNode: GKGraphNode2D) -> [GKGraphNode2D] {
-        
         return graph.findPath(from: fromNode, to: toNode) as! [GKGraphNode2D]
-//        var paths: [GKGraphNode] = []
-//        lock.lock()
-//        paths = graph.findPath(from: fromNode, to: toNode)
-//        lock.unlock()
-//        return paths as! [GKGraphNode2D]
-    }
-    
-    private func lockedProcedure(procedure: () -> ()) {
-        defer {
-            lock.unlock()
-        }
-        
-        lock.lock()
-        procedure()
     }
 }

@@ -63,10 +63,10 @@ class LayeredMap: SKNode {
         return scene as! GameScene
     }
     
-    init(placeholder: PlaceholderMapNode) {
+    init(placeholder: PlaceholderMapNode, mapNumber: Int = 0) {
         self.placeholderMap = placeholder
         super.init()
-        
+        mapName = "\(mapNumber)"
         addChild(placeholder)
     }
     
@@ -130,19 +130,8 @@ class LayeredMap: SKNode {
                 physicsBodies.append(body)
             }
             
-            DispatchQueue.global(qos: .userInitiated).async {
-                let obstacles = SKNode.obstacles(fromNodeBounds: self.polygonSprites)
-                self.gameScene.obstacleGraph.addObstacles(obstacles)
-            }
-
-            
-//            let physics = LandPhysics()
-//            map.physicsBody = SKPhysicsBody(bodies: physicsBodies)
-//            map.physicsBody?.categoryBitMask = physics.categoryBitMask.rawValue
-//            map.physicsBody?.collisionBitMask = physics.collisionBitMask.rawValue
-//            map.physicsBody?.contactTestBitMask = physics.contactTestBitMask.rawValue
-//            map.physicsBody?.affectedByGravity = physics.affectedByGravity
-//            map.physicsBody?.isDynamic = physics.isDynamic
+            print("*** ADDING OBSTACLES NODES TO GRAPH FOR MAP #: \(mapName)")
+            gameScene.obstacleGraph.addNodes(polygonSprites, fromSource: mapName)
         }
     }
 }
