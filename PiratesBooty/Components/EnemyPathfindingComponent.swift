@@ -65,7 +65,6 @@ final class EnemyPathfindingComponent: GKComponent {
     private func findNextPath() -> CGPoint? {
         
         guard let firstPath = currentPaths.first else {
-            createNodes()
             return nil
         }
         if shipEntity.position!.withInRange(range: -100...100, matchingPoint: firstPath) {
@@ -87,7 +86,6 @@ final class EnemyPathfindingComponent: GKComponent {
     }
     
     private func createNodes() {
-        
         DispatchQueue.global().async {
             
             print("CONNECTING NODES")
@@ -104,7 +102,6 @@ final class EnemyPathfindingComponent: GKComponent {
 
             let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
             self.currentPaths = newPaths
-            
             
             // Using SKActions - meh
 //            if newPaths.isEmpty {
