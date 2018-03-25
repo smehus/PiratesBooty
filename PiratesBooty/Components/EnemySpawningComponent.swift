@@ -20,6 +20,7 @@ class EnemySpawnComponent: GKComponent {
     private var lastMap: LayeredMap?
     private var totalEnemies = 0
     private let ruleSystem = GKRuleSystem()
+    private let Max_Enemies = 1
     
     /// Number of maps the player has crossed
     private var numMapsTraveled = 0
@@ -68,7 +69,7 @@ class EnemySpawnComponent: GKComponent {
     }
     
     private func spawnEnemyShip(map: LayeredMap) -> Bool {
-        guard totalEnemies < 3, let pos = findEmptyPosition(map: map) else { return false }
+        guard totalEnemies < Max_Enemies, let pos = findEmptyPosition(map: map) else { return false }
         
         let scenePosition = map.convert(pos, to: scene)
         var ship = Ship(scene: scene, shipType: .enemyShip)

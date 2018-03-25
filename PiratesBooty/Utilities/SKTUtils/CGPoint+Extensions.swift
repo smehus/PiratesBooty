@@ -25,6 +25,12 @@ import SpriteKit
 
 public extension CGPoint {
     
+    public func withInRange(range: CountableClosedRange<Int>, matchingPoint: CGPoint) -> Bool {
+        let rangeX = range ~= Int(matchingPoint.x - x)
+        let rangeY = range ~= Int(matchingPoint.y - y)
+        return rangeX && rangeY
+    }
+    
     public func vector_float() -> vector_float2 {
         return vector_float2(Float(x), Float(y))
     }

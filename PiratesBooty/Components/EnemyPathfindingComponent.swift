@@ -25,7 +25,7 @@ final class EnemyPathfindingComponent: GKComponent {
     
     private unowned let scene: GameScene
     private var currentActions: [SKAction] = []
-    private let movePointsPerSec: CGFloat = 480
+    private let movePointsPerSec: CGFloat = 5000
     private var currentDT: TimeInterval = 0
     private var hasCreatedNodes = false
     private var currentPaths: [CGPoint] = [] {
@@ -50,7 +50,7 @@ final class EnemyPathfindingComponent: GKComponent {
         currentDT = seconds
         if let _ = entity, !hasCreatedNodes {
             hasCreatedNodes = true
-//            createNodes()
+            createNodes()
         }
         
         move()
@@ -62,20 +62,27 @@ final class EnemyPathfindingComponent: GKComponent {
         }
     }
     
+    private func findNextPath() -> CGPoint? {
+        
+        guard let firstPath = currentPaths.first else {
+            createNodes()
+            return nil
+        }
+        if shipEntity.position!.withInRange(range: -100...100, matchingPoint: firstPath) {
+            currentPaths.removeFirst()
+            return findNextPath()
+        } else {
+            return firstPath
+        }
+    }
+    
     private func move() {
-//        guard let firstPath = currentPaths.first else { return }
-//        var nextPath: CGPoint
-//        if firstPath == shipEntity.position, currentPaths.count > 1 {
-//            nextPath = currentPaths[1]
-//        } else {
-//            nextPath = firstPath
-//        }
+        guard let path = findNextPath() else { return }
 
-        let offset = player.position! - self.shipEntity.sprite()!.position
+        let offset = path - self.shipEntity.sprite()!.position
         let direction = offset.normalized()
         let velocity = direction * self.movePointsPerSec
-//        print("offset: \(offset) direction: \(direction) velocity: \(velocity) final: \(velocity * CGFloat(currentDT))")
-        shipEntity.sprite()!.physicsBody!.velocity += CGVector(point: velocity * CGFloat(currentDT))
+        shipEntity.sprite()!.physicsBody!.velocity = CGVector(point: velocity * CGFloat(currentDT))
         shipEntity.sprite()!.zRotation = direction.angle
     }
     
@@ -98,6 +105,8 @@ final class EnemyPathfindingComponent: GKComponent {
             let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
             self.currentPaths = newPaths
             
+            
+            // Using SKActions - meh
 //            if newPaths.isEmpty {
 //                self.createNodes()
 //                return
