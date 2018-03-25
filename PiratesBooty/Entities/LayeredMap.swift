@@ -45,14 +45,13 @@ private struct LandPhysics: PhysicsConfiguration {
     var affectedByGravity: Bool = false
 }
 
-class LayeredMap: SKNode {
+final class LayeredMap: SKNode {
     
     var maps: [SKTileMapNode] = []
-    var polygonObstacles: [GKPolygonObstacle] = []
     var polygonSprites: [SKNode] = []
     var placeholderMap: PlaceholderMapNode?
     var enemyCount = 0
-    
+    var hasAttachedObstacles = false
     var mapName = ""
     
     var mapSize: CGSize {
@@ -107,17 +106,12 @@ class LayeredMap: SKNode {
     func addMaps(maps: [SKTileMapNode]) {
         self.maps = maps
         addChildren(children: maps)
-        
         configure(maps: maps)
     }
-    
-    
+
     private func configure(maps: [SKTileMapNode]) {
         for map in maps {
-            var physicsBodies: [SKPhysicsBody] = []
-            
             for (center, texture) in LayeredMap.obstacleTiles(from: map) {
-                
                 guard polygonSprites.first (where : { $0.position == center }) == nil else {
                     return
                 }
@@ -129,10 +123,7 @@ class LayeredMap: SKNode {
                 let body = SKPhysicsBody(rectangleOf: texture.size(), center: CGPoint(x: 0, y: 0))
                 sprite.physicsBody = body
                 sprite.move(toParent: map)
-                
-                
                 polygonSprites.append(sprite)
-                physicsBodies.append(body)
             }
         }
     }

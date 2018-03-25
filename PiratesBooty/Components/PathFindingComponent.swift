@@ -47,8 +47,9 @@ final class PathFindingComponent: GKComponent {
     }
     
     private func createObstacles() {
-        guard let layeredMap = currentMap else { return }
-        scene.obstacleGraph?.addNodes(layeredMap.polygonSprites, fromSource: layeredMap.mapName)
+        guard let layeredMap = currentMap, !layeredMap.hasAttachedObstacles else { return }
+        scene.obstacleGraph.addNodes(layeredMap.polygonSprites, fromSource: layeredMap.mapName)
+        layeredMap.hasAttachedObstacles = true
     }
     
 //    private func createPolygonObstacle(from map: SKTileMapNode, center: CGPoint, texture: SKTexture) -> GKPolygonObstacle {

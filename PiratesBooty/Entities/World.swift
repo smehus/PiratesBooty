@@ -14,7 +14,7 @@ final class World: GKEntity {
     init(scene: GameScene, entityManager: EntityManager) {
         super.init()
         addComponent(InfiniteMapComponent(scene: scene))
-//        addComponent(EnemySpawnComponent(scene: scene, entityManager: entityManager))
+        addComponent(EnemySpawnComponent(scene: scene, entityManager: entityManager))
         addComponent(PathFindingComponent(scene: scene))
     }
     

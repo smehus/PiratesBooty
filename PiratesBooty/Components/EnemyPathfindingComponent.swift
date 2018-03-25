@@ -25,7 +25,7 @@ final class EnemyPathfindingComponent: GKComponent {
     
     private unowned let scene: GameScene
     private var currentActions: [SKAction] = []
-    private let movePointsPerSec: CGFloat = 5.0
+    private let movePointsPerSec: CGFloat = 480
     private var currentDT: TimeInterval = 0
     private var hasCreatedNodes = false
     private var currentPaths: [CGPoint] = [] {
@@ -47,10 +47,13 @@ final class EnemyPathfindingComponent: GKComponent {
     
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
+        currentDT = seconds
         if let _ = entity, !hasCreatedNodes {
             hasCreatedNodes = true
-            createNodes()
+//            createNodes()
         }
+        
+        move()
     }
     
     private func checkProximity(dt: TimeInterval) {
@@ -60,14 +63,20 @@ final class EnemyPathfindingComponent: GKComponent {
     }
     
     private func move() {
-        
-        guard let nextPath = currentPaths.first else { return }
-        let offset = nextPath - self.shipEntity.sprite()!.position
+//        guard let firstPath = currentPaths.first else { return }
+//        var nextPath: CGPoint
+//        if firstPath == shipEntity.position, currentPaths.count > 1 {
+//            nextPath = currentPaths[1]
+//        } else {
+//            nextPath = firstPath
+//        }
+
+        let offset = player.position! - self.shipEntity.sprite()!.position
         let direction = offset.normalized()
         let velocity = direction * self.movePointsPerSec
-        
-        self.shipEntity.sprite()!.position += velocity
-        self.shipEntity.sprite()!.zRotation = direction.angle
+//        print("offset: \(offset) direction: \(direction) velocity: \(velocity) final: \(velocity * CGFloat(currentDT))")
+        shipEntity.sprite()!.physicsBody!.velocity += CGVector(point: velocity * CGFloat(currentDT))
+        shipEntity.sprite()!.zRotation = direction.angle
     }
     
     private func createNodes() {
@@ -87,28 +96,28 @@ final class EnemyPathfindingComponent: GKComponent {
             let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
 
             let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
-            self.currentPaths.append(contentsOf: newPaths)
+            self.currentPaths = newPaths
             
-            if newPaths.isEmpty {
-                self.createNodes()
-                return
-            }
-            
-            var actions: [SKAction] = []
-            for path in newPaths {
-                let offset = path - self.shipEntity.sprite()!.position
-                let time = offset.length() / self.movePointsPerSec
-                let action = SKAction.move(to: path, duration: Double(time / 100))
-                actions.append(action)
-            }
-            
-            DispatchQueue.main.async {
-                
-                self.shipEntity.sprite()!.run(SKAction.sequence(actions), completion: {
-                    print("ACTIONS COMPLETED")
-                    self.createNodes()
-                })
-            }
+//            if newPaths.isEmpty {
+//                self.createNodes()
+//                return
+//            }
+//
+//            var actions: [SKAction] = []
+//            for path in newPaths {
+//                let offset = path - self.shipEntity.sprite()!.position
+//                let time = offset.length() / self.movePointsPerSec
+//                let action = SKAction.move(to: path, duration: Double(time / 100))
+//                actions.append(action)
+//            }
+//
+//            DispatchQueue.main.async {
+//
+//                self.shipEntity.sprite()!.run(SKAction.sequence(actions), completion: {
+//                    print("ACTIONS COMPLETED")
+//                    self.createNodes()
+//                })
+//            }
         }
     }
 }
