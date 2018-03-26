@@ -133,6 +133,7 @@ extension GameScene: MotionManagerDelegate {
 // MARK: - Touch handling
 extension GameScene {
     
+    /// Want to push the physics body similar to enemyPathFinding
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first?.location(in: self) else { return }
         guard let playerVector = playerShip.position?.vector_float() else { return }
@@ -143,19 +144,21 @@ extension GameScene {
         obstacleGraph?.connectUsingObstacles(node: playerNode)
         
         let paths = obstacleGraph.graph.findPath(from: playerNode, to: touchNode)
+        
+        
+    }
     
-        printDebugInfo(with: touch)
+    private func runPlayerActions(with paths: [GKPath]) {
         let actions = paths.enumerated().flatMap { (index, node) -> SKAction? in
             guard let graphNode = node as? GKGraphNode2D else { fatalError() }
             let point = CGPoint(graphNode.position)
-    
+            
             let offset = playerShip.position! - point
             let time = offset.length() / 5.0
             return SKAction.move(to: point, duration: Double(time / 100))
         }
         
         playerShip.sprite()!.run(SKAction.sequence(actions))
-        
     }
     
     func printDebugInfo(with touch: CGPoint) {

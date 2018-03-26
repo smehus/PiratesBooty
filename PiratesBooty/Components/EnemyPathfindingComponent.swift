@@ -25,7 +25,6 @@ final class EnemyPathfindingComponent: GKComponent {
     
     private unowned let scene: GameScene
     private var currentActions: [SKAction] = []
-    private let movePointsPerSec: CGFloat = 5000
     private var currentDT: TimeInterval = 0
     private var hasCreatedNodes = false
     private var currentPaths: [CGPoint] = [] {
@@ -65,7 +64,7 @@ final class EnemyPathfindingComponent: GKComponent {
     
     /// Need to figure out a way to only create nodes once, when we need them. Before the create nodes
     /// function was getting called like 98 times in a row. NO NO NO. Also, I think that crashed the 'findPath' method.
-    /// Should probably put that in a barrier as well. 
+    /// Should probably put that in a barrier as well.
     
     private func findNextPath() -> CGPoint? {
         
@@ -85,8 +84,8 @@ final class EnemyPathfindingComponent: GKComponent {
 
         let offset = path - self.shipEntity.sprite()!.position
         let direction = offset.normalized()
-        let velocity = direction * self.movePointsPerSec
-        shipEntity.sprite()!.physicsBody!.velocity = CGVector(point: velocity * CGFloat(currentDT))
+        let velocity = direction * 200.0
+        shipEntity.sprite()!.physicsBody!.velocity = CGVector(point: velocity)
         shipEntity.sprite()!.zRotation = direction.angle
     }
     
