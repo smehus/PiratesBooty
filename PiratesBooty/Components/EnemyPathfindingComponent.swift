@@ -86,7 +86,6 @@ final class EnemyPathfindingComponent: GKComponent {
         let direction = offset.normalized()
         let velocity = direction * 200.0
         shipEntity.sprite()!.physicsBody!.velocity = CGVector(point: velocity)
-        shipEntity.sprite()!.zRotation = direction.angle
     }
     
     private func createNodes() {

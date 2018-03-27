@@ -22,8 +22,7 @@ final class GameScene: SKScene {
     private var motionManager: MovementManager = MotionManager(modifier: 30.0)
     private var entityManager: EntityManager!
     private var lastUpdatedTime: TimeInterval = 0
-    private let attitudeMultiplier: Double = 30.0
-    private var queuedObstacles: [GKPolygonObstacle]?
+    var playerPaths: [GKGraphNode] = []
     
     override func didMove(to view: SKView) {
         setupRequiredNodes()
@@ -36,6 +35,7 @@ final class GameScene: SKScene {
         let delta = currentTime - lastUpdatedTime
         lastUpdatedTime = currentTime
         entityManager.update(delta)
+        movePlayer()
     }
     
     private func setupRequiredNodes() {
@@ -133,6 +133,24 @@ extension GameScene: MotionManagerDelegate {
 // MARK: - Touch handling
 extension GameScene {
     
+    private func nextPath() -> CGPoint? {
+        guard let firstPath = playerPaths.first, let path = firstPath as? GKGraphNode2D else { return nil }
+        if playerShip.position!.withInRange(range: -100...100, matchingPoint: CGPoint(path.position)) {
+            playerPaths.removeFirst()
+            return nextPath()
+        } else {
+            return CGPoint(path.position)
+        }
+    }
+    
+    private func movePlayer() {
+        guard let path = nextPath() else { return }
+        let offset = path - playerShip.position!
+        let direction = offset.normalized()
+        let velocity = direction * 200.0
+        playerShip.sprite()?.physicsBody?.velocity = normalizedVelocity(velocity: CGVector(point: velocity))
+    }
+    
     /// Want to push the physics body similar to enemyPathFinding
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first?.location(in: self) else { return }
@@ -143,12 +161,10 @@ extension GameScene {
         obstacleGraph?.connectUsingObstacles(node: touchNode)
         obstacleGraph?.connectUsingObstacles(node: playerNode)
         
-        let paths = obstacleGraph.graph.findPath(from: playerNode, to: touchNode)
-        
-        
+        playerPaths = obstacleGraph.graph.findPath(from: playerNode, to: touchNode)
     }
     
-    private func runPlayerActions(with paths: [GKPath]) {
+    private func runPlayerActions(with paths: [GKGraphNode]) {
         let actions = paths.enumerated().flatMap { (index, node) -> SKAction? in
             guard let graphNode = node as? GKGraphNode2D else { fatalError() }
             let point = CGPoint(graphNode.position)
@@ -166,12 +182,12 @@ extension GameScene {
             return first.vertex(at: 0).x > second.vertex(at: 0).x
         })
         
-        for v in filter {
+        for _ in filter {
 //            print("\(v.vertex(at: 0)) \n")
         }
         
 //        print("TOUCH \(touch)")
-        let vertex = filter.first { (obstacle) -> Bool in
+        let _ = filter.first { (obstacle) -> Bool in
             let range: CountableClosedRange<Int> = -100...100
             let matchX = range ~= Int((obstacle.vertex(at: 0).x - Float(touch.x)))
             let matchY = range ~= Int((obstacle.vertex(at: 0).y - Float(touch.y)))
