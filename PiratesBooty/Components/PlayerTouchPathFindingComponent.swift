@@ -47,29 +47,6 @@ final class PlayerTouchPathFindingComponent: GKComponent {
         let velocity = direction * 200.0
         playerShip.sprite()?.physicsBody?.velocity = normalizedVelocity(velocity: CGVector(point: velocity))
     }
-    
-    
-    private func normalizedVelocity(velocity: CGVector) -> CGVector {
-        var y: CGFloat
-        var x: CGFloat
-        if velocity.dx < -Ship.MAX_VELOCITY {
-            x = -Ship.MAX_VELOCITY
-        } else if velocity.dx > Ship.MAX_VELOCITY {
-            x = Ship.MAX_VELOCITY
-        } else {
-            x = velocity.dx
-        }
-        
-        if velocity.dy < -Ship.MAX_VELOCITY {
-            y = -Ship.MAX_VELOCITY
-        } else if velocity.dy > Ship.MAX_VELOCITY {
-            y = Ship.MAX_VELOCITY
-        } else {
-            y = velocity.dy
-        }
-        
-        return CGVector(dx: x, dy: y)
-    }
 }
 
 extension PlayerTouchPathFindingComponent: ToucheDetector {

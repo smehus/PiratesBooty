@@ -18,6 +18,10 @@ protocol CollisionDetector {
     func didBegin(_ contact: SKPhysicsContact)
 }
 
+protocol MotionDetector {
+    func didRecieveMotionUpdate(pitch: CGFloat, roll: CGFloat)
+}
+
 /// Subclass to support collision detection
 class ComponentSystem: GKComponentSystem<GKComponent> {
     func didBegin(_ contact: SKPhysicsContact) {
@@ -32,6 +36,14 @@ class ComponentSystem: GKComponentSystem<GKComponent> {
         for component in components {
             if let detector = component as? ToucheDetector {
                 detector.touchesBegan(touches, with: event)
+            }
+        }
+    }
+    
+    func didRecieveMotionUpdate(pitch: CGFloat, roll: CGFloat) {
+        for component in components {
+            if let detector = component as? MotionDetector {
+                detector.didRecieveMotionUpdate(pitch: pitch, roll: roll)
             }
         }
     }
@@ -117,6 +129,12 @@ class EntityManager {
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         componentSystems.forEach { (system) in
             system.touchesBegan(touches, with: event)
+        }
+    }
+    
+    func didRecieveMotionUpdate(pitch: CGFloat, roll: CGFloat) {
+        componentSystems.forEach { (system) in
+            system.didRecieveMotionUpdate(pitch: pitch, roll: roll)
         }
     }
 }

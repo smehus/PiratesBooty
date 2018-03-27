@@ -95,13 +95,7 @@ extension GameScene: SKPhysicsContactDelegate {
 
 extension GameScene: MotionManagerDelegate {
     func didRecieveMotionUpdate(pitch: CGFloat, roll: CGFloat) {
-        guard let sprite = self.playerShip.sprite() else { return }
-        
-        let moveVelocity = CGVector(dx: pitch, dy: roll)
-        if let body = sprite.physicsBody {
-            let newVelocity = body.velocity + moveVelocity
-//            body.velocity = self.normalizedVelocity(velocity: newVelocity)
-        }
+        entityManager.didRecieveMotionUpdate(pitch: pitch, roll: roll)
     }
 }
 
