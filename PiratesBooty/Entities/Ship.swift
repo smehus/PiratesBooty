@@ -10,7 +10,7 @@ import SpriteKit
 import GameplayKit
 
 enum ShipType: Directional {
-    case defaultShip
+    case playerShip
     case enemyShip
     
     var texture: SKTexture {
@@ -56,8 +56,11 @@ class Ship: GKEntity, Sprite {
         addComponent(DirectionalComponent(directional: shipType))
         addComponent(ShipWreckComponent())
         
-        if shipType == .enemyShip {
+        switch shipType {
+        case .enemyShip:
             addComponent(EnemyPathfindingComponent(scene: scene))
+        case .playerShip:
+            addComponent(PlayerTouchPathFindingComponent())
         }
     }
     

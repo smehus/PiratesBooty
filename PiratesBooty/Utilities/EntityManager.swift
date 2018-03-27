@@ -10,6 +10,10 @@ import Foundation
 import SpriteKit
 import GameplayKit
 
+protocol ToucheDetector {
+    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+}
+
 protocol CollisionDetector {
     func didBegin(_ contact: SKPhysicsContact)
 }
@@ -20,6 +24,14 @@ class ComponentSystem: GKComponentSystem<GKComponent> {
         for component in components {
             if let detector = component as? CollisionDetector {
                 detector.didBegin(contact)
+            }
+        }
+    }
+    
+    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for component in components {
+            if let detector = component as? ToucheDetector {
+                detector.touchesBegan(touches, with: event)
             }
         }
     }
@@ -45,7 +57,14 @@ class EntityManager {
         let enemySpawnSystem = ComponentSystem(componentClass: EnemySpawnComponent.self)
         let pathFindingSystem = ComponentSystem(componentClass: PathFindingComponent.self)
         let enemyPathfindingSystem = ComponentSystem(componentClass: EnemyPathfindingComponent.self)
-        return [directional, infiniteMapSystem, shipWreckSystem, enemySpawnSystem, pathFindingSystem, enemyPathfindingSystem]
+        let touchPathFinding = ComponentSystem(componentClass: PlayerTouchPathFindingComponent.self)
+        return [directional,
+                infiniteMapSystem,
+                shipWreckSystem,
+                enemySpawnSystem, 
+                pathFindingSystem,
+                enemyPathfindingSystem,
+                touchPathFinding]
     }()
     
     init(scene: SKScene) {
@@ -92,6 +111,12 @@ class EntityManager {
     func didBegin(_ contact: SKPhysicsContact) {
         componentSystems.forEach { (system) in
             system.didBegin(contact)
+        }
+    }
+    
+    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        componentSystems.forEach { (system) in
+            system.touchesBegan(touches, with: event)
         }
     }
 }

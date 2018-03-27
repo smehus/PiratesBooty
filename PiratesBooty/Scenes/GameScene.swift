@@ -44,7 +44,7 @@ final class GameScene: SKScene {
         motionManager.delegate = self
         entityManager = EntityManager(scene: self)
         
-        playerShip = Ship(scene: self, shipType: .defaultShip)
+        playerShip = Ship(scene: self, shipType: .playerShip)
         playerShip.position = CGPoint(x: 0, y: 0)
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)
@@ -153,6 +153,8 @@ extension GameScene {
     
     /// Want to push the physics body similar to enemyPathFinding
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        entityManager.touchesBegan(touches, with: event)
+        
         guard let touch = touches.first?.location(in: self) else { return }
         guard let playerVector = playerShip.position?.vector_float() else { return }
         
