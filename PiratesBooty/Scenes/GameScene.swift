@@ -22,7 +22,6 @@ final class GameScene: SKScene {
     private var motionManager: MovementManager = MotionManager(modifier: 30.0)
     private var entityManager: EntityManager!
     private var lastUpdatedTime: TimeInterval = 0
-    var playerPaths: [GKGraphNode] = []
     
     override func didMove(to view: SKView) {
         setupRequiredNodes()
@@ -35,7 +34,6 @@ final class GameScene: SKScene {
         let delta = currentTime - lastUpdatedTime
         lastUpdatedTime = currentTime
         entityManager.update(delta)
-        movePlayer()
     }
     
     private func setupRequiredNodes() {
@@ -102,30 +100,8 @@ extension GameScene: MotionManagerDelegate {
         let moveVelocity = CGVector(dx: pitch, dy: roll)
         if let body = sprite.physicsBody {
             let newVelocity = body.velocity + moveVelocity
-            body.velocity = self.normalizedVelocity(velocity: newVelocity)
+//            body.velocity = self.normalizedVelocity(velocity: newVelocity)
         }
-    }
-    
-    private func normalizedVelocity(velocity: CGVector) -> CGVector {
-        var y: CGFloat
-        var x: CGFloat
-        if velocity.dx < -Ship.MAX_VELOCITY {
-            x = -Ship.MAX_VELOCITY
-        } else if velocity.dx > Ship.MAX_VELOCITY {
-            x = Ship.MAX_VELOCITY
-        } else {
-            x = velocity.dx
-        }
-        
-        if velocity.dy < -Ship.MAX_VELOCITY {
-            y = -Ship.MAX_VELOCITY
-        } else if velocity.dy > Ship.MAX_VELOCITY {
-            y = Ship.MAX_VELOCITY
-        } else {
-            y = velocity.dy
-        }
-        
-        return CGVector(dx: x, dy: y)
     }
 }
 
@@ -133,70 +109,9 @@ extension GameScene: MotionManagerDelegate {
 // MARK: - Touch handling
 extension GameScene {
     
-    private func nextPath() -> CGPoint? {
-        guard let firstPath = playerPaths.first, let path = firstPath as? GKGraphNode2D else { return nil }
-        if playerShip.position!.withInRange(range: -100...100, matchingPoint: CGPoint(path.position)) {
-            playerPaths.removeFirst()
-            return nextPath()
-        } else {
-            return CGPoint(path.position)
-        }
-    }
-    
-    private func movePlayer() {
-        guard let path = nextPath() else { return }
-        let offset = path - playerShip.position!
-        let direction = offset.normalized()
-        let velocity = direction * 200.0
-        playerShip.sprite()?.physicsBody?.velocity = normalizedVelocity(velocity: CGVector(point: velocity))
-    }
-    
     /// Want to push the physics body similar to enemyPathFinding
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         entityManager.touchesBegan(touches, with: event)
-        
-        guard let touch = touches.first?.location(in: self) else { return }
-        guard let playerVector = playerShip.position?.vector_float() else { return }
-        
-        let playerNode = GKGraphNode2D.node(withPoint: playerVector)
-        let touchNode = GKGraphNode2D.node(withPoint: touch.vector_float())
-        obstacleGraph?.connectUsingObstacles(node: touchNode)
-        obstacleGraph?.connectUsingObstacles(node: playerNode)
-        
-        playerPaths = obstacleGraph.graph.findPath(from: playerNode, to: touchNode)
-    }
-    
-    private func runPlayerActions(with paths: [GKGraphNode]) {
-        let actions = paths.enumerated().flatMap { (index, node) -> SKAction? in
-            guard let graphNode = node as? GKGraphNode2D else { fatalError() }
-            let point = CGPoint(graphNode.position)
-            
-            let offset = playerShip.position! - point
-            let time = offset.length() / 5.0
-            return SKAction.move(to: point, duration: Double(time / 100))
-        }
-        
-        playerShip.sprite()!.run(SKAction.sequence(actions))
-    }
-    
-    func printDebugInfo(with touch: CGPoint) {
-        let filter = obstacleGraph.graph.obstacles.sorted(by: { (first, second) -> Bool in
-            return first.vertex(at: 0).x > second.vertex(at: 0).x
-        })
-        
-        for _ in filter {
-//            print("\(v.vertex(at: 0)) \n")
-        }
-        
-//        print("TOUCH \(touch)")
-        let _ = filter.first { (obstacle) -> Bool in
-            let range: CountableClosedRange<Int> = -100...100
-            let matchX = range ~= Int((obstacle.vertex(at: 0).x - Float(touch.x)))
-            let matchY = range ~= Int((obstacle.vertex(at: 0).y - Float(touch.y)))
-            return matchX && matchY
-        }
-        
-        
     }
 }
 
