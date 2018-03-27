@@ -27,6 +27,7 @@ final class EnemyPathfindingComponent: GKComponent {
     private var currentActions: [SKAction] = []
     private var currentDT: TimeInterval = 0
     private var hasCreatedNodes = false
+    private var isUpdating = false
     private var currentPaths: [CGPoint] = [] {
         didSet {
 //            print("CURRENT PATHS COUNT: \(currentPaths.count)")
@@ -52,12 +53,8 @@ final class EnemyPathfindingComponent: GKComponent {
             createNodes()
         }
         
-        move()
-    }
-    
-    private func checkProximity(dt: TimeInterval) {
-        if let currentPath = currentPaths.first, (currentPath - shipEntity.position!) < radius {
-            currentPaths.removeFirst()
+        if !isUpdating {
+            move()
         }
     }
     
@@ -66,11 +63,15 @@ final class EnemyPathfindingComponent: GKComponent {
     /// function was getting called like 98 times in a row. NO NO NO. Also, I think that crashed the 'findPath' method.
     /// Should probably put that in a barrier as well.
     
+    /// Kinda works - creates nodes too often when close to the player...
+    
     private func findNextPath() -> CGPoint? {
         
         guard let firstPath = currentPaths.first else {
+            createNodes()
             return nil
         }
+        
         if shipEntity.position!.withInRange(range: -100...100, matchingPoint: firstPath) {
             currentPaths.removeFirst()
             return findNextPath()
@@ -85,10 +86,11 @@ final class EnemyPathfindingComponent: GKComponent {
         let offset = path - self.shipEntity.sprite()!.position
         let direction = offset.normalized()
         let velocity = direction * 200.0
-        shipEntity.sprite()!.physicsBody!.velocity = CGVector(point: velocity)
+        shipEntity.sprite()!.physicsBody!.velocity = normalizedVelocity(velocity: CGVector(point: velocity))
     }
     
-    private func createNodes() {
+    private func createNodes(completion: (() -> Void)? = nil) {
+        isUpdating = true
         DispatchQueue.global().async {
             
             print("CONNECTING NODES")
@@ -105,6 +107,8 @@ final class EnemyPathfindingComponent: GKComponent {
 
             let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
             self.currentPaths = newPaths
+            self.isUpdating = false
+            completion?()
             
             // Using SKActions - meh
 //            if newPaths.isEmpty {
