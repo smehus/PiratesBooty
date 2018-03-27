@@ -23,6 +23,10 @@ final class EnemyPathfindingComponent: GKComponent {
         return entity as! Ship
     }
     
+    private var withInRangeOfPlayer: Bool {
+        return shipEntity.position!.withInRange(range: -500...500, matchingPoint: player.position!)
+    }
+    
     private unowned let scene: GameScene
     private var currentActions: [SKAction] = []
     private var currentDT: TimeInterval = 0
@@ -58,15 +62,8 @@ final class EnemyPathfindingComponent: GKComponent {
         }
     }
     
-    
-    /// Need to figure out a way to only create nodes once, when we need them. Before the create nodes
-    /// function was getting called like 98 times in a row. NO NO NO. Also, I think that crashed the 'findPath' method.
-    /// Should probably put that in a barrier as well.
-    
-    /// Kinda works - creates nodes too often when close to the player...
-    
     private func findNextPath() -> CGPoint? {
-        
+        guard !withInRangeOfPlayer else { return nil }
         guard let firstPath = currentPaths.first else {
             createNodes()
             return nil
@@ -81,6 +78,11 @@ final class EnemyPathfindingComponent: GKComponent {
     }
     
     private func move() {
+        guard !withInRangeOfPlayer else {
+            currentPaths.removeAll()
+            return
+        }
+        
         guard let path = findNextPath() else { return }
 
         let offset = path - self.shipEntity.sprite()!.position
