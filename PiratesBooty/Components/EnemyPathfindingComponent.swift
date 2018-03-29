@@ -9,6 +9,21 @@
 import Foundation
 import GameplayKit
 
+private enum State {
+    case enroute
+    case updating
+    case withinRange
+    
+    static func !=(lhs: State, rhs: State) -> Bool {
+        switch (lhs, rhs) {
+        case (.enroute, .enroute): return false
+        case (.updating, .updating): return false
+        case (.withinRange, .withinRange): return false
+        default: return true
+        }
+    }
+}
+
 final class EnemyPathfindingComponent: GKComponent {
     
     private struct ActionKeys {
@@ -31,7 +46,7 @@ final class EnemyPathfindingComponent: GKComponent {
     private var currentActions: [SKAction] = []
     private var currentDT: TimeInterval = 0
     private var hasCreatedNodes = false
-    private var isUpdating = false
+    private var state: State = .enroute
     private var currentPaths: [CGPoint] = [] {
         didSet {
 //            print("CURRENT PATHS COUNT: \(currentPaths.count)")
@@ -57,7 +72,7 @@ final class EnemyPathfindingComponent: GKComponent {
             createNodes()
         }
         
-        if !isUpdating {
+        if state != .updating {
             move()
         }
     }
@@ -95,13 +110,15 @@ final class EnemyPathfindingComponent: GKComponent {
     }
     
     private func orientTowardsPlayer() {
+        guard state != .withinRange else { return }
+        state = .withinRange
         shipEntity.sprite()!.physicsBody?.velocity = .zero
         let angle = shortestAngleBetween(shipEntity.sprite()!.zRotation, angle2: velocityToPlayer(path: player.position!).angle)
         shipEntity.sprite()!.zRotation = angle
     }
     
     private func createNodes(completion: (() -> Void)? = nil) {
-        isUpdating = true
+        state = .updating
         DispatchQueue.global().async {
             
             print("CONNECTING NODES")
@@ -118,7 +135,7 @@ final class EnemyPathfindingComponent: GKComponent {
 
             let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
             self.currentPaths = newPaths
-            self.isUpdating = false
+            self.state = .enroute
             completion?()
             
             // Using SKActions - meh
