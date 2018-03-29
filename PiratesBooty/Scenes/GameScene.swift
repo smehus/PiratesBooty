@@ -46,7 +46,7 @@ final class GameScene: SKScene {
         playerShip.position = CGPoint(x: 0, y: 0)
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)
-        obstacleGraph = GraphManager(graph: GKObstacleGraph(obstacles: [], bufferRadius: 30))
+        obstacleGraph = GraphManager(graph: GKObstacleGraph(obstacles: [], bufferRadius: 100))
 
     }
     

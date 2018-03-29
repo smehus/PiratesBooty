@@ -1,5 +1,6 @@
 TODO:
 
+When enemies get stuck on walls - their paths get created over and over again!
 Figure out why enemies aren't pathfinding around obstacles
 When damaged - add ability to heal the ship - but when healing, you have to be motionless. Also enemies will recognize this and go after you.
 
