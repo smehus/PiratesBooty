@@ -77,18 +77,27 @@ final class EnemyPathfindingComponent: GKComponent {
         }
     }
     
+    private func velocityToPlayer(path: CGPoint) -> CGPoint {
+        let offset = path - self.shipEntity.sprite()!.position
+        let direction = offset.normalized()
+        return direction * 200.0
+    }
+    
     private func move() {
         guard !withInRangeOfPlayer else {
+            orientTowardsPlayer()
             currentPaths.removeAll()
             return
         }
         
         guard let path = findNextPath() else { return }
-
-        let offset = path - self.shipEntity.sprite()!.position
-        let direction = offset.normalized()
-        let velocity = direction * 200.0
-        shipEntity.sprite()!.physicsBody!.velocity = normalizedVelocity(velocity: CGVector(point: velocity))
+        shipEntity.sprite()!.physicsBody!.velocity = normalizedVelocity(velocity: CGVector(point: velocityToPlayer(path: path)))
+    }
+    
+    private func orientTowardsPlayer() {
+        shipEntity.sprite()!.physicsBody?.velocity = .zero
+        let angle = shortestAngleBetween(shipEntity.sprite()!.zRotation, angle2: velocityToPlayer(path: player.position!).angle)
+        shipEntity.sprite()!.zRotation = angle
     }
     
     private func createNodes(completion: (() -> Void)? = nil) {
