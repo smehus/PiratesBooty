@@ -120,12 +120,13 @@ final class LayeredMap: SKNode {
                 let sprite = SKSpriteNode(texture: nil, color: .white, size: texture.size())
                 sprite.position = pos
                 
+                let physics = LandPhysics()
                 let body = SKPhysicsBody(rectangleOf: texture.size(), center: CGPoint(x: 0, y: 0))
-                body.isDynamic = false
-                body.affectedByGravity = false
-                body.categoryBitMask = Collision.land.rawValue
-                body.collisionBitMask = Collision.ship.rawValue
-                body.contactTestBitMask = Collision.ship.rawValue
+                body.isDynamic = physics.isDynamic
+                body.affectedByGravity = physics.affectedByGravity
+                body.categoryBitMask = physics.categoryBitMask.rawValue
+                body.collisionBitMask = physics.collisionBitMask.rawValue
+                body.contactTestBitMask = physics.contactTestBitMask.rawValue
                 sprite.physicsBody = body
                 sprite.move(toParent: map)
                 polygonSprites.append(sprite)
