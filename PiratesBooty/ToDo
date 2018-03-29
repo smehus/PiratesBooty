@@ -1,7 +1,13 @@
 TODO:
 
+Ability to shoot projectiles
+Enemies shoot player when within range
+Random fort placement
+Forts shoot player when within range
+Ship picker at beginning
 Rotate ships based on delta - rather than just immediately rotating
 When enemies get stuck on walls - their paths get created over and over again!
 Figure out why enemies aren't pathfinding around obstacles
 When damaged - add ability to heal the ship - but when healing, you have to be motionless. Also enemies will recognize this and go after you.
+figure out why certain land edges aren't getting picked up as edges
 
