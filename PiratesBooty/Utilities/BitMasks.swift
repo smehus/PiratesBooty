@@ -12,7 +12,7 @@ struct Collision: OptionSet {
     let rawValue: UInt32
     
     /// Physics Categories
-    static let ship = Collision(rawValue: 0)
+    static let ship = Collision(rawValue: 0x1 << 0)
     static let land = Collision(rawValue: 0x1 << 1)
     
     /// Collisions

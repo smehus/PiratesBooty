@@ -246,7 +246,7 @@ extension InfiniteMapComponent {
             
             DispatchQueue.main.async {
                 map.addMaps(maps: generatedMaps)
-                self.addDebugSprite(map: map, noiseMap: noiseMap)
+//                self.addDebugSprite(map: map, noiseMap: noiseMap)
                 completion(map)
             }
         }
