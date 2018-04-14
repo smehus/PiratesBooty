@@ -46,19 +46,17 @@ final class EnRouteState: EnemyState {
     }
     
     override func update(deltaTime seconds: TimeInterval) {
-        
+        move()
     }
     
     override func willExit(to nextState: GKState) {
         
     }
-    
-    
+
     private func findNextPath() -> CGPoint? {
         guard !withInRangeOfPlayer else { return nil }
         guard let firstPath = currentPaths.first else {
-//            createNodes()
-            // Switch to updating
+            stateMachine!.enter(UpdatingState.self)
             return nil
         }
         
@@ -71,9 +69,8 @@ final class EnRouteState: EnemyState {
     }
     
     private func move() {
-        
         guard !withInRangeOfPlayer else {
-
+            stateMachine!.enter(WithinRangeState.self)
             currentPaths.removeAll()
             return
         }
@@ -86,27 +83,31 @@ final class EnRouteState: EnemyState {
 
 final class UpdatingState: EnemyState {
     
-//    private func createNodes(completion: (() -> Void)? = nil) {
-//        DispatchQueue.global().async {
-//
-//            print("CONNECTING NODES")
-//            let playerNode = GKGraphNode2D.node(withPoint: vector_float2(Float(self.player.sprite()!.position.x), Float(self.player.sprite()!.position.y)))
-//            guard let graph = self.scene.obstacleGraph else { fatalError() }
-//            graph.connectUsingObstacles(node: playerNode)
-//
-//            let enemyNode = GKGraphNode2D.node(withPoint: vector_float2(Float(self.shipEntity.sprite()!.position.x), Float(self.shipEntity.sprite()!.position.y)))
-//
-//            graph.connectUsingObstacles(node: enemyNode)
-//
-//            print("CREATING NODES")
-//            let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
-//
-//            let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
-//            self.currentPaths = newPaths
-//            self.state = .enroute
-//            completion?()
-//        }
-//    }
+    override func didEnter(from previousState: GKState?) {
+        createNodes()
+    }
+    
+    private func createNodes(completion: (() -> Void)? = nil) {
+        DispatchQueue.global().async {
+
+            print("CONNECTING NODES")
+            let playerNode = GKGraphNode2D.node(withPoint: vector_float2(Float(self.player.sprite()!.position.x), Float(self.player.sprite()!.position.y)))
+            guard let graph = self.scene.obstacleGraph else { fatalError() }
+            graph.connectUsingObstacles(node: playerNode)
+
+            let enemyNode = GKGraphNode2D.node(withPoint: vector_float2(Float(self.entity.sprite()!.position.x), Float(self.entity.sprite()!.position.y)))
+
+            graph.connectUsingObstacles(node: enemyNode)
+
+            print("CREATING NODES")
+            let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
+
+            let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
+            self.currentPaths = newPaths
+            self.stateMachine!.enter(EnRouteState.self)
+            completion?()
+        }
+    }
 }
 
 final class WithinRangeState: EnemyState {
