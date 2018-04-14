@@ -158,7 +158,7 @@ final class WithinRangeState: EnemyState {
         
         if firingGate >= 2, let pos = player.position {
             firingGate = 0
-            entity.fireCannon(at: CGVector(point: pos))
+            entity.fireCannon(at: pos)
         }
     }
     
