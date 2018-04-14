@@ -61,7 +61,6 @@ final class EnRouteState: EnemyState {
     }
 
     private func findNextPath() -> CGPoint? {
-        guard !withInRangeOfPlayer else { return nil }
         guard let firstPath = currentPaths.first else {
             stateMachine!.enter(UpdatingState.self)
             return nil
@@ -98,6 +97,7 @@ final class HoldingState: EnemyState {
         accumalatedTime += seconds
         
         if accumalatedTime > 2.0 {
+            accumalatedTime = 0
             stateMachine!.enter(UpdatingState.self)
         }
     }
