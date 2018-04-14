@@ -35,18 +35,25 @@ class EnemyState: GKState {
 
 final class EnRouteState: EnemyState {
     
-    private var currentPaths: [CGPoint] = []
+    var currentPaths: [CGPoint] = [] {
+        didSet {
+            shouldMove = !currentPaths.isEmpty
+        }
+    }
+    private var shouldMove = false
     
     override func isValidNextState(_ stateClass: AnyClass) -> Bool {
         return true
     }
     
     override func didEnter(from previousState: GKState?) {
-        
+
     }
     
     override func update(deltaTime seconds: TimeInterval) {
-        move()
+        if shouldMove {
+            move()
+        }
     }
     
     override func willExit(to nextState: GKState) {
@@ -78,16 +85,23 @@ final class EnRouteState: EnemyState {
         guard let path = findNextPath() else { return }
         entity.sprite()!.physicsBody!.velocity = normalizedVelocity(velocity: CGVector(point: velocityToPlayer(path: path)))
     }
-
 }
 
 final class UpdatingState: EnemyState {
+    
+    var currentPaths: [CGPoint] = []
     
     override func didEnter(from previousState: GKState?) {
         createNodes()
     }
     
-    private func createNodes(completion: (() -> Void)? = nil) {
+    override func willExit(to nextState: GKState) {
+        if let enrouteState = nextState as? EnRouteState {
+            enrouteState.currentPaths = currentPaths
+        }
+    }
+    
+    private func createNodes() {
         DispatchQueue.global().async {
 
             print("CONNECTING NODES")
@@ -102,10 +116,9 @@ final class UpdatingState: EnemyState {
             print("CREATING NODES")
             let pathNodes = graph.findPath(from: enemyNode, to: playerNode)
 
-            let newPaths = pathNodes.flatMap ({ $0.position }).map { CGPoint($0) }
+            let newPaths = pathNodes.compactMap ({ $0.position }).map { CGPoint($0) }
             self.currentPaths = newPaths
             self.stateMachine!.enter(EnRouteState.self)
-            completion?()
         }
     }
 }
@@ -124,22 +137,11 @@ final class EnemyPathfindingComponent: GKComponent {
     private unowned let scene: GameScene
     private let radius = CGPoint(x: 50, y: 50)
     private var stateMachine: GKStateMachine!
+    private var createdStateMachine = false
     
     init(scene: GameScene) {
         self.scene = scene
         super.init()
-        
-        guard let ship = entity as? Ship else {
-            fatalError("Failed to cast entity as Ship object")
-        }
-        
-        stateMachine = GKStateMachine(states: [
-            EnRouteState(entity: ship, scene: scene),
-            WithinRangeState(entity: ship, scene: scene),
-            UpdatingState(entity: ship, scene: scene)])
-        
-        
-        stateMachine.enter(EnRouteState.self)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -149,6 +151,17 @@ final class EnemyPathfindingComponent: GKComponent {
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
         
-        stateMachine.update(deltaTime: seconds)
+        if !createdStateMachine, let ship = entity as? Ship {
+            stateMachine = GKStateMachine(states: [
+                EnRouteState(entity: ship, scene: scene),
+                WithinRangeState(entity: ship, scene: scene),
+                UpdatingState(entity: ship, scene: scene)])
+            
+            
+            stateMachine.enter(UpdatingState.self)
+            createdStateMachine = true
+        } else {
+            stateMachine.update(deltaTime: seconds)
+        }
     }
 }
