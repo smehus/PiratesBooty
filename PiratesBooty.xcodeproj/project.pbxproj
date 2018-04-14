@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A5164D502082A37D00839B1D /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5164D4F2082A37D00839B1D /* Shared.swift */; };
 		A52EF6691F8CE931005636D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52EF6681F8CE931005636D3 /* AppDelegate.swift */; };
 		A52EF66B1F8CE931005636D3 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A52EF66A1F8CE931005636D3 /* GameScene.sks */; };
 		A52EF66F1F8CE931005636D3 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52EF66E1F8CE931005636D3 /* GameScene.swift */; };
@@ -61,6 +62,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A5164D4F2082A37D00839B1D /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		A52EF6651F8CE931005636D3 /* PiratesBooty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PiratesBooty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A52EF6681F8CE931005636D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A52EF66A1F8CE931005636D3 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				A5A6EADF1FD4A9BF00DE31F2 /* BitMasks.swift */,
 				A5B58CE91FD969C500B62A7F /* MotionManager.swift */,
 				A548F16920544617001F1D45 /* GraphManager.swift */,
+				A5164D4F2082A37D00839B1D /* Shared.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -363,6 +366,7 @@
 				AF09CB902069D922004586C5 /* GKComponent+Extensions.swift in Sources */,
 				A594B6941F8E3D5600361E50 /* SKTEffects.swift in Sources */,
 				A594B68D1F8E3D5600361E50 /* SKAction+Extensions.swift in Sources */,
+				A5164D502082A37D00839B1D /* Shared.swift in Sources */,
 				A594B68C1F8E3D5600361E50 /* NSDictionary+Extensions.swift in Sources */,
 				A594B6911F8E3D5600361E50 /* SKScene+Extensions.swift in Sources */,
 				A594B6601F8E2D6100361E50 /* Ship.swift in Sources */,
