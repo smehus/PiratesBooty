@@ -70,6 +70,7 @@ class EntityManager {
         let pathFindingSystem = ComponentSystem(componentClass: PathFindingComponent.self)
         let enemyPathfindingSystem = ComponentSystem(componentClass: EnemyPathfindingComponent.self)
         let touchPathFinding = ComponentSystem(componentClass: PlayerTouchPathFindingComponent.self)
+        let cannonBall = ComponentSystem(componentClass: CannonProjectileComponent.self)
         let motionSystem = ComponentSystem(componentClass: MotionResponderComponent.self)
         return [directional,
                 infiniteMapSystem,
@@ -78,7 +79,8 @@ class EntityManager {
                 pathFindingSystem,
                 enemyPathfindingSystem,
                 touchPathFinding,
-                motionSystem]
+                motionSystem,
+                cannonBall]
     }()
     
     init(scene: SKScene) {

@@ -142,6 +142,8 @@ final class UpdatingState: EnemyState {
 
 final class WithinRangeState: EnemyState {
     
+    private var firingGate: Double = 2
+    
     override func didEnter(from previousState: GKState?) {
         print("ENTERING WITHINRANGE STATE")
         orientTowardsPlayer()
@@ -150,6 +152,13 @@ final class WithinRangeState: EnemyState {
     override func update(deltaTime seconds: TimeInterval) {
         if !withInRangeOfPlayer {
             stateMachine!.enter(HoldingState.self)
+        }
+        
+        firingGate += seconds
+        
+        if firingGate >= 2, let pos = player.position {
+            firingGate = 0
+            entity.fireCannon(at: CGVector(point: pos))
         }
     }
     

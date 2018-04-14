@@ -55,6 +55,7 @@ class Ship: GKEntity, Sprite {
         addComponent(spriteComponent)
         addComponent(DirectionalComponent(directional: shipType))
         addComponent(ShipWreckComponent())
+        addComponent(CannonProjectileComponent())
         
         switch shipType {
         case .enemyShip:
@@ -66,6 +67,10 @@ class Ship: GKEntity, Sprite {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func fireCannon(at vector: CGVector) {
+        component(ofType: CannonProjectileComponent.self)?.fire(at: vector)
     }
 }
 
