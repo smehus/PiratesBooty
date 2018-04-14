@@ -9,6 +9,28 @@
 import Foundation
 import GameplayKit
 
+class EnemyState: GKState {
+    weak var scene: GameScene?
+    var entity: Ship
+    
+    init(entity: Ship, scene: GameScene) {
+        self.entity = entity
+        self.scene = scene
+    }
+}
+
+final class EnRouteState: EnemyState {
+    
+}
+
+final class UpdatingState: EnemyState {
+    
+}
+
+final class WithinRangeState: EnemyState {
+    
+}
+
 private enum State {
     case enroute
     case updating
@@ -99,6 +121,7 @@ final class EnemyPathfindingComponent: GKComponent {
     }
     
     private func move() {
+        
         guard !withInRangeOfPlayer else {
             orientTowardsPlayer()
             currentPaths.removeAll()
