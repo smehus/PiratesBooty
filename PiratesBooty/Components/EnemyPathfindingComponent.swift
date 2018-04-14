@@ -47,7 +47,7 @@ final class EnRouteState: EnemyState {
     }
     
     override func didEnter(from previousState: GKState?) {
-
+        print("ENTERING ENROUTE STATE")
     }
     
     override func update(deltaTime seconds: TimeInterval) {
@@ -77,8 +77,8 @@ final class EnRouteState: EnemyState {
     
     private func move() {
         guard !withInRangeOfPlayer else {
-            stateMachine!.enter(WithinRangeState.self)
             currentPaths.removeAll()
+            stateMachine!.enter(WithinRangeState.self)
             return
         }
         
@@ -87,11 +87,28 @@ final class EnRouteState: EnemyState {
     }
 }
 
+final class HoldingState: EnemyState {
+    private var accumalatedTime: TimeInterval = 0
+    
+    override func didEnter(from previousState: GKState?) {
+        print("ENTERING HOLDING STATE")
+    }
+    
+    override func update(deltaTime seconds: TimeInterval) {
+        accumalatedTime += seconds
+        
+        if accumalatedTime > 2.0 {
+            stateMachine!.enter(UpdatingState.self)
+        }
+    }
+}
+
 final class UpdatingState: EnemyState {
     
     var currentPaths: [CGPoint] = []
     
     override func didEnter(from previousState: GKState?) {
+        print("ENTERING UPDATING STATE")
         createNodes()
     }
     
@@ -125,6 +142,17 @@ final class UpdatingState: EnemyState {
 
 final class WithinRangeState: EnemyState {
     
+    override func didEnter(from previousState: GKState?) {
+        print("ENTERING WITHINRANGE STATE")
+        orientTowardsPlayer()
+    }
+    
+    override func update(deltaTime seconds: TimeInterval) {
+        if !withInRangeOfPlayer {
+            stateMachine!.enter(HoldingState.self)
+        }
+    }
+    
     private func orientTowardsPlayer() {
         entity.sprite()!.physicsBody?.velocity = .zero
         let angle = shortestAngleBetween(entity.sprite()!.zRotation, angle2: velocityToPlayer(path: player.position!).angle)
@@ -155,7 +183,8 @@ final class EnemyPathfindingComponent: GKComponent {
             stateMachine = GKStateMachine(states: [
                 EnRouteState(entity: ship, scene: scene),
                 WithinRangeState(entity: ship, scene: scene),
-                UpdatingState(entity: ship, scene: scene)])
+                UpdatingState(entity: ship, scene: scene),
+                HoldingState(entity: ship, scene: scene)])
             
             
             stateMachine.enter(UpdatingState.self)
