@@ -55,7 +55,7 @@ final class GameScene: SKScene {
     }
     
     private func setupMotion() {
-//        motionManager.start()
+        motionManager.start()
     }
     
     private func setupCamera() {
