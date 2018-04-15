@@ -50,6 +50,13 @@ enum ShipType: Directional, PhysicsConfiguration {
         case .playerShip: return .playerFire
         }
     }
+    
+    var cannonDamageContactBitMask: Collision {
+        switch self {
+        case .enemyShip: return .cannonEnemyShip
+        case .playerShip: return .cannonShip
+        }
+    }
 }
 
 final class Ship: GKEntity, Sprite {

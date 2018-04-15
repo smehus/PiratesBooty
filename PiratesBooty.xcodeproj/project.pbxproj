@@ -57,6 +57,7 @@
 		A5B58CEA1FD969C500B62A7F /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B58CE91FD969C500B62A7F /* MotionManager.swift */; };
 		A5B8F93F203DB9B600B92367 /* PathFindingComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B8F93E203DB9B600B92367 /* PathFindingComponent.swift */; };
 		A5C60E522082B89A00E5F738 /* CannonProjectileComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C60E512082B89A00E5F738 /* CannonProjectileComponent.swift */; };
+		A5C60E542082E6CF00E5F738 /* CannonDamageComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C60E532082E6CF00E5F738 /* CannonDamageComponent.swift */; };
 		AF09CB8C2069D459004586C5 /* PlayerTouchPathFindingComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF09CB8B2069D459004586C5 /* PlayerTouchPathFindingComponent.swift */; };
 		AF09CB8E2069D841004586C5 /* MotionResponderComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF09CB8D2069D841004586C5 /* MotionResponderComponent.swift */; };
 		AF09CB902069D922004586C5 /* GKComponent+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF09CB8F2069D922004586C5 /* GKComponent+Extensions.swift */; };
@@ -115,6 +116,7 @@
 		A5B58CE91FD969C500B62A7F /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		A5B8F93E203DB9B600B92367 /* PathFindingComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathFindingComponent.swift; sourceTree = "<group>"; };
 		A5C60E512082B89A00E5F738 /* CannonProjectileComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannonProjectileComponent.swift; sourceTree = "<group>"; };
+		A5C60E532082E6CF00E5F738 /* CannonDamageComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannonDamageComponent.swift; sourceTree = "<group>"; };
 		AF09CB8B2069D459004586C5 /* PlayerTouchPathFindingComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTouchPathFindingComponent.swift; sourceTree = "<group>"; };
 		AF09CB8D2069D841004586C5 /* MotionResponderComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionResponderComponent.swift; sourceTree = "<group>"; };
 		AF09CB8F2069D922004586C5 /* GKComponent+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GKComponent+Extensions.swift"; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				AF09CB8B2069D459004586C5 /* PlayerTouchPathFindingComponent.swift */,
 				AF09CB8D2069D841004586C5 /* MotionResponderComponent.swift */,
 				A5C60E512082B89A00E5F738 /* CannonProjectileComponent.swift */,
+				A5C60E532082E6CF00E5F738 /* CannonDamageComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				AF09CB8E2069D841004586C5 /* MotionResponderComponent.swift in Sources */,
 				A58676411F925524001F37C1 /* DirectionalComponent.swift in Sources */,
 				A5A6EAE01FD4A9BF00DE31F2 /* BitMasks.swift in Sources */,
+				A5C60E542082E6CF00E5F738 /* CannonDamageComponent.swift in Sources */,
 				A5A3118D1F9B8DE400E54EA7 /* World.swift in Sources */,
 				A52EF6691F8CE931005636D3 /* AppDelegate.swift in Sources */,
 				A5A6EADE1FD4A5F500DE31F2 /* ShipWreckComponent.swift in Sources */,
