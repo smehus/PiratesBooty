@@ -8,10 +8,28 @@
 
 import GameplayKit
 
-struct CannonPhysics: PhysicsConfiguration {
-    var categoryBitMask: Collision { return .cannon }
-    var contactTestBitMask: Collision { return .ship }
-    var collisionBitMask: Collision { return .ship }
+enum CannonPhysics: PhysicsConfiguration {
+    case playerFire
+    case enemyFire
+    
+    var categoryBitMask: Collision {
+        return .cannon
+    }
+    
+    var contactTestBitMask: Collision {
+        switch self {
+        case .playerFire: return .enemyShip
+        case .enemyFire: return .ship
+        }
+    }
+    
+    var collisionBitMask: Collision {
+        switch self {
+        case .playerFire: return .enemyShip
+        case .enemyFire: return .ship
+        }
+    }
+    
     var isDynamic: Bool { return true }
     var affectedByGravity: Bool { return false }
 }
@@ -36,10 +54,14 @@ final class CannonProjectileComponent: GKComponent {
     func fire(at vector: CGPoint) {
 
         let cannon = createCannon()
-        let action = SKAction.move(to: vector, duration: 2.0)
         scene?.addChild(cannon)
         
-        cannon.run(action)
+        // Not working probably because its centered on the ship - colliding with the ship
+        let offset = vector - cannon.position
+        let direction = offset.normalized()
+        let velocity = direction * 1000
+        print("FIRING CANNON AT VELOCITY \(velocity)")
+        cannon.physicsBody?.velocity = CGVector(point: velocity)
     }
     
     private func createCannon() -> SKSpriteNode {
@@ -47,9 +69,9 @@ final class CannonProjectileComponent: GKComponent {
         let sprite = SKSpriteNode(texture: texture, color: .white, size: texture.size() * 2)
         sprite.position = ship.position!
         
-        let physics = SKPhysicsBody(circleOfRadius: texture.size().halfHeight)
+        let physics = SKPhysicsBody(circleOfRadius: texture.size().height)
         sprite.physicsBody = physics
-        sprite.set(physicsConfiguration: CannonPhysics())
+        sprite.set(physicsConfiguration: ship.shipType)
         
         return sprite
     }

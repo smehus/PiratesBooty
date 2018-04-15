@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-enum ShipType: Directional {
+enum ShipType: Directional, PhysicsConfiguration {
     case playerShip
     case enemyShip
     
@@ -20,11 +20,12 @@ enum ShipType: Directional {
     var directionOffset: CGFloat {
         return CGFloat(90).degreesToRadians()
      }
-}
-
-struct ShipPhysics: PhysicsConfiguration {
+    
     var categoryBitMask: Collision {
-        return .ship
+        switch self {
+        case .playerShip: return .ship
+        case .enemyShip: return .enemyShip
+        }
     }
     
     var contactTestBitMask: Collision {
@@ -35,22 +36,37 @@ struct ShipPhysics: PhysicsConfiguration {
         return [.land, .ship]
     }
     
-    var isDynamic: Bool = true
-    var affectedByGravity: Bool = false
+    var isDynamic: Bool {
+        return true
+    }
+    
+    var affectedByGravity: Bool {
+        return false
+    }
+    
+    var cannonPhysics: CannonPhysics {
+        switch self {
+        case .enemyShip: return .enemyFire
+        case .playerShip: return .playerFire
+        }
+    }
 }
 
-
-class Ship: GKEntity, Sprite {
+final class Ship: GKEntity, Sprite {
     
     static let MAX_VELOCITY: CGFloat = 500
+    
+    var shipType: ShipType
     
     private unowned let scene: GameScene
     
     init(scene: GameScene, shipType: ShipType) {
         self.scene = scene
+        self.shipType = shipType
+        
         super.init()
         
-        let spriteComponent = SpriteComponent(texture: shipType.texture, physicsConfiguration: ShipPhysics())
+        let spriteComponent = SpriteComponent(texture: shipType.texture, physicsConfiguration: shipType)
         spriteComponent.node.name = "FUCK"
         addComponent(spriteComponent)
         addComponent(DirectionalComponent(directional: shipType))
