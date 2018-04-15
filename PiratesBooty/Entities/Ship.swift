@@ -79,6 +79,8 @@ final class Ship: GKEntity, Sprite {
         addComponent(DirectionalComponent(directional: shipType))
         addComponent(ShipWreckComponent())
         addComponent(CannonProjectileComponent(scene: scene))
+        addComponent(CannonDamageComponent(scene: scene, collisionType: shipType.cannonDamageContactBitMask))
+        
         
         switch shipType {
         case .enemyShip:

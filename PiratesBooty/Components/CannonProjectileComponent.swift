@@ -71,7 +71,7 @@ final class CannonProjectileComponent: GKComponent {
         
         let physics = SKPhysicsBody(circleOfRadius: texture.size().height)
         sprite.physicsBody = physics
-        sprite.set(physicsConfiguration: ship.shipType)
+        sprite.set(physicsConfiguration: ship.shipType.cannonPhysics)
         
         return sprite
     }

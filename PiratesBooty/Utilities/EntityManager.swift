@@ -72,6 +72,7 @@ class EntityManager {
         let touchPathFinding = ComponentSystem(componentClass: PlayerTouchPathFindingComponent.self)
         let cannonBall = ComponentSystem(componentClass: CannonProjectileComponent.self)
         let motionSystem = ComponentSystem(componentClass: MotionResponderComponent.self)
+        let cannonDamage = ComponentSystem(componentClass: CannonDamageComponent.self)
         return [directional,
                 infiniteMapSystem,
                 shipWreckSystem,
@@ -80,7 +81,8 @@ class EntityManager {
                 enemyPathfindingSystem,
                 touchPathFinding,
                 motionSystem,
-                cannonBall]
+                cannonBall,
+                cannonDamage]
     }()
     
     init(scene: SKScene) {
