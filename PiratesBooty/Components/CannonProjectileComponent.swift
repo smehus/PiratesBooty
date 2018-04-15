@@ -81,7 +81,7 @@ final class CannonProjectileComponent: GKComponent {
 
 extension CannonProjectileComponent: ToucheDetector {
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard ship.shipType == .playerShip else { return }
+        guard case .playerShip = ship.shipType else { return }
         guard let touch = touches.first else { return }
         guard let gameScene = scene else { return }
         let location = touch.location(in: gameScene)

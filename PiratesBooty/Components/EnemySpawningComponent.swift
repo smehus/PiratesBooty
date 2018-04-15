@@ -72,7 +72,7 @@ final class EnemySpawnComponent: GKComponent {
         guard totalEnemies < Max_Enemies, let pos = findEmptyPosition(map: map) else { return false }
         
         let scenePosition = map.convert(pos, to: scene)
-        var ship = Ship(scene: scene, shipType: .enemyShip)
+        var ship = Ship(scene: scene, shipType: .enemyShip(style: .black))
         ship.position = scenePosition
         ship.sprite()?.zPosition = 10
         entityManager.add(ship)

@@ -69,7 +69,7 @@ extension PlayerTouchPathFindingComponent: ToucheDetector {
 extension PlayerTouchPathFindingComponent {
     private func runPlayerActions(with paths: [GKGraphNode]) {
         guard let playerShip = entity as? Ship else { return }
-        let actions = paths.enumerated().flatMap { (index, node) -> SKAction? in
+        let actions = paths.enumerated().compactMap { (index, node) -> SKAction? in
             guard let graphNode = node as? GKGraphNode2D else { fatalError() }
             let point = CGPoint(graphNode.position)
             

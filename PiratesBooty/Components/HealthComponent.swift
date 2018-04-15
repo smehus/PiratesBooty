@@ -43,7 +43,7 @@ final class HealthCompnent: GKComponent {
         
         if
             let ship = entity as? Ship,
-            ship.shipType == .playerShip,
+            case .playerShip = ship.shipType,
             health.currentHealth <= 0
         {
             print("!!!!!!! GAME OVER !!!!!!!!!")

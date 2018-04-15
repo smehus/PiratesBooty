@@ -42,7 +42,7 @@ final class GameScene: SKScene {
         motionManager.delegate = self
         entityManager = EntityManager(scene: self)
         
-        playerShip = Ship(scene: self, shipType: .playerShip)
+        playerShip = Ship(scene: self, shipType: .playerShip(style: .plain))
         playerShip.position = CGPoint(x: 0, y: 0)
         playerShip.sprite()!.zRotation = CGFloat(90).degreesToRadians()
         entityManager.add(playerShip)

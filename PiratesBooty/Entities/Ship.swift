@@ -9,9 +9,28 @@
 import SpriteKit
 import GameplayKit
 
-enum ShipType: Directional, PhysicsConfiguration {
-    case playerShip
-    case enemyShip
+enum ShipStyle {
+    case plain
+    case black
+    case red
+    case green
+    case blue
+    case yellow
+    
+    var baseName: String {
+        return ""
+    }
+    
+    func texture(for health: Health) -> SKTexture? {
+        return SKTexture(imageNamed: "\(baseName)\(health.currentHealth)")
+    }
+}
+
+
+
+enum ShipType: Directional, PhysicsConfiguration, Equatable {
+    case playerShip(style: ShipStyle)
+    case enemyShip(style: ShipStyle)
     
     var texture: SKTexture {
         return SKTexture(image: #imageLiteral(resourceName: "ship (1)"))
@@ -55,6 +74,14 @@ enum ShipType: Directional, PhysicsConfiguration {
         switch self {
         case .enemyShip: return .cannonEnemyShip
         case .playerShip: return .cannonShip
+        }
+    }
+    
+    static func ==(lhs: ShipType, rhs: ShipType) -> Bool {
+        switch (lhs, rhs) {
+        case (.playerShip, .playerShip): return true
+        case (.enemyShip, .enemyShip): return true
+        default: return false
         }
     }
 }
