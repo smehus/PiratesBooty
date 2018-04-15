@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A5164D502082A37D00839B1D /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5164D4F2082A37D00839B1D /* Shared.swift */; };
+		A5165EF12083CDDA00B0F2C6 /* HealthComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5165EF02083CDDA00B0F2C6 /* HealthComponent.swift */; };
 		A52EF6691F8CE931005636D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52EF6681F8CE931005636D3 /* AppDelegate.swift */; };
 		A52EF66B1F8CE931005636D3 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A52EF66A1F8CE931005636D3 /* GameScene.sks */; };
 		A52EF66F1F8CE931005636D3 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52EF66E1F8CE931005636D3 /* GameScene.swift */; };
@@ -65,6 +66,7 @@
 
 /* Begin PBXFileReference section */
 		A5164D4F2082A37D00839B1D /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
+		A5165EF02083CDDA00B0F2C6 /* HealthComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthComponent.swift; sourceTree = "<group>"; };
 		A52EF6651F8CE931005636D3 /* PiratesBooty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PiratesBooty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A52EF6681F8CE931005636D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A52EF66A1F8CE931005636D3 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 				AF09CB8D2069D841004586C5 /* MotionResponderComponent.swift */,
 				A5C60E512082B89A00E5F738 /* CannonProjectileComponent.swift */,
 				A5C60E532082E6CF00E5F738 /* CannonDamageComponent.swift */,
+				A5165EF02083CDDA00B0F2C6 /* HealthComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -377,6 +380,7 @@
 				A594B6911F8E3D5600361E50 /* SKScene+Extensions.swift in Sources */,
 				A594B6601F8E2D6100361E50 /* Ship.swift in Sources */,
 				A594B6681F8E320600361E50 /* Sprite.swift in Sources */,
+				A5165EF12083CDDA00B0F2C6 /* HealthComponent.swift in Sources */,
 				A544CA16202139CE00EB914E /* EnemySpawningComponent.swift in Sources */,
 				A594B6901F8E3D5600361E50 /* SKNode+Extensions.swift in Sources */,
 				A52EF6711F8CE931005636D3 /* GameViewController.swift in Sources */,

@@ -12,7 +12,7 @@ import GameplayKit
 // how to do this....
 // Spawn based off of 
 
-class EnemySpawnComponent: GKComponent {
+final class EnemySpawnComponent: GKComponent {
     
     private unowned var scene: GameScene
     private unowned var entityManager: EntityManager
