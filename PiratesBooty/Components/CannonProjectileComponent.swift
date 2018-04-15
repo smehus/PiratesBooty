@@ -62,6 +62,8 @@ final class CannonProjectileComponent: GKComponent {
         let velocity = direction * 1000
         print("FIRING CANNON AT VELOCITY \(velocity)")
         cannon.physicsBody?.velocity = CGVector(point: velocity)
+        
+        cannon.run(SKAction.removeFromParentAfterDelay(2.0))
     }
     
     private func createCannon() -> SKSpriteNode {

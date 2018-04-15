@@ -44,6 +44,11 @@ extension CannonDamageComponent: CollisionDetector {
     func didBegin(_ contact: SKPhysicsContact) {
         guard let ship = entity as? Ship else { return }
         guard case Collision(rawValue: contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask) = collisionType else { return }
+        
+        // remove cannon
+        let cannon = contact.bodyA.categoryBitMask == ship.sprite()!.physicsBody!.categoryBitMask ? contact.bodyB.node : contact.bodyA.node
+        cannon?.removeFromParent()
+        
         let point = scene.convert(contact.contactPoint, to: ship.sprite()!)
         let explosion = createExplosion(at: point)
         ship.sprite()?.addChild(explosion)
