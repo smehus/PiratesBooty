@@ -44,15 +44,22 @@ extension CannonDamageComponent: CollisionDetector {
     func didBegin(_ contact: SKPhysicsContact) {
         guard let ship = entity as? Ship else { return }
         guard case Collision(rawValue: contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask) = collisionType else { return }
-        let explosion = createExplosion(at: contact.contactPoint)
+        let point = scene.convert(contact.contactPoint, to: ship.sprite()!)
+        let explosion = createExplosion(at: point)
+        ship.sprite()?.addChild(explosion)
         
-        scene.addChild(explosion)
+        let textures: [Explosion] = [.small, .medium, .large]
+        let action = SKAction.animate(with: textures.map ({ $0.texture }), timePerFrame: 0.15, resize: true, restore: false)
+        let removal = SKAction.removeFromParent()
+        let sequence = SKAction.sequence([action, action.reversed(), removal])
+        explosion.run(sequence)
     }
     
     func createExplosion(at point: CGPoint) -> SKSpriteNode {
-        let explosion = SKSpriteNode(texture: Explosion.small.texture, color: .white, size: Explosion.small.texture.size())
+        let explosion = SKSpriteNode(texture: Explosion.small.texture)
         explosion.position = point
-        explosion.zPosition = 10
+        explosion.zPosition = 100
+        
         return explosion
     }
 }
