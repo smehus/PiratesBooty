@@ -158,7 +158,10 @@ final class WithinRangeState: EnemyState {
         
         if firingGate >= 2, let pos = player.position {
             firingGate = 0
-            entity.fireCannon(at: pos)
+            
+            let x = CGFloat.random(min: pos.x - 250, max: pos.x + 250)
+            let y = CGFloat.random(min: pos.y - 250, max: pos.y + 250)
+            entity.fireCannon(at: CGPoint(x: x, y: y))
         }
     }
     
