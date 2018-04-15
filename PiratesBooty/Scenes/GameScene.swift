@@ -116,6 +116,6 @@ extension GameScene: MultiScaledScene {
     }
     
     var cameraScale: (xScale: CGFloat, yScale: CGFloat) {
-        return (4.0, 4.0)
+        return (3.0, 3.0)
     }
 }
