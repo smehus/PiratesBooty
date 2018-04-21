@@ -96,8 +96,7 @@ final class Ship: GKEntity, Sprite {
     static let MAX_HEALTH: Int = 3
     
     var shipType: ShipType
-    
-    private unowned let scene: GameScene
+    weak var scene: GameScene?
     
     init(scene: GameScene, shipType: ShipType) {
         self.scene = scene
@@ -111,7 +110,7 @@ final class Ship: GKEntity, Sprite {
         addComponent(ShipWreckComponent())
         addComponent(CannonProjectileComponent(scene: scene))
         addComponent(CannonDamageComponent(scene: scene))
-        addComponent(HealthCompnent(maxHealth: Ship.MAX_HEALTH, texturable: shipType.style))
+        addComponent(HealthComponent(maxHealth: Ship.MAX_HEALTH, texturable: shipType.style))
         
         
         switch shipType {
@@ -129,6 +128,21 @@ final class Ship: GKEntity, Sprite {
     
     func fireCannon(at vector: CGPoint) {
         component(ofType: CannonProjectileComponent.self)?.fire(at: vector)
+    }
+    
+    func die() {
+        switch shipType {
+        case .enemyShip:
+            removeComponent(ofType: HealthComponent.self)
+            removeComponent(ofType: EnemyPathfindingComponent.self)
+            removeComponent(ofType: CannonProjectileComponent.self)
+            removeComponent(ofType: CannonDamageComponent.self)
+            
+            scene?.entityManager.removeOrphanComponents()
+            
+        case .playerShip:
+            print("!!!!! GAME OVER !!!!!")
+        }
     }
 }
 

@@ -103,6 +103,16 @@ class EntityManager {
         }
     }
     
+    func removeOrphanComponents() {
+        for system in componentSystems {
+            for component in system.components {
+                if component.entity == nil {
+                    system.removeComponent(component)
+                }
+            }
+        }
+    }
+    
     func remove(_ entity: GKEntity) {
         if let spriteNode = entity.component(ofType: SpriteComponent.self)?.node {
             spriteNode.removeFromParent()

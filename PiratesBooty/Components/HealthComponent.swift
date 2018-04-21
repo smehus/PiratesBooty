@@ -12,7 +12,7 @@ protocol HealthTexturable {
     func texture(for health: Int) -> SKTexture
 }
 
-final class HealthCompnent: GKComponent {
+final class HealthComponent: GKComponent {
 
     private let maxHealth: Int
     private var currentHealth: Int
@@ -40,12 +40,8 @@ final class HealthCompnent: GKComponent {
             spriteComponent.set(texture: texturable.texture(for: currentHealth))
         }
     
-        if
-            let ship = entity as? Ship,
-            case .playerShip = ship.shipType,
-            currentHealth <= 0
-        {
-            print("!!!!!!! GAME OVER !!!!!!!!!")
+        if let ship = entity as? Ship, currentHealth <= 0 {
+            ship.die()
         }
     }
 }

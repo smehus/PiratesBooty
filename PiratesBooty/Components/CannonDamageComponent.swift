@@ -89,7 +89,7 @@ extension CannonDamageComponent: CollisionDetector {
     }
     
     private func damageHealth() {
-        guard let healthComponent = entity?.component(ofType: HealthCompnent.self) else {
+        guard let healthComponent = entity?.component(ofType: HealthComponent.self) else {
             assertionFailure("Failed to retrieve health componenet when taking damage")
             return
         }

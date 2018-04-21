@@ -176,7 +176,7 @@ final class EnemyPathfindingComponent: GKComponent {
     
     private unowned let scene: GameScene
     private let radius = CGPoint(x: 50, y: 50)
-    private var stateMachine: GKStateMachine!
+    private var stateMachine: GKStateMachine?
     private var createdStateMachine = false
     
     init(scene: GameScene) {
@@ -186,6 +186,11 @@ final class EnemyPathfindingComponent: GKComponent {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func willRemoveFromEntity() {
+        super.willRemoveFromEntity()
+        stateMachine = nil
     }
     
     override func update(deltaTime seconds: TimeInterval) {
@@ -199,10 +204,10 @@ final class EnemyPathfindingComponent: GKComponent {
                 HoldingState(entity: ship, scene: scene)])
             
             
-            stateMachine.enter(UpdatingState.self)
+            stateMachine?.enter(UpdatingState.self)
             createdStateMachine = true
         } else {
-            stateMachine.update(deltaTime: seconds)
+            stateMachine?.update(deltaTime: seconds)
         }
     }
 }

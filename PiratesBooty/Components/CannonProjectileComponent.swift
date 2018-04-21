@@ -38,8 +38,8 @@ final class CannonProjectileComponent: GKComponent {
     
     private weak var scene: GameScene?
     
-    private var ship: Ship {
-        return entity as! Ship
+    private var ship: Ship? {
+        return entity as? Ship
     }
     
     init(scene: GameScene) {
@@ -52,8 +52,7 @@ final class CannonProjectileComponent: GKComponent {
     }
     
     func fire(at vector: CGPoint) {
-
-        let cannon = createCannon()
+        guard let cannon = createCannon() else { return }
         scene?.addChild(cannon)
         
         // Not working probably because its centered on the ship - colliding with the ship
@@ -66,7 +65,8 @@ final class CannonProjectileComponent: GKComponent {
         cannon.run(SKAction.removeFromParentAfterDelay(2.0))
     }
     
-    private func createCannon() -> SKSpriteNode {
+    private func createCannon() -> SKSpriteNode? {
+        guard let ship = ship else { return nil }
         let texture = SKTexture(image: #imageLiteral(resourceName: "cannonBall"))
         let sprite = SKSpriteNode(texture: texture, color: .white, size: texture.size() * 2)
         sprite.position = ship.position!
@@ -81,9 +81,11 @@ final class CannonProjectileComponent: GKComponent {
 
 extension CannonProjectileComponent: ToucheDetector {
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let ship = ship else { return }
         guard case .playerShip = ship.shipType else { return }
         guard let touch = touches.first else { return }
         guard let gameScene = scene else { return }
+        
         let location = touch.location(in: gameScene)
         fire(at: location)
     }

@@ -18,9 +18,9 @@ final class GameScene: SKScene {
     
     var playerShip: Ship!
     var obstacleGraph: GraphManager!
+    var entityManager: EntityManager!
     
     private var motionManager: MovementManager = MotionManager(modifier: 30.0)
-    private var entityManager: EntityManager!
     private var lastUpdatedTime: TimeInterval = 0
     
     override func didMove(to view: SKView) {
