@@ -17,7 +17,7 @@ protocol PhysicsConfiguration {
     var affectedByGravity: Bool { get }
 }
 
-class SpriteComponent: GKComponent {
+final class SpriteComponent: GKComponent {
     
     let node: SKSpriteNode
     
@@ -31,7 +31,8 @@ class SpriteComponent: GKComponent {
     }
     
     func set(texture: SKTexture) {
-        node.texture = texture
+        let action = SKAction.setTexture(texture)
+        node.run(action)
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -40,8 +40,12 @@ final class CannonDamageComponent: GKComponent {
 extension CannonDamageComponent: CollisionDetector {
     
     func didBegin(_ contact: SKPhysicsContact) {
+        guard let sprite = entity as? Sprite, let physicsBody = sprite.sprite()?.physicsBody else { return }
+        guard let entityCollision = Collision(value: physicsBody.categoryBitMask) else { return }
         guard let collision = Collision(value: contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask) else { return }
-
+        guard collision.contains(entityCollision) else { return }
+        
+        
         switch collision {
         case .cannonShip, .cannonEnemyShip:
             cannonShipCollision(contact: contact)
@@ -51,18 +55,21 @@ extension CannonDamageComponent: CollisionDetector {
     }
     
     private func cannonShipCollision(contact: SKPhysicsContact) {
-        guard let ship = entity as? Ship else {
-            assertionFailure("Failed to cast entity as ship")
+        // Make sure we're acting on the correct sprite
+        guard let ship = entity as? Ship,
+            let sprite = ship.sprite(),
+            let body = sprite.physicsBody,
+            let cannon = contact.bodyA.categoryBitMask == body.categoryBitMask ? contact.bodyB.node : contact.bodyA.node
+        else {
+            assertionFailure("Cannon missing from contact")
             return
         }
-        
-        // remove cannon
-        let cannon = contact.bodyA.categoryBitMask == ship.sprite()!.physicsBody!.categoryBitMask ? contact.bodyB.node : contact.bodyA.node
-        cannon?.removeFromParent()
+
+        cannon.removeFromParent()
         
         let point = scene.convert(contact.contactPoint, to: ship.sprite()!)
         let explosion = createExplosion(at: point)
-        ship.sprite()?.addChild(explosion)
+        sprite.addChild(explosion)
         
         let textures: [Explosion] = [.small, .medium, .large]
         let action = SKAction.animate(with: textures.map ({ $0.texture }), timePerFrame: 0.15, resize: true, restore: false)
