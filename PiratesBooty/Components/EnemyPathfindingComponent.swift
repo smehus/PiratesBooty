@@ -178,6 +178,20 @@ final class WithinRangeState: EnemyState {
     }
 }
 
+final class OutOfRangeState: EnemyState {
+    
+    override func update(deltaTime seconds: TimeInterval) {
+        super.update(deltaTime: seconds)
+        guard let position = entity.position, let playerPos = player.position else {
+            return
+        }
+        
+        if position.withInRange(range: -2000...2000, matchingPoint: playerPos) {
+            stateMachine?.enter(UpdatingState.self)
+        }
+    }
+}
+
 
 final class EnemyPathfindingComponent: GKComponent {
     
@@ -208,12 +222,20 @@ final class EnemyPathfindingComponent: GKComponent {
                 EnRouteState(entity: ship, scene: scene),
                 WithinRangeState(entity: ship, scene: scene),
                 UpdatingState(entity: ship, scene: scene),
-                HoldingState(entity: ship, scene: scene)])
+                HoldingState(entity: ship, scene: scene),
+                OutOfRangeState(entity: ship, scene: scene)])
             
             
             stateMachine?.enter(UpdatingState.self)
             createdStateMachine = true
         } else {
+            
+            if let spriteComponent = entity?.component(ofType: SpriteComponent.self), let playerPos = scene.playerShip.position {
+                if spriteComponent.node.position.withInRange(range: -2000...2000, matchingPoint: playerPos) {
+                    stateMachine?.enter(OutOfRangeState.self)
+                }
+            }
+            
             stateMachine?.update(deltaTime: seconds)
         }
     }

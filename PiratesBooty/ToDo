@@ -1,5 +1,6 @@
 TODO:
 
+Need to remove graph nodes after paths are created?
 Get rid of the land physics bodies & just check which tile its colliding with
 Make an arrow indictor showing what direction the enemy is following you from
 make enemy ship spin while withing range to follow player
