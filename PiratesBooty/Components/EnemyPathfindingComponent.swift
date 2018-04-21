@@ -163,14 +163,21 @@ final class WithinRangeState: EnemyState {
             let y = CGFloat.random(min: pos.y - 250, max: pos.y + 250)
             entity.fireCannon(at: CGPoint(x: x, y: y))
         }
+        
+        orientTowardsPlayer()
     }
     
     private func orientTowardsPlayer() {
         entity.sprite()!.physicsBody?.velocity = .zero
-        let angle = shortestAngleBetween(entity.sprite()!.zRotation, angle2: velocityToPlayer(path: player.position!).angle)
-        entity.sprite()!.zRotation = angle
+        let direction = velocityToPlayer(path: player.position!)
+        rotate(sprite: entity.sprite()!, direction: direction)
+    }
+    
+    private func rotate(sprite: SKSpriteNode, direction: CGPoint) {
+        sprite.zRotation = atan2(direction.y, direction.x)
     }
 }
+
 
 final class EnemyPathfindingComponent: GKComponent {
     
