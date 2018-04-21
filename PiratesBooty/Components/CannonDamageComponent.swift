@@ -40,11 +40,20 @@ final class CannonDamageComponent: GKComponent {
 extension CannonDamageComponent: CollisionDetector {
     
     func didBegin(_ contact: SKPhysicsContact) {
-        guard let sprite = entity as? Sprite, let physicsBody = sprite.sprite()?.physicsBody else { return }
-        guard let entityCollision = Collision(value: physicsBody.categoryBitMask) else { return }
-        guard let collision = Collision(value: contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask) else { return }
-        guard collision.contains(entityCollision) else { return }
+        guard let sprite = entity as? Sprite, let spriteNode = sprite.sprite(), let physicsBody = spriteNode.physicsBody else { return }
         
+        // Check to make sure the contact node is the same node as the entity
+        guard let contactNode = contact.bodyA.categoryBitMask == physicsBody.categoryBitMask ? contact.bodyA.node : contact.bodyB.node else { return }
+        guard contactNode == spriteNode else { return }
+        
+        // bit mask for entity
+        guard let entityCollision = Collision(value: physicsBody.categoryBitMask) else { return }
+        
+        // Bitmask for collision of two physics bodies
+        guard let collision = Collision(value: contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask) else { return }
+        
+        // Make sure the collision bit mask contains the entities bitmask
+        guard collision.contains(entityCollision) else { return }
         
         switch collision {
         case .cannonShip, .cannonEnemyShip:
@@ -64,7 +73,7 @@ extension CannonDamageComponent: CollisionDetector {
             assertionFailure("Cannon missing from contact")
             return
         }
-
+        
         cannon.removeFromParent()
         
         let point = scene.convert(contact.contactPoint, to: ship.sprite()!)

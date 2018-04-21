@@ -231,7 +231,7 @@ final class EnemyPathfindingComponent: GKComponent {
         } else {
             
             if let spriteComponent = entity?.component(ofType: SpriteComponent.self), let playerPos = scene.playerShip.position {
-                if spriteComponent.node.position.withInRange(range: -2000...2000, matchingPoint: playerPos) {
+                if !spriteComponent.node.position.withInRange(range: -2000...2000, matchingPoint: playerPos) {
                     stateMachine?.enter(OutOfRangeState.self)
                 }
             }
