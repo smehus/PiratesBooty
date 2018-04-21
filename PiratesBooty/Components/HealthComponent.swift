@@ -8,19 +8,20 @@
 
 import GameplayKit
 
-protocol Health {
-    var currentHealth: Int { get set  }
-    var numOfHearts: Int { get }
-    var currentTexture: SKTexture? { get }
+protocol HealthTexturable {
+    func texture(for health: Int) -> SKTexture
 }
 
 final class HealthCompnent: GKComponent {
+
+    private let maxHealth: Int
+    private var currentHealth: Int
+    private let texturable: HealthTexturable
     
-    private var health: Health
-    
-    init(health: Health) {
-        self.health = health
-        
+    init(maxHealth: Int, texturable: HealthTexturable) {
+        self.texturable = texturable
+        self.maxHealth = maxHealth
+        currentHealth = maxHealth
         super.init()
     }
     
@@ -33,18 +34,16 @@ final class HealthCompnent: GKComponent {
     }
     
     func takeDamage() {
-        health.currentHealth -= 1
-        if
-            let spriteComponent = entity?.component(ofType: SpriteComponent.self),
-            let texture = health.currentTexture
-        {
-            spriteComponent.node.texture = texture
-        }
+        currentHealth -= 1
         
+        if let spriteComponent = entity?.component(ofType: SpriteComponent.self) {
+            spriteComponent.set(texture: texturable.texture(for: currentHealth))
+        }
+    
         if
             let ship = entity as? Ship,
             case .playerShip = ship.shipType,
-            health.currentHealth <= 0
+            currentHealth <= 0
         {
             print("!!!!!!! GAME OVER !!!!!!!!!")
         }

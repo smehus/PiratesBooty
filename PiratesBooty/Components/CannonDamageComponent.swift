@@ -24,11 +24,9 @@ private enum Explosion {
 
 final class CannonDamageComponent: GKComponent {
     
-    private let collisionType: Collision
     private unowned let scene: GameScene
     
-    init(scene: GameScene, collisionType: Collision) {
-        self.collisionType = collisionType
+    init(scene: GameScene) {
         self.scene = scene
         
         super.init()
@@ -42,8 +40,21 @@ final class CannonDamageComponent: GKComponent {
 extension CannonDamageComponent: CollisionDetector {
     
     func didBegin(_ contact: SKPhysicsContact) {
-        guard let ship = entity as? Ship else { return }
-        guard case Collision(rawValue: contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask) = collisionType else { return }
+        guard let collision = Collision(value: contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask) else { return }
+
+        switch collision {
+        case .cannonShip, .cannonEnemyShip:
+            cannonShipCollision(contact: contact)
+        default:
+            break
+        }
+    }
+    
+    private func cannonShipCollision(contact: SKPhysicsContact) {
+        guard let ship = entity as? Ship else {
+            assertionFailure("Failed to cast entity as ship")
+            return
+        }
         
         // remove cannon
         let cannon = contact.bodyA.categoryBitMask == ship.sprite()!.physicsBody!.categoryBitMask ? contact.bodyB.node : contact.bodyA.node
@@ -58,13 +69,24 @@ extension CannonDamageComponent: CollisionDetector {
         let removal = SKAction.removeFromParent()
         let sequence = SKAction.sequence([action, action.reversed(), removal])
         explosion.run(sequence)
+        
+        damageHealth()
     }
     
-    func createExplosion(at point: CGPoint) -> SKSpriteNode {
+    private func createExplosion(at point: CGPoint) -> SKSpriteNode {
         let explosion = SKSpriteNode(texture: Explosion.small.texture)
         explosion.position = point
         explosion.zPosition = 100
         
         return explosion
+    }
+    
+    private func damageHealth() {
+        guard let healthComponent = entity?.component(ofType: HealthCompnent.self) else {
+            assertionFailure("Failed to retrieve health componenet when taking damage")
+            return
+        }
+        
+        healthComponent.takeDamage()
     }
 }

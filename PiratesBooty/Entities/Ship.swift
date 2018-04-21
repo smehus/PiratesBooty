@@ -9,8 +9,9 @@
 import SpriteKit
 import GameplayKit
 
-enum ShipStyle {
-    case plain
+
+enum ShipStyle: String, HealthTexturable {
+    case plain = "plain"
     case black
     case red
     case green
@@ -18,22 +19,25 @@ enum ShipStyle {
     case yellow
     
     var baseName: String {
-        return ""
+        return rawValue
     }
     
-    func texture(for health: Health) -> SKTexture? {
-        return SKTexture(imageNamed: "\(baseName)\(health.currentHealth)")
+    func texture(for health: Int) -> SKTexture {
+        let texture = SKTexture(imageNamed: "\(baseName)\(health)")
+        
+        return texture
     }
 }
-
-
 
 enum ShipType: Directional, PhysicsConfiguration, Equatable {
     case playerShip(style: ShipStyle)
     case enemyShip(style: ShipStyle)
     
-    var texture: SKTexture {
-        return SKTexture(image: #imageLiteral(resourceName: "ship (1)"))
+    var style: ShipStyle {
+        switch self {
+        case .playerShip(let style), .enemyShip(let style):
+            return style
+        }
     }
     
     var directionOffset: CGFloat {
@@ -89,6 +93,7 @@ enum ShipType: Directional, PhysicsConfiguration, Equatable {
 final class Ship: GKEntity, Sprite {
     
     static let MAX_VELOCITY: CGFloat = 500
+    static let MAX_HEALTH: Int = 3
     
     var shipType: ShipType
     
@@ -100,13 +105,13 @@ final class Ship: GKEntity, Sprite {
         
         super.init()
         
-        let spriteComponent = SpriteComponent(texture: shipType.texture, physicsConfiguration: shipType)
-        spriteComponent.node.name = "FUCK"
+        let spriteComponent = SpriteComponent(texture: shipType.style.texture(for: Ship.MAX_HEALTH), physicsConfiguration: shipType)
         addComponent(spriteComponent)
         addComponent(DirectionalComponent(directional: shipType))
         addComponent(ShipWreckComponent())
         addComponent(CannonProjectileComponent(scene: scene))
-        addComponent(CannonDamageComponent(scene: scene, collisionType: shipType.cannonDamageContactBitMask))
+        addComponent(CannonDamageComponent(scene: scene))
+        addComponent(HealthCompnent(maxHealth: Ship.MAX_HEALTH, texturable: shipType.style))
         
         
         switch shipType {
