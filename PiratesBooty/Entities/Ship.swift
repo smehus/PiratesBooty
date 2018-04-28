@@ -23,9 +23,8 @@ enum ShipStyle: String, HealthTexturable {
     }
     
     func texture(for health: Int) -> SKTexture {
-        var normalizedHealth = health >= 0 ? health : 0
+        let normalizedHealth = health >= 0 ? health : 0
         let texture = SKTexture(imageNamed: "\(baseName)\(normalizedHealth)")
-        
         return texture
     }
 }
