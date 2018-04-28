@@ -19,7 +19,8 @@ extension MotionResponderComponent: MotionDetector {
         
         let moveVelocity = CGVector(dx: pitch, dy: roll)
         if let body = sprite.physicsBody {
-            let newVelocity = body.velocity + moveVelocity
+//            let newVelocity = body.velocity + moveVelocity
+            let newVelocity = moveVelocity * 20
             body.velocity = normalizedVelocity(velocity: newVelocity)
         }
     }

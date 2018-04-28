@@ -42,8 +42,6 @@ final class GraphManager {
             print("OBSTACLES ADDED FOR SOURCE \(name)")
         }
     }
-    
-    
 
     //TODO: This logic is wrong
     func obstacle(at point: CGPoint) -> GKPolygonObstacle? {

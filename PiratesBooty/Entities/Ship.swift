@@ -117,8 +117,8 @@ final class Ship: GKEntity, Sprite {
         case .enemyShip:
             addComponent(EnemyPathfindingComponent(scene: scene))
         case .playerShip:
-            addComponent(PlayerTouchPathFindingComponent(scene: scene))
-//            addComponent(MotionResponderComponent())
+//            addComponent(PlayerTouchPathFindingComponent(scene: scene))
+            addComponent(MotionResponderComponent())
         }
     }
     
