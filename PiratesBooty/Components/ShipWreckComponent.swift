@@ -12,11 +12,11 @@ import SpriteKit
 final class ShipWreckComponent: GKComponent {
     
     private unowned let scene: GameScene
+    private var isColliding = false
     
     private var map: LayeredMap? {
         guard let playerPos = scene.playerShip.position else { return nil }
         let mapsAtPoint = scene.nodes(at: playerPos).filter { $0 is LayeredMap }
-        
         return mapsAtPoint.first as? LayeredMap
     }
     
@@ -36,8 +36,20 @@ final class ShipWreckComponent: GKComponent {
     }
     
     private func checkForCollision() {
+        guard let sprite = scene.playerShip.sprite() else { return }
+        guard let body = sprite.physicsBody else { return }
         if isLandTile() {
-            print("HITTING LAND TILE")
+            if !isColliding {
+                isColliding = true
+                
+                if let health = scene.playerShip.component(ofType: HealthComponent.self) {
+                    health.takeDamage()
+                }
+                
+                body.velocity = CGVector(dx: -body.velocity.dx, dy: -body.velocity.dy)
+            }
+        } else {
+            isColliding = false
         }
     }
     
