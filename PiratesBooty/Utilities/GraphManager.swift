@@ -22,7 +22,7 @@ final class GraphManager {
         self.graph = graph
     }
     
-    func addNodes(_ obstacles:[SKNode], fromSource name: String) {
+    func addNodes(_ obstacles: [SKNode], fromSource name: String) {
         print("ADDING \(obstacles.count) OBSTACLES FOR SOURCE: \(name)")
         queue.async(qos: .userInitiated,flags: .barrier) {
             

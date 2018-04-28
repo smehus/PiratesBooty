@@ -109,6 +109,8 @@ final class LayeredMap: SKNode {
         configure(maps: maps)
     }
 
+    
+    /// Adds sprites for pathfind around obstacles
     private func configure(maps: [SKTileMapNode]) {
         for map in maps {
             for (center, texture) in LayeredMap.obstacleTiles(from: map) {
