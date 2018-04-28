@@ -21,6 +21,7 @@ enum MapGroups: String, CustomStringConvertible {
     /// Used in PirateTileSet.sks in the tiles user data to tag edge tiles
     /// Which I then use to only add physics bodies to land edges
     static let isEdgeKey = "isEdge"
+    static let isLandKey = "isLand"
     
     var description: String {
         return rawValue
@@ -91,8 +92,8 @@ final class LayeredMap: SKNode {
                     let group = MapGroups(rawValue: groupName),
                     case .land = group,
                     let tile = map.tileDefinition(atColumn: column, row: row),
-                    let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
-                    isEdge,
+//                    let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
+//                    isEdge,
                     let texture = tile.textures.first
                     else { continue }
                 
@@ -102,6 +103,24 @@ final class LayeredMap: SKNode {
         }
         
         return response
+    }
+    
+    func mapContainsLand(at point: CGPoint) -> Bool {
+        
+        let mapsWithLand = maps.first { (map) -> Bool in
+            let column = map.tileColumnIndex(fromPosition: point)
+            let row = map.tileRowIndex(fromPosition: point)
+            
+            guard column != UInt.max, row != UInt.max else { return false }
+            guard let groupName = map.tileGroup(atColumn: column, row: row)?.name else { return false }
+            guard let group = MapGroups(rawValue: groupName) else { return false }
+            guard case .land = group else { return false }
+            
+            return true
+        }
+        
+        
+        return mapsWithLand != nil
     }
     
     func addMaps(maps: [SKTileMapNode]) {

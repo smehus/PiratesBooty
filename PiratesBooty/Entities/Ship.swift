@@ -107,7 +107,7 @@ final class Ship: GKEntity, Sprite {
         let spriteComponent = SpriteComponent(texture: shipType.style.texture(for: Ship.MAX_HEALTH), physicsConfiguration: shipType)
         addComponent(spriteComponent)
         addComponent(DirectionalComponent(directional: shipType))
-        addComponent(ShipWreckComponent())
+        addComponent(ShipWreckComponent(scene: scene))
         addComponent(CannonProjectileComponent(scene: scene))
         addComponent(CannonDamageComponent(scene: scene))
         addComponent(HealthComponent(maxHealth: Ship.MAX_HEALTH, texturable: shipType.style))
