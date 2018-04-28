@@ -92,8 +92,8 @@ final class LayeredMap: SKNode {
                     let group = MapGroups(rawValue: groupName),
                     case .land = group,
                     let tile = map.tileDefinition(atColumn: column, row: row),
-//                    let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
-//                    isEdge,
+                    let isEdge = tile.userData?[MapGroups.isEdgeKey] as? Bool,
+                    isEdge,
                     let texture = tile.textures.first
                     else { continue }
                 

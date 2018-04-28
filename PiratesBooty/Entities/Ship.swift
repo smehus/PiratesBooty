@@ -23,7 +23,8 @@ enum ShipStyle: String, HealthTexturable {
     }
     
     func texture(for health: Int) -> SKTexture {
-        let texture = SKTexture(imageNamed: "\(baseName)\(health)")
+        var normalizedHealth = health >= 0 ? health : 0
+        let texture = SKTexture(imageNamed: "\(baseName)\(normalizedHealth)")
         
         return texture
     }
@@ -117,8 +118,8 @@ final class Ship: GKEntity, Sprite {
         case .enemyShip:
             addComponent(EnemyPathfindingComponent(scene: scene))
         case .playerShip:
-//            addComponent(PlayerTouchPathFindingComponent(scene: scene))
-            addComponent(MotionResponderComponent())
+            addComponent(PlayerTouchPathFindingComponent(scene: scene))
+//            addComponent(MotionResponderComponent())
         }
     }
     
