@@ -32,6 +32,17 @@ final class GraphManager {
         }
     }
     
+    func addNodes(_ obstacles: [[float2]], fromSource name: String) {
+        print("ADDING \(obstacles.count) OBSTACLES FOR SOURCE: \(name)")
+        
+        queue.async(qos: .userInitiated,flags: .barrier) {
+            
+            let nodes = obstacles.map { GKPolygonObstacle(points: $0) }
+            self.graph.addObstacles(nodes)
+            print("OBSTACLES ADDED FOR SOURCE \(name)")
+        }
+    }
+    
     func addObstacles(_ obstacles: [GKPolygonObstacle]) {
         queue.async(flags: .barrier) {
             self.graph.addObstacles(obstacles)

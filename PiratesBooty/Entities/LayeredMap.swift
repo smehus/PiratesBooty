@@ -49,6 +49,7 @@ final class LayeredMap: SKNode {
     
     var maps: [SKTileMapNode] = []
     var polygonSprites: [SKNode] = []
+    var obstacleVertices: [[float2]] = []
     var placeholderMap: PlaceholderMapNode?
     var enemyCount = 0
     var hasAttachedObstacles = false
@@ -117,23 +118,40 @@ final class LayeredMap: SKNode {
                 guard polygonSprites.first (where : { $0.position == center }) == nil else {
                     return
                 }
-                
-                let pos = map.convert(center, to: scene!)
-                let sprite = SKSpriteNode(texture: nil, color: .white, size: texture.size())
-                sprite.position = pos
-                
-                let physics = LandPhysics()
-                let body = SKPhysicsBody(rectangleOf: texture.size(), center: CGPoint(x: 0, y: 0))
-                body.isDynamic = physics.isDynamic
-                body.affectedByGravity = physics.affectedByGravity
-                body.categoryBitMask = physics.categoryBitMask.rawValue
-                body.collisionBitMask = physics.collisionBitMask.rawValue
-                body.contactTestBitMask = physics.contactTestBitMask.rawValue
-                sprite.physicsBody = body
-                sprite.move(toParent: map)
-                polygonSprites.append(sprite)
+//                addSpriteForObstacle(map: map, center: center, texture: texture)
+                createVerticeForObstacle(map: map, center: center, texture: texture)
             }
         }
+    }
+    
+    private func createVerticeForObstacle(map: SKTileMapNode, center: CGPoint, texture: SKTexture) {
+        let pos = map.convert(center, to: scene!)
+        
+        let offset = texture.size().halfWidth
+        
+        let topLeft = float2(Float(pos.x - offset), Float(pos.y + offset))
+        let topRight = float2(Float(pos.x + offset), Float(pos.y + offset))
+        let bottomRight = float2(Float(pos.x + offset), Float(pos.y - offset))
+        let bottomLeft = float2(Float(pos.x - offset), Float(pos.y - offset))
+        
+        obstacleVertices.append([topLeft, topRight, bottomRight, bottomLeft])
+    }
+    
+    private func addSpriteForObstacle(map: SKTileMapNode, center: CGPoint, texture: SKTexture) {
+        let pos = map.convert(center, to: scene!)
+        let sprite = SKSpriteNode(texture: nil, color: .white, size: texture.size())
+        sprite.position = pos
+        
+        let physics = LandPhysics()
+        let body = SKPhysicsBody(rectangleOf: texture.size(), center: CGPoint(x: 0, y: 0))
+        body.isDynamic = physics.isDynamic
+        body.affectedByGravity = physics.affectedByGravity
+        body.categoryBitMask = physics.categoryBitMask.rawValue
+        body.collisionBitMask = physics.collisionBitMask.rawValue
+        body.contactTestBitMask = physics.contactTestBitMask.rawValue
+        sprite.physicsBody = body
+        sprite.move(toParent: map)
+        polygonSprites.append(sprite)
     }
 }
 
