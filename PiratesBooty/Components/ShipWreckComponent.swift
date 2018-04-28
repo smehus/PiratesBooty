@@ -38,7 +38,8 @@ final class ShipWreckComponent: GKComponent {
     private func checkForCollision() {
         guard let sprite = scene.playerShip.sprite() else { return }
         guard let body = sprite.physicsBody else { return }
-        if isLandTile() {
+        if let tileCenter = isLandTile() {
+            
             if !isColliding {
                 isColliding = true
                 
@@ -46,16 +47,23 @@ final class ShipWreckComponent: GKComponent {
                     health.takeDamage()
                 }
                 
-                body.velocity = CGVector(dx: -body.velocity.dx, dy: -body.velocity.dy)
+                if let motionResponder = scene.playerShip.component(ofType: MotionResponderComponent.self) {
+                    motionResponder.pause(for: 3.0)
+                }
+                
+                let offset = tileCenter - sprite.position
+                let direction = offset.normalized()
+                print("directionn \(direction)")
+                body.velocity = CGVector(dx: -direction.x * 100, dy: -direction.y * 100)
             }
         } else {
             isColliding = false
         }
     }
     
-    private func isLandTile() -> Bool {
-        guard let map = map else { return false }
-        guard let pos = scene.playerShip.position else { return false }
-        return map.mapContainsLand(at: pos)
+    private func isLandTile() -> CGPoint? {
+        guard let map = map else { return nil }
+        guard let pos = scene.playerShip.position else { return nil }
+        return map.centerOfLandTile(at: pos)
     }
 }

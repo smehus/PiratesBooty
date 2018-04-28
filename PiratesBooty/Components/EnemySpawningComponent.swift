@@ -18,7 +18,11 @@ final class EnemySpawnComponent: GKComponent {
     private unowned var entityManager: EntityManager
     
     private var lastMap: LayeredMap?
-    private var totalEnemies = 0
+    private var totalEnemies = 0 {
+        didSet {
+            print("*** TOTAL MAP ENEMIES \(totalEnemies)")
+        }
+    }
     private let ruleSystem = GKRuleSystem()
     private let Max_Enemies = 1
     

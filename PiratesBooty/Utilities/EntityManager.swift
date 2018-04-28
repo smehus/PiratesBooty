@@ -154,13 +154,7 @@ class EntityManager {
         }
     }
     
-    func component<T: GKComponent>() -> T? {
-        for entitiy in entities {
-            if let requestedComponent = entitiy.component(ofType: T.self) {
-                return requestedComponent
-            }
-        }
-        
-        return nil
+    func entity<T: GKEntity>() -> T? {
+        return entities.first(where: { $0 is T }) as? T
     }
 }

@@ -140,6 +140,12 @@ final class Ship: GKEntity, Sprite {
             
             scene?.entityManager.removeOrphanComponents()
             
+            
+            if let world: World = scene?.entityManager.entity() as? World {
+                world.component(ofType: EnemySpawnComponent.self)?.enemyDied()
+            }
+            
+            
         case .playerShip:
             print("!!!!! GAME OVER !!!!!")
         }

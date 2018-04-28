@@ -57,7 +57,7 @@ extension PlayerTouchPathFindingComponent: ToucheDetector {
         guard let touch = touches.first?.location(in: scene) else { return }
         if
             let map = scene.nodes(at: touch).first(where: { $0 is LayeredMap }) as? LayeredMap,
-            map.mapContainsLand(at: touch) {
+            let _ = map.centerOfLandTile(at: touch) {
             return
         }
         

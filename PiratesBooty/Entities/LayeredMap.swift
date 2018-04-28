@@ -105,22 +105,24 @@ final class LayeredMap: SKNode {
         return response
     }
     
-    func mapContainsLand(at point: CGPoint) -> Bool {
+    func centerOfLandTile(at point: CGPoint) -> CGPoint? {
         
-        let mapsWithLand = maps.first { (map) -> Bool in
+        let mapsWithLand = maps.flatMap { (map) -> CGPoint? in
             let column = map.tileColumnIndex(fromPosition: point)
             let row = map.tileRowIndex(fromPosition: point)
             
-            guard column != UInt.max, row != UInt.max else { return false }
-            guard let groupName = map.tileGroup(atColumn: column, row: row)?.name else { return false }
-            guard let group = MapGroups(rawValue: groupName) else { return false }
-            guard case .land = group else { return false }
-            
-            return true
+            guard column != UInt.max, row != UInt.max else { return nil }
+            guard let groupName = map.tileGroup(atColumn: column, row: row)?.name else { return nil }
+            guard let group = MapGroups(rawValue: groupName) else { return nil }
+            guard case .land = group else { return nil }
+            guard let definition = map.tileDefinition(atColumn: column, row: row) else { return nil }
+            guard let name = definition.name else { return nil }
+            guard name != "water" else { return nil }
+            print("TILE AT POITN \(point) IS LAND GROUP")
+            return map.centerOfTile(atColumn: column, row: row)
         }
         
-        
-        return mapsWithLand != nil
+        return mapsWithLand.first
     }
     
     func addMaps(maps: [SKTileMapNode]) {
