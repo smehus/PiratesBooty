@@ -1,8 +1,5 @@
 TODO:
 
-In player touch path finding - I need to check if an obstacle already exists at the touch point...
-... If its a GKPolygonObstacle, don't do anything
-
 Will cannonDamangeComponent fall apart once there are multiple enemies
 Need to remove graph nodes after paths are created?
 Get rid of the land physics bodies & just check which tile its colliding with

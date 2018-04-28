@@ -43,6 +43,21 @@ final class GraphManager {
         }
     }
     
+    
+
+    //TODO: This logic is wrong
+    func obstacle(at point: CGPoint) -> GKPolygonObstacle? {
+        return graph.obstacles.first(where: { (obstacle) -> Bool in
+            for i in 0..<obstacle.vertexCount {
+                let vertex = CGPoint(obstacle.vertex(at: i))
+                
+                return point < vertex
+            }
+            
+            return false
+        })
+    }
+    
     func addObstacles(_ obstacles: [GKPolygonObstacle]) {
         queue.async(flags: .barrier) {
             self.graph.addObstacles(obstacles)
