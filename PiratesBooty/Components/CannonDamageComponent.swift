@@ -56,7 +56,13 @@ extension CannonDamageComponent: CollisionDetector {
         guard collision.contains(entityCollision) else { return }
         
         switch collision {
-        case .cannonShip, .cannonEnemyShip:
+        case .cannonEnemyShip:
+            if let spawningComponent: EnemySpawnComponent = scene.entityManager.component() as? EnemySpawnComponent {
+                spawningComponent.enemyDied()
+            }
+            
+            fallthrough
+        case .cannonShip:
             cannonShipCollision(contact: contact)
         default:
             break

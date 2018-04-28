@@ -153,4 +153,14 @@ class EntityManager {
             system.didRecieveMotionUpdate(pitch: pitch, roll: roll)
         }
     }
+    
+    func component<T: GKComponent>() -> T? {
+        for entitiy in entities {
+            if let requestedComponent = entitiy.component(ofType: T.self) {
+                return requestedComponent
+            }
+        }
+        
+        return nil
+    }
 }

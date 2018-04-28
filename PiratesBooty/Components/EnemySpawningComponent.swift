@@ -45,6 +45,11 @@ final class EnemySpawnComponent: GKComponent {
         checkSpawn()
     }
     
+    func enemyDied() {
+        guard totalEnemies > 0 else { return }
+        totalEnemies -= 1
+    }
+    
     private func checkSpawn() {
         guard let shipPosition = scene.playerShip.position else { return }
         let nodesAtShipPosition = scene.nodes(at: shipPosition)
