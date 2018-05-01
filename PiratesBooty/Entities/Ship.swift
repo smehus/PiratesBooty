@@ -23,8 +23,8 @@ enum ShipStyle: String, HealthTexturable {
     }
     
     func texture(for health: Int) -> SKTexture {
-        let texture = SKTexture(imageNamed: "\(baseName)\(health)")
-        
+        let normalizedHealth = health >= 0 ? health : 0
+        let texture = SKTexture(imageNamed: "\(baseName)\(normalizedHealth)")
         return texture
     }
 }
@@ -107,7 +107,7 @@ final class Ship: GKEntity, Sprite {
         let spriteComponent = SpriteComponent(texture: shipType.style.texture(for: Ship.MAX_HEALTH), physicsConfiguration: shipType)
         addComponent(spriteComponent)
         addComponent(DirectionalComponent(directional: shipType))
-        addComponent(ShipWreckComponent())
+        addComponent(ShipWreckComponent(scene: scene))
         addComponent(CannonProjectileComponent(scene: scene))
         addComponent(CannonDamageComponent(scene: scene))
         addComponent(HealthComponent(maxHealth: Ship.MAX_HEALTH, texturable: shipType.style))
@@ -139,6 +139,12 @@ final class Ship: GKEntity, Sprite {
             removeComponent(ofType: CannonDamageComponent.self)
             
             scene?.entityManager.removeOrphanComponents()
+            
+            
+            if let world: World = scene?.entityManager.entity() as? World {
+                world.component(ofType: EnemySpawnComponent.self)?.enemyDied()
+            }
+            
             
         case .playerShip:
             print("!!!!! GAME OVER !!!!!")

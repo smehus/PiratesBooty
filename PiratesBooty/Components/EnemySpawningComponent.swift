@@ -18,7 +18,11 @@ final class EnemySpawnComponent: GKComponent {
     private unowned var entityManager: EntityManager
     
     private var lastMap: LayeredMap?
-    private var totalEnemies = 0
+    private var totalEnemies = 0 {
+        didSet {
+            print("*** TOTAL MAP ENEMIES \(totalEnemies)")
+        }
+    }
     private let ruleSystem = GKRuleSystem()
     private let Max_Enemies = 1
     
@@ -43,6 +47,11 @@ final class EnemySpawnComponent: GKComponent {
     override func update(deltaTime seconds: TimeInterval) {
         super.update(deltaTime: seconds)
         checkSpawn()
+    }
+    
+    func enemyDied() {
+        guard totalEnemies > 0 else { return }
+        totalEnemies -= 1
     }
     
     private func checkSpawn() {

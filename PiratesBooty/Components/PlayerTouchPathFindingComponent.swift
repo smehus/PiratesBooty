@@ -55,10 +55,17 @@ extension PlayerTouchPathFindingComponent: ToucheDetector {
         
         guard let playerShip = entity as? Ship else { return }
         guard let touch = touches.first?.location(in: scene) else { return }
+        if
+            let map = scene.nodes(at: touch).first(where: { $0 is LayeredMap }) as? LayeredMap,
+            let _ = map.centerOfLandTile(at: touch) {
+            return
+        }
+        
         guard let playerVector = playerShip.position?.vector_float() else { return }
         
         let playerNode = GKGraphNode2D.node(withPoint: playerVector)
         let touchNode = GKGraphNode2D.node(withPoint: touch.vector_float())
+        
         graph.connectUsingObstacles(node: touchNode)
         graph.connectUsingObstacles(node: playerNode)
         

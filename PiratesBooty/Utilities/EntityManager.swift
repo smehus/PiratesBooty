@@ -153,4 +153,8 @@ class EntityManager {
             system.didRecieveMotionUpdate(pitch: pitch, roll: roll)
         }
     }
+    
+    func entity<T: GKEntity>() -> T? {
+        return entities.first(where: { $0 is T }) as? T
+    }
 }

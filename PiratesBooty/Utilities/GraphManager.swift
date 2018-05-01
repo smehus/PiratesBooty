@@ -22,7 +22,7 @@ final class GraphManager {
         self.graph = graph
     }
     
-    func addNodes(_ obstacles:[SKNode], fromSource name: String) {
+    func addNodes(_ obstacles: [SKNode], fromSource name: String) {
         print("ADDING \(obstacles.count) OBSTACLES FOR SOURCE: \(name)")
         queue.async(qos: .userInitiated,flags: .barrier) {
             
@@ -30,6 +30,30 @@ final class GraphManager {
             self.graph.addObstacles(nodes)
             print("OBSTACLES ADDED FOR SOURCE \(name)")
         }
+    }
+    
+    func addNodes(_ obstacles: [[float2]], fromSource name: String) {
+        print("ADDING \(obstacles.count) OBSTACLES FOR SOURCE: \(name)")
+        
+        queue.async(qos: .userInitiated,flags: .barrier) {
+            
+            let nodes = obstacles.map { GKPolygonObstacle(points: $0) }
+            self.graph.addObstacles(nodes)
+            print("OBSTACLES ADDED FOR SOURCE \(name)")
+        }
+    }
+
+    //TODO: This logic is wrong
+    func obstacle(at point: CGPoint) -> GKPolygonObstacle? {
+        return graph.obstacles.first(where: { (obstacle) -> Bool in
+            for i in 0..<obstacle.vertexCount {
+                let vertex = CGPoint(obstacle.vertex(at: i))
+                
+                return point < vertex
+            }
+            
+            return false
+        })
     }
     
     func addObstacles(_ obstacles: [GKPolygonObstacle]) {

@@ -48,7 +48,8 @@ final class PathFindingComponent: GKComponent {
     
     private func createObstacles() {
         guard let layeredMap = currentMap, !layeredMap.hasAttachedObstacles else { return }
-        scene.obstacleGraph.addNodes(layeredMap.polygonSprites, fromSource: layeredMap.mapName)
+//        scene.obstacleGraph.addNodes(layeredMap.polygonSprites, fromSource: layeredMap.mapName)
+        scene.obstacleGraph.addNodes(layeredMap.obstacleVertices, fromSource: layeredMap.mapName)
         layeredMap.hasAttachedObstacles = true
     }
     

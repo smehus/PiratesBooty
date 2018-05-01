@@ -56,7 +56,9 @@ extension CannonDamageComponent: CollisionDetector {
         guard collision.contains(entityCollision) else { return }
         
         switch collision {
-        case .cannonShip, .cannonEnemyShip:
+        case .cannonEnemyShip:
+            fallthrough
+        case .cannonShip:
             cannonShipCollision(contact: contact)
         default:
             break
